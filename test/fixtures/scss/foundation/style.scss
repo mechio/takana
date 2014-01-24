@@ -1,0 +1,17 @@
+@import "normalize.scss";
+@import "bourbon/bourbon";
+
+// try changing these -------
+$primary-color: #888;
+$secondary-color: green;
+$alert-color: #c60f13;
+$success-color: #5da423;
+
+// and now this
+$row-width: 80%;
+
+@import "foundation.scss";
+
+body {
+  margin: 20px 0;
+}

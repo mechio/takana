@@ -1,0 +1,25 @@
+{
+  "name": "takana-server",
+  "version": "0.0.0",
+  "description": "Takana live stylesheet server",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --watch  --compilers coffee:coffee-script "
+  },
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "underscore": "~1.5.2",
+    "nssocket": "~0.5.1",
+    "log4js": "~0.6.9",
+    "node-sass": "~0.8.1",
+    "connect": "~2.12.0",
+    "shelljs": "~0.2.6",
+    "q": "~1.0.0"
+  },
+  "devDependencies": {
+    "mocha": "~1.17.0",
+    "should": "~3.0.1",
+    "coffee-script": "~1.6.3"
+  }
+}
