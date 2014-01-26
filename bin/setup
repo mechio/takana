@@ -1,2 +1,6 @@
 #!/bin/bash
-brew install node && npm install
+brew install node
+npm install
+# brew tap phinze/cask
+# brew install brew-cask
+# brew cask install google-chrome
