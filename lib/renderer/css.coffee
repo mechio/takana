@@ -1,4 +1,4 @@
-fs           = require("fs")
+fs           = require 'fs'
 
 exports.render = (options, callback) ->
   fs.readFile options.file, (error, data) ->

@@ -15,7 +15,7 @@ scratchDir      = helpers.expandPath('~/.takana/scratch')
 
 
 
-renderers = require('./renderers')
+renderer = require('./renderer')
 
 
 exports.helpers = helpers

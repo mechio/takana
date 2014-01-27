@@ -1,4 +1,4 @@
-sass         = require('node-sass')
+sass         = require 'node-sass'
 
 exports.parseError = parseError = (errorString) ->
   error = errorString
