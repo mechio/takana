@@ -1,4 +1,5 @@
 fs               = require 'fs'
+shell            = require 'shelljs'
 
 class File
   constructor: (@options) ->
@@ -6,12 +7,11 @@ class File
     @scratchPath  = @options.scratchPath
     @buffer       = null
     
-  syncToScratchFile: (callback) ->
-    if !@hasBuffer
-      callback(null)
-      return
-
-    fs.writeFile @scratchFile, data, {flags: 'w'}, callback
+  syncToScratch: (callback) ->
+    if @hasBuffer()
+      fs.writeFile @scratchPath, @buffer, {flags: 'w'}, callback
+    else
+      shell.cp '-f', @path, @scratchPath
 
   updateBuffer: (@buffer, callback) ->
     @syncToScratchFile callback

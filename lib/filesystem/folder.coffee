@@ -6,8 +6,9 @@ helpers           = require '../helpers'
 Q                 = require 'q'
 glob              = require 'glob'
 path              = require 'path'
+{EventEmitter}    = require 'events'
 
-class Folder 
+class Folder extends EventEmitter
   constructor: (@options={}) ->
     @files          = {}
     @name           = @options.name
@@ -18,11 +19,19 @@ class Folder
     if !@name || !@path || !@scratchPath
       throw('Folder not instantiated with required options')
 
-  addFile: (path) ->
-    @files[path] = new File(path: path)
+  addFile: (filePath) ->
+    @files[filePath] = new File(
+      path:         filePath
+      scratchPath:  filePath.replace(@path, @scratchPath)
+    )
 
-  removeFile: (template) ->
-    delete @files[file.path]
+  removeFile: (filePath) ->
+    shell.rm @files[filePath].scratchPath
+    delete @files[filePath]
+
+
+  getFile: (path) ->
+    @files[path]
 
   runRsync: (callback) ->
     source      = helpers.sanitizePath(@path)
@@ -33,28 +42,19 @@ class Folder
     exec cmd, (error, stdout, stderr) =>
       callback?(error)
 
-  syncToScratch: (callback) ->
-    logger = @logger
+  start: (callback) ->
+    shell.mkdir('-p', @scratchPath)
     @runRsync =>
-      templates = _.select _.values(@templates), (s) -> s.get('hasBuffer')
-      if templates.length == 0
-        callback?(null)
-        return
-      logger.trace "syncing buffered templates with ramdisk..." 
-      timer = util.measureTime()
-      Step( 
-        ->
-          templates.forEach (template) =>
-            template.syncToRamdisk @parallel()
-        , (error) ->
-          if error
-            logger.error "error while syncing to ramdisk: #{error}" 
-          else
-            logger.trace "ramdisk sync done in #{timer.elapsed()}ms"
-          callback?(error)
-      )
+      console.log 
+      glob path.join(@path, "**/*.{" + @extensions.join(',') + "}"), (e, files) =>
+        files.forEach @addFile.bind(@)
+        @startWatching()
+        callback?()
 
-
+  stop: ->
+    if @watcher
+      @watcher.removeAllListeners()
+      delete @watcher
 
   startWatching: ->
     @watcher  = fsevents(@path)
@@ -66,47 +66,33 @@ class Folder
 
       @_handleFSEvent(event, path, info)
 
-  stop: ->
-    if @watcher
-      @watcher.removeAllListeners()
-      delete @watcher
-
-  start: (callback) ->
-    shell.mkdir('-p', @scratchPath)
-    @runRsync =>
-      glob path.join(@path, "**/*.{scss,css}"), (e, files) =>
-        files.forEach @addFile.bind(@)
-        @startWatching()
-        callback?()
-
-
   _handleFSEvent: (event, path, info={}) ->
     if path == @path && event == 'deleted'
       @logger.warn "project removed from filesystem"
       @stopWatching()
-      @destroy()
       return
 
-    if util.isFileOfType(path, Config.extensions.template)          
-      @logger.trace "received fsevent:#{event}", path
+    if helpers.isFileOfType(path, @extensions)          
+      switch event
+        when 'deleted'
+          @removeFile(path) if !!@getFile(path) 
 
-      if event == 'deleted'
-        if template = @templates[path]
-          @removeTemplate(template)
-      else
-        if template = @templates[path]
-          template.clearBuffer()
+        when 'created'
+          file = @addFile(path)
+          file.syncToScratch()
 
-
-      @throttledSyncForUpdate()
-
+        when 'modified'
+          file = @getFile(path) 
+          file.syncToScratch()
+          file.clearBuffer()
 
     else if event == 'deleted' && info.type == 'directory'
-      for k, v of @templates
+      for k, v of @files
         if k.indexOf(path) == 0
-          @removeTemplate(v)
+          @removeFile(v)
 
-
+    @emit 'updated'
+    #publish update event
 
 
 module.exports = Folder
