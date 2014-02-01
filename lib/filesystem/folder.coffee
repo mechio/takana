@@ -7,6 +7,8 @@ Q                 = require 'q'
 glob              = require 'glob'
 path              = require 'path'
 {EventEmitter}    = require 'events'
+_                 = require 'underscore'
+
 
 class Folder extends EventEmitter
   constructor: (@options={}) ->
@@ -15,6 +17,10 @@ class Folder extends EventEmitter
     @path           = @options.path
     @scratchPath    = @options.scratchPath
     @extensions     = @options.extensions
+
+    @emitUpdateMessage = _.throttle =>
+      @emit 'update'
+    , 100
 
     if !@name || !@path || !@scratchPath
       throw('Folder not instantiated with required options')
@@ -56,6 +62,25 @@ class Folder extends EventEmitter
       @watcher.removeAllListeners()
       delete @watcher
 
+  bufferUpdate: (path, buffer, callback) ->
+    if file = @getFile(path)
+      file.updateBuffer(buffer)
+      file.syncToScratch(callback)
+
+      @emitUpdateMessage()
+    else
+      callback?()
+    
+
+  bufferClear: (path, callback) ->
+    if file = @getFile(path)
+      file.clearBuffer()
+      file.syncToScratch(callback)
+
+      @emitUpdateMessage()
+    else
+      callback?()
+
   startWatching: ->
     @watcher  = fsevents(@path)
 
@@ -89,10 +114,12 @@ class Folder extends EventEmitter
     else if event == 'deleted' && info.type == 'directory'
       for k, v of @files
         if k.indexOf(path) == 0
-          @removeFile(v)
+          @removeFile(k)
 
-    @emit 'updated'
-    #publish update event
+    else
+      return
+
+    @emitUpdateMessage
 
 
 module.exports = Folder

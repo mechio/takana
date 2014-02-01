@@ -12,9 +12,9 @@ class File
       fs.writeFile @scratchPath, @buffer, {flags: 'w'}, callback
     else
       shell.cp '-f', @path, @scratchPath
+      callback?(null)
 
-  updateBuffer: (@buffer, callback) ->
-    @syncToScratchFile callback
+  updateBuffer: (@buffer) ->
 
   clearBuffer: ->
     @buffer = null

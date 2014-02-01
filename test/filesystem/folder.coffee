@@ -5,12 +5,13 @@ sinon   = require 'sinon'
 glob    = require 'glob'
 _       = require 'underscore'
 fs      = require 'fs'
+Q       = require 'q'
 
 mockFolder = ->
   source  = createEmptyTmpDir('source')
   scratch = path.join(createEmptyTmpDir(), 'scratch')
 
-  shell.cp('-r', fixturePath('filesystem/project'), source)
+  shell.cp('-r', fixturePath('filesystem/project/*'), source)
 
   new Folder(
     name:        'test_folder'
@@ -46,14 +47,35 @@ describe 'Project', ->
       @startWatching.calledOnce.should.be.true
 
   context 'template', ->
+    before ->
+      @file = @folder.getFile(_.keys(@folder.files)[0])
+
     context 'buffer updated', ->
-      it "should update the corresponding template's buffer"
-      it "should sync the dirty templates to the scratch"
+      before (done) ->
+        @buffer = "Some buffer from the text editor"
+        @folder.bufferUpdate(@file.path, @buffer, done)
+
+      it "should update the corresponding template's buffer", ->
+        @file.hasBuffer().should.be.true
+        @file.buffer.should.equal(@buffer)
+
+      it "should sync the dirty template to the scratch", (done) ->
+        assertFileHasBody(@file.scratchPath, @buffer, done)
+
       it "should publish an update event"
 
     context 'cleared', ->
-      it "should clear the corresponding template's buffer"
-      it "should sync the dirty templates to the scratch"   
+      before (done) ->
+        @buffer = "Some buffer from the text editor"
+        @folder.bufferUpdate @file.path, @buffer, =>
+          @folder.bufferClear(@file.path, done)
+
+      it "should clear the corresponding template's buffer", ->
+        @file.hasBuffer().should.be.false
+
+      it "should sync the dirty templates to the scratch", ->
+        assertFilesSame(@file.scratchPath, @file.path)
+
       it "should publish an update event"
 
   context 'watching', ->
@@ -107,4 +129,26 @@ describe 'Project', ->
       it "should publish an update event"
 
     context 'folder deleted', ->
-      it 'should remove', ->
+      before ->
+        @folderPath = path.join(@folder.path, 'styles/bourbon')
+        @children   = _.values(@folder.files).filter( (f) => f.path.indexOf(@folderPath) == 0 )
+        
+        @folder._handleFSEvent('deleted', @folderPath, type: 'directory')
+
+      it 'should remove all children from the internal representation', ->
+        @children.forEach (child) =>
+          (typeof(@folder.getFile(child.path)) == 'undefined').should.be.true
+
+      it 'should remove all children from the scratch', (done) ->
+        Q.allSettled( @children.map (child) => Q.nfcall(assertFileExistance, false, child.scratchPath) )
+          .then ->
+            done()
+          .fail (e) ->
+            throw e
+          .done()
+
+
+      it 'should publish an update event'
+
+
+
