@@ -18,11 +18,9 @@ class Folder extends EventEmitter
     @scratchPath    = @options.scratchPath
     @extensions     = @options.extensions
 
-    @emitUpdateMessage = _.throttle =>
-      @emit 'update'
-    , 100
+    @throttledEmitUpdateMessage = _.throttle @emitUpdateMessage.bind(@), 100
 
-    if !@name || !@path || !@scratchPath
+    if !@name || !@path || !@scratchPath || !@extensions
       throw('Folder not instantiated with required options')
 
   addFile: (filePath) ->
@@ -38,6 +36,9 @@ class Folder extends EventEmitter
 
   getFile: (path) ->
     @files[path]
+
+  emitUpdateMessage: ->
+    @emit 'updated', @
 
   runRsync: (callback) ->
     source      = helpers.sanitizePath(@path)
@@ -93,8 +94,8 @@ class Folder extends EventEmitter
 
   _handleFSEvent: (event, path, info={}) ->
     if path == @path && event == 'deleted'
-      @logger.warn "project removed from filesystem"
-      @stopWatching()
+      @stop()
+      @emit 'deleted', @
       return
 
     if helpers.isFileOfType(path, @extensions)          
@@ -119,7 +120,7 @@ class Folder extends EventEmitter
     else
       return
 
-    @emitUpdateMessage
+    @throttledEmitUpdateMessage()
 
 
 module.exports = Folder

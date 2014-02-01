@@ -27,6 +27,15 @@ describe 'Project', ->
     assertFileExistance(false, @folder.scratchPath)
     @folder.start -> done()
 
+  beforeEach ->
+    @emitStub = sinon.stub(@folder, 'emitUpdateMessage');
+    # @throttledEmitUpadteStub = sinon.stub(@project, 'throttledEmitUpdateMessage')
+
+    
+  afterEach ->
+    @emitStub.restore()
+    # @throttledEmitUpadteStub.restore()    
+
   context 'on start', ->
     it 'should create its scratch folder', ->
       assertIsFolder(true, @folder.scratchPath)
@@ -51,7 +60,8 @@ describe 'Project', ->
       @file = @folder.getFile(_.keys(@folder.files)[0])
 
     context 'buffer updated', ->
-      before (done) ->
+
+      beforeEach (done) ->
         @buffer = "Some buffer from the text editor"
         @folder.bufferUpdate(@file.path, @buffer, done)
 
@@ -62,10 +72,11 @@ describe 'Project', ->
       it "should sync the dirty template to the scratch", (done) ->
         assertFileHasBody(@file.scratchPath, @buffer, done)
 
-      it "should publish an update event"
+      it "should publish an update event", ->
+        @emitStub.calledOnce.should.be.true
 
     context 'cleared', ->
-      before (done) ->
+      beforeEach (done) ->
         @buffer = "Some buffer from the text editor"
         @folder.bufferUpdate @file.path, @buffer, =>
           @folder.bufferClear(@file.path, done)
@@ -76,11 +87,13 @@ describe 'Project', ->
       it "should sync the dirty templates to the scratch", ->
         assertFilesSame(@file.scratchPath, @file.path)
 
-      it "should publish an update event"
+      it "should publish an update event", ->
+        @emitStub.calledOnce.should.be.true
 
   context 'watching', ->
+
     context 'file deleted', ->
-      before ->
+      beforeEach ->
         @file = @folder.getFile(_.keys(@folder.files)[0])
         @folder._handleFSEvent('deleted', @file.path)
 
@@ -90,10 +103,7 @@ describe 'Project', ->
       it "should be removed from the scratch", (done) ->
         assertFileExistance false, @file.scratchPath, done
 
-      it "should publish an update event"#, (done) ->
-        # @folder.on 'updated', ->
-        #   console.log "DDD"
-
+      it "should publish an update event"
 
     context 'file created', ->
       before ->
@@ -147,6 +157,15 @@ describe 'Project', ->
             throw e
           .done()
 
+    context 'project folder deleted', ->
+      before ->
+        @stopSub = sinon.stub(@folder, 'stop')
+        @folder._handleFSEvent('deleted', @folder.path)
+
+      it 'should stop watching', ->
+        @stopSub.calledOnce.should.be.true
+
+      it 'should emit a deleted event'
 
       it 'should publish an update event'
 
