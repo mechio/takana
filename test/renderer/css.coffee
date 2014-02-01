@@ -3,9 +3,9 @@ css = require '../../lib/renderer/css'
 describe 'css', ->
   describe 'render', ->
     it 'should return the body', (done) ->
-      css.render file: fixturePath('css/style.css'), (error, body) ->
-        body.should.be.type('string')
+      file = fixturePath('css/style.css')
+      css.render file: file, (error, body) ->
         (error == null).should.be.true
-        done()
+        assertFileHasBody(file, body, done)
+        
 
-    it 'should contain the css body'

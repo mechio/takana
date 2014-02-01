@@ -1,14 +1,8 @@
 scss = require '../../lib/renderer/scss'
+sass = require 'node-sass'
 
 describe 'scss', ->
   describe 'render', ->
-    it 'should return the body when the render is successful', (done) ->
-      file = fixturePath('scss/foundation/style.scss')
-      scss.render file: file, (error, body) ->
-        body.should.be.type('string')
-        (error == null).should.be.true
-        done()
-
     it 'should return an error when the render is unsuccessful', (done) ->
       file = fixturePath('scss/error/style.scss')
       scss.render file: file, (error, body) ->
@@ -18,4 +12,14 @@ describe 'scss', ->
         (body == null).should.be.true
         done()
 
-    it 'should have the same output as the sass compiler'
+    it 'should have the same output as the sass compiler', (done) ->
+      file = fixturePath('scss/foundation/style.scss')
+      scss.render file: file, (error, body) ->
+        body.should.be.type('string')
+        (error == null).should.be.true
+        sass.render(
+          file    : file
+          success : (sassBody) =>
+            sassBody.should.equal(body)
+            done()
+        )
