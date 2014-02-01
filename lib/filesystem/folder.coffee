@@ -1,31 +1,12 @@
-# {Config}          = require '../config'
-# {Schema}          = require 'jugglingdb'
-# Q                 = require 'Q'
-# _                 = require 'underscore'
-# glob              = require 'glob'
-# path              = require 'path'
-# util              = require '../util/util'
-# {SassTemplate}    = require './sass_template'
-# {CssTemplate}     = require './css_template'
-# {LessTemplate}    = require './less_template'
-# mkdirp            = require 'mkdirp'
-# log4js            = require 'log4js'
-# Step              = require 'step'
 fsevents          = require 'fsevents'
-# {EventEmitter2}   = require 'eventemitter2'
-# fs                = require 'fs'
-# minimatch         = require 'minimatch'
-# templateFactory   = require './template_factory'
-# pow               = require '../util/pow'
-
-
-
-Template          = require './file'
+File              = require './file'
 {exec}            = require 'child_process'
 shell             = require 'shelljs'
 helpers           = require '../helpers'
 Q                 = require 'q'
 glob              = require 'glob'
+path              = require 'path'
+
 class Folder 
   constructor: (@options={}) ->
     @files          = {}
@@ -37,13 +18,11 @@ class Folder
     if !@name || !@path || !@scratchPath
       throw('Folder not instantiated with required options')
 
-  addTemplate: (template) ->
-    @templates[template.path] = template
+  addFile: (path) ->
+    @files[path] = new File(path: path)
 
-  removeTemplate: (template) ->
-    if template = @templates[template.path]
-      template.removeAllListeners()
-      delete @templates[template.path]
+  removeFile: (template) ->
+    delete @files[file.path]
 
   runRsync: (callback) ->
     source      = helpers.sanitizePath(@path)
@@ -78,7 +57,6 @@ class Folder
 
 
   startWatching: ->
-    console.log "Watching"
     @watcher  = fsevents(@path)
 
     @watcher.on 'change', (path, info) =>
@@ -86,8 +64,7 @@ class Folder
       event = 'deleted' if event == 'moved-out'
       event = 'created' if event == 'moved-in'
 
-      # console.log "HHHH", path
-      # @_handleFSEvent(event, path, info)
+      @_handleFSEvent(event, path, info)
 
   stop: ->
     if @watcher
@@ -97,10 +74,10 @@ class Folder
   start: (callback) ->
     shell.mkdir('-p', @scratchPath)
     @runRsync =>
-      @startWatching()
-
-
-      callback?()
+      glob path.join(@path, "**/*.{scss,css}"), (e, files) =>
+        files.forEach @addFile.bind(@)
+        @startWatching()
+        callback?()
 
 
   _handleFSEvent: (event, path, info={}) ->

@@ -3,7 +3,7 @@ shell   = require 'shelljs'
 path    = require 'path'
 sinon   = require 'sinon'
 glob    = require 'glob'
-
+_       = require 'underscore'
 mockFolder = ->
   new Folder(
     name:        'test_folder'
@@ -27,8 +27,11 @@ describe 'Project', ->
       assertFoldersEqual('**/*.{scss,css}', @folder.path, @folder.scratchPath)
 
     it 'should have an accurate internal representation of the folder', (done) ->
-      glob path.join(@folder.path, "**/*.{scss,css}"), (e, files) ->
-        console.log files.length
+      glob path.join(@folder.path, "**/*.{scss,css}"), (e, files) =>
+        files.length.should.equal(_.keys(@folder.files).length)
+        files.forEach (f) =>
+          @folder.files[f].path.should.equal(f)
+
         done()
 
     it 'should start watching its folder for changes', ->
