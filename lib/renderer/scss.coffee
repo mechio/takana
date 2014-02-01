@@ -1,6 +1,6 @@
 sass         = require 'node-sass'
 
-exports.parseError = parseError = (errorString) ->
+parseError = (errorString) ->
   error = errorString
   if matches = errorString.match(/([^\:]+)\:(\d+)\:\serror\:\s(.+)/)
     error = 

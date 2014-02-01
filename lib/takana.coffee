@@ -2,9 +2,9 @@
 helpers    = require('./helpers')
 shell      = require('shelljs')
 
-supportDir      = helpers.expandPath('~/.takana')
-projectIndexDir = helpers.expandPath('~/.takana/projects')
-scratchDir      = helpers.expandPath('~/.takana/scratch')
+supportDir      = helpers.sanitizePath('~/.takana')
+projectIndexDir = helpers.sanitizePath('~/.takana/projects')
+scratchDir      = helpers.sanitizePath('~/.takana/scratch')
 
 # shell.mkdir('-p', supportDir)
 # shell.mkdir('-p', projectIndexDir)

@@ -2,19 +2,36 @@ Q          = require('q')
 fs         = require('fs')
 path       = require('path')
 
-# Like path.resolve, but it handles ~ expansion
-exports.expandPath = (string) ->
-  if (string.substr(0,1) == '~')
-    string = process.env.HOME + string.substr(1)
-
-  path.resolve(string)
 
 # Given a path, returns it's extension, without the leading .
-exports.extname = (filePath) ->
+exports.extname = extname = (filePath) ->
   path.extname(filePath).replace('.', '')
 
+# Given a file path and a extension list, 
+# returns true if the file is of one of the given types 
+exports.isFileOfType = isFileOfType = (p, types) ->
+  types = [types] if typeof types == 'string'
+  types.indexOf(extname(p)) != -1
+
+# Given a path: 
+#   1. ensures that it has a trailing slash
+#   2. resolves ~ to the full path of the home directory
+exports.sanitizePath = sanitizePath = (p) ->
+  if (p.substr(0,1) == '~')
+    p = process.env.HOME + p.substr(1)
+
+  p = path.resolve(p)
+  if /.*\/$/.test(p) then p else p + "/"
+
+# Easily create a timer
+exports.measureTime = measureTime = ->
+  startTime   = Date.now()
+  {
+    elapsed: -> Date.now() - startTime
+  }
+
 # Given a directory, returns and resolves all symlinks
-exports.resolveSymlinksInDirectory = (dir, callback) ->
+exports.resolveSymlinksInDirectory = resolveSymlinksInDirectory = (dir, callback) ->
   Q.nfcall(fs.readdir, dir)
     .then (files) ->
       # Get the stats for each file

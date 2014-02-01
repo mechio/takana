@@ -15,11 +15,15 @@
     "node-sass": "~0.8.1",
     "connect": "~2.12.0",
     "shelljs": "~0.2.6",
-    "q": "~1.0.0"
+    "q": "~1.0.0",
+    "fsevents": "~0.1.6"
   },
   "devDependencies": {
     "mocha": "~1.17.0",
     "should": "~3.0.1",
-    "coffee-script": "~1.6.3"
+    "coffee-script": "~1.6.3",
+    "checksum": "~0.1.1",
+    "glob": "~3.2.8",
+    "sinon": "~1.7.3"
   }
 }

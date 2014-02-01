@@ -11,4 +11,7 @@ exports.for = (file) ->
   extension = helpers.extname(file)
   renderers[extension]
 
+exports.supportedExtensions = ->
+  _.keys(renderers)
+
 module.exports = _.extend(module.exports, renderers)

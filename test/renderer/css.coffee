@@ -8,3 +8,4 @@ describe 'css', ->
         (error == null).should.be.true
         done()
 
+    it 'should contain the css body'

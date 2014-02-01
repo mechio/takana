@@ -17,3 +17,5 @@ describe 'scss', ->
         error.message.should.be.ok
         (body == null).should.be.true
         done()
+
+    it 'should have the same output as the sass compiler'
