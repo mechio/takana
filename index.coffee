@@ -1,4 +1,4 @@
-module.exports = require('./lib/takana')
+require('./lib/takana').start()
 
 
 

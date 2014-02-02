@@ -52,7 +52,6 @@ class Folder extends EventEmitter
   start: (callback) ->
     shell.mkdir('-p', @scratchPath)
     @runRsync =>
-      console.log 
       glob path.join(@path, "**/*.{" + @extensions.join(',') + "}"), (e, files) =>
         files.forEach @addFile.bind(@)
         @startWatching()

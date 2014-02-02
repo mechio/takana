@@ -1,6 +1,11 @@
 
-helpers    = require('./helpers')
-shell      = require('shelljs')
+helpers         = require './helpers'
+renderer        = require './renderer'
+log             = require './logger'
+EditorManager   = require './editor_manager'
+shell           = require 'shelljs'
+
+
 
 supportDir      = helpers.sanitizePath('~/.takana')
 projectIndexDir = helpers.sanitizePath('~/.takana/projects')
@@ -15,10 +20,22 @@ scratchDir      = helpers.sanitizePath('~/.takana/scratch')
 
 
 
-renderer = require('./renderer')
+
+logger = log.getLogger('Core')
 
 
-exports.helpers = helpers
+editorManager = new EditorManager(
+  port   : 48627
+  logger : log.getLogger('EditorManager')
+)
+
+editorManager.on 'buffer:update', ->
+  logger.info arguments
 
 
+editorManager.on 'buffer:clear', ->
+  logger.info arguments
 
+exports.start = ->
+  logger.info "starting up..."
+  editorManager.start()

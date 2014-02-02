@@ -82,4 +82,4 @@ require 'should'
 
 # assertFoldersEqual('**/**', fixturePath('test_helpers/foundation'), fixturePath('test_helpers/foundation-copy'))
 
-assertFolderEmpty(fixturePath('test_helpers/empty'))
+# assertFolderEmpty(fixturePath('test_helpers/empty'))
