@@ -2,9 +2,6 @@ EditorManager  = require '../lib/editor_manager'
 sinon          = require 'sinon'
 nssocket       = require 'nssocket'
 
-
-
-
 describe 'EditorManager', ->
   before (done) ->
     @editorManager = new EditorManager(port: 5000)
