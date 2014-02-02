@@ -1,5 +1,5 @@
 nssocket          = require 'nssocket'
-logger            = require './logger'
+logger            = require './support/logger'
 {EventEmitter}    = require 'events'
 
 class EditorManager extends EventEmitter

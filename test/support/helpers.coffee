@@ -1,4 +1,4 @@
-helpers = require '../lib/helpers'
+helpers = require '../../lib/support/helpers'
 
 describe 'helpers', ->
   describe 'sanitizePath', ->

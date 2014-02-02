@@ -1,6 +1,6 @@
 css     = require './css'
 scss    = require './scss'
-helpers = require '../helpers'
+helpers = require '../support/helpers'
 _       = require 'underscore'
 
 renderers = 

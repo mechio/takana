@@ -1,7 +1,7 @@
 
-helpers         = require './helpers'
+helpers         = require './support/helpers'
 renderer        = require './renderer'
-log             = require './logger'
+log             = require './support/logger'
 EditorManager   = require './editor_manager'
 shell           = require 'shelljs'
 
