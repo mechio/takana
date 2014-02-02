@@ -46,11 +46,11 @@ browserManager = new BrowserManager(
   logger    : log.getLogger('BrowserManager')
 )
 
-browserManager.on 'stylesheet:listen', (projectName, stylesheetPath, browser) ->
-  callback
-
 browserManager.on 'stylesheet:resolve', (projectName, stylesheetHref, callback) ->
   callback
+
+browserManager.watchedStylesheetsForProject('some project')
+browserManager.nofifyBrowsersOfRender
 
 exports.start = ->
   logger.info "starting up..."

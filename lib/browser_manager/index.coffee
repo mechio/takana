@@ -1,20 +1,37 @@
 WebSocketServer     = require('websocket').server
 WebSocketConnection = require('websocket').connection
-logger              = require './support/logger'
-
+logger              = require '../support/logger'
+helpers             = require '../support/helpers'
 {EventEmitter}      = require 'events'
 
-WebSocketConnection.prototype.sendMessage = (event, data) ->
-  @sendUTF JSON.stringify(
-    event : event
-    data  : data
-  )
+
+
+class Browser extends EventEmitter
+  constructor: (@options={}) ->
+    @id                 = helpers.guid()
+    @logger             = @options.logger || logger.silentLogger()
+    @watchedStylesheets = []
+    @connection         = @options.connection
+    
+    if !@connection
+      throw 'Browser not instantiated with correct options'
+
+  handleMessage: (event, data) ->
+    switch event
+      when 'stylesheet:resolve'
+        @emit 'stylesheet:resolve', data, (id) =>
+          data.id = id
+          @connection.sendMessage 'stylesheet:resolved', data
+
+
+
 
 class BrowserManager extends EventEmitter
   constructor: (@options={}) ->
     @logger          = @options.logger || logger.silentLogger()
     @webServer       = @options.webServer
 
+    @browsers        = {}
     if !@webServer
       throw 'BrowserManager not instantiated with correct options'
 
@@ -26,9 +43,15 @@ class BrowserManager extends EventEmitter
     )
 
     @websocketServer.on 'request', (request) =>
-      @logger.debug "new browser connection on: " + request.resourceURL.path
+      return unless request.resourceURL.pathname == '/browser'
+      connection            = request.accept()
+      browser               = new Browser(connection: connection)
 
-      connection = request.accept()
+      helpers.pipeEvent('stylesheet:resolve', browser, @)
+
+      @browsers[browser.id] = browser
+
+      @logger.debug "browser connected"
 
       connection.on 'message', (message) =>
         message = if message.binaryData
@@ -36,16 +59,20 @@ class BrowserManager extends EventEmitter
         else if message.utf8Data
           JSON.parse(message.utf8Data)
 
-        @handleMessage(message.event, message.data)
+        @logger.trace "received event: '#{message.event}', data:", message.data
+
+        browser.handleMessage(message.event, message.data)
       
-      switch request.resourceURL.pathname
-        when '/browser'
-          projectName = request.resourceURL.query.projectName
-          console.log "PROJECT NAME", projectName
+      connection.sendMessage = (event, data) ->
+        @sendUTF JSON.stringify(
+          event : event
+          data  : data
+        )
 
-
-  handleMessage: (event, message) ->
-    @logger.trace "MESSAGE: ", message
+      connection.on 'close', =>
+        @logger.debug "browser disconnected"
+        connection.removeAllListeners()
+        delete @browsers[browser.id]
 
 
   stop: ->

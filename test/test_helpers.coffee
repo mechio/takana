@@ -5,6 +5,9 @@ Q        = require 'q'
 fs       = require 'fs'
 glob     = require 'glob'
 assert   = require 'assert'
+logger   = require '../lib/support/logger'
+
+global.testLogger = logger.getLogger('Test')
 
 global.fixturePath = (fixture) -> 
   path.join(__dirname, 'fixtures', fixture)

@@ -2,6 +2,18 @@ Q          = require('q')
 fs         = require('fs')
 path       = require('path')
 
+exports.guid = ->
+  "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace /[xy]/g, (c) ->
+    r = Math.random() * 16 | 0
+    v = (if c is "x" then r else (r & 0x3 | 0x8))
+    v.toString 16
+
+# pipes event from eventemitter a through eventemitter b
+exports.pipeEvent = (event, a, b) ->
+  a.on event, ->
+    args = Array.prototype.slice.call(arguments)
+    args.unshift(event)
+    b.emit.apply(b, args)
 
 # Given a path, returns it's extension, without the leading .
 exports.extname = extname = (filePath) ->
