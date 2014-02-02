@@ -12,8 +12,9 @@ class Browser extends EventEmitter
     @logger             = @options.logger || logger.silentLogger()
     @watchedStylesheets = []
     @connection         = @options.connection
+    @projectName        = @options.projectName
     
-    if !@connection
+    if !@connection || !@projectName
       throw 'Browser not instantiated with correct options'
 
   handleMessage: (event, data) ->
@@ -23,8 +24,9 @@ class Browser extends EventEmitter
           data.id = id
           @connection.sendMessage 'stylesheet:resolved', data
 
-
-
+      when 'stylesheet:listen'
+        @watchedStylesheets.push data.stylesheet_id
+        @emit 'stylesheet:listen', data.stylesheet_id
 
 class BrowserManager extends EventEmitter
   constructor: (@options={}) ->
@@ -45,13 +47,17 @@ class BrowserManager extends EventEmitter
     @websocketServer.on 'request', (request) =>
       return unless request.resourceURL.pathname == '/browser'
       connection            = request.accept()
-      browser               = new Browser(connection: connection)
+      browser               = new Browser(
+        connection  : connection
+        projectName : request.resourceURL.query.project_name
+      )
 
       helpers.pipeEvent('stylesheet:resolve', browser, @)
+      helpers.pipeEvent('stylesheet:listen', browser, @)
 
       @browsers[browser.id] = browser
 
-      @logger.debug "browser connected"
+      @logger.debug "browser connected to project '#{browser.projectName}'"
 
       connection.on 'message', (message) =>
         message = if message.binaryData

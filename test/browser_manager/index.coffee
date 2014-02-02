@@ -7,7 +7,7 @@ Q               = require 'q'
 
 PORT = 50001
 
-newBrowserConnection = (callback) ->
+newBrowserConnection = (projectName, callback) ->
   client = new WebSocketClient()
 
   client.on "connectFailed", (error) ->
@@ -32,7 +32,7 @@ newBrowserConnection = (callback) ->
 
     callback?(null, connection)
 
-  client.connect "ws://localhost:#{PORT}/browser"
+  client.connect "ws://localhost:#{PORT}/browser?project_name=#{projectName}"
 
 
 describe 'BrowserManager', ->
@@ -55,14 +55,14 @@ describe 'BrowserManager', ->
 
       browserList().should.be.empty
 
-      Q.nfcall(newBrowserConnection)
+      Q.nfcall(newBrowserConnection, 'some_project')
         .then (@connection1) ->
           browserList().length.should.equal(1)
           @browser1    = browserList()[0]
-          Q.nfcall(newBrowserConnection)
+          Q.nfcall(newBrowserConnection, 'some_project')
         .then (@connection2) ->
           browserList().length.should.equal(2)
-          Q.nfcall(newBrowserConnection)
+          Q.nfcall(newBrowserConnection, 'some_project')
         .then (@connection3) ->
           browserList().length.should.equal(3)
           @connection1.close()
@@ -87,7 +87,7 @@ describe 'BrowserManager', ->
         project_name : 'project'
         href         : 'http://reddit.com/stylesheet.css'
 
-      newBrowserConnection (e, @connection) => done()
+      newBrowserConnection 'some_project', (e, @connection) => done()
 
     afterEach ->
       @connection.close()
