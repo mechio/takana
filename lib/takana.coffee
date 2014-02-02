@@ -3,6 +3,10 @@ helpers         = require './support/helpers'
 renderer        = require './renderer'
 log             = require './support/logger'
 EditorManager   = require './editor_manager'
+BrowserManager  = require './browser_manager'
+connect         = require 'connect'
+http            = require 'http'
+
 shell           = require 'shelljs'
 
 
@@ -18,24 +22,37 @@ scratchDir      = helpers.sanitizePath('~/.takana/scratch')
 # helpers.resolveSymlinksInDirectory projectIndexDir, ->
 #   console.log arguments
 
-
-
+config = 
+  editor_port    : 48627
+  webserver_port : 48626
 
 logger = log.getLogger('Core')
 
 
 editorManager = new EditorManager(
-  port   : 48627
+  port   : config.editor_port
   logger : log.getLogger('EditorManager')
 )
 
 editorManager.on 'buffer:update', ->
   logger.info arguments
 
-
 editorManager.on 'buffer:clear', ->
   logger.info arguments
+
+
+webServer      = http.createServer(connect())
+
+browserManager = new BrowserManager(
+  webServer : webServer
+  logger    : log.getLogger('BrowserManager')
+)
 
 exports.start = ->
   logger.info "starting up..."
   editorManager.start()
+  browserManager.start()
+
+  webServer.listen config.webserver_port, ->
+    logger.info "webserver listening on #{config.webserver_port}"
+
