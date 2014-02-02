@@ -26,7 +26,7 @@ class BrowserManager extends EventEmitter
     )
 
     @websocketServer.on 'request', (request) =>
-      @logger.debug "new browser connection connection on: " + request.resourceURL.path
+      @logger.debug "new browser connection on: " + request.resourceURL.path
 
       connection = request.accept()
 

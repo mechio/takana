@@ -14,7 +14,6 @@ mockFolder = ->
   shell.cp('-r', fixturePath('filesystem/project/*'), source)
 
   new Folder(
-    name:        'test_folder'
     extensions:  ['scss', 'css']
     path:        source
     scratchPath: scratch

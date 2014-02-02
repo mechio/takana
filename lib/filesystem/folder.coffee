@@ -13,14 +13,13 @@ _                 = require 'underscore'
 class Folder extends EventEmitter
   constructor: (@options={}) ->
     @files          = {}
-    @name           = @options.name
     @path           = @options.path
     @scratchPath    = @options.scratchPath
     @extensions     = @options.extensions
 
     @throttledEmitUpdateMessage = _.throttle @emitUpdateMessage.bind(@), 100
 
-    if !@name || !@path || !@scratchPath || !@extensions
+    if !@path || !@scratchPath || !@extensions
       throw('Folder not instantiated with required options')
 
   addFile: (filePath) ->

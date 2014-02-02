@@ -1,4 +1,4 @@
-EditorManager  = require '../lib/editor_manager'
+EditorManager  = require '../../lib/editor_manager'
 sinon          = require 'sinon'
 nssocket       = require 'nssocket'
 
