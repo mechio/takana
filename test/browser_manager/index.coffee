@@ -1,11 +1,16 @@
-BrowserManager  = require '../../lib/browser_manager'
+browser         = require '../../lib/browser_manager'
 sinon           = require 'sinon'
 http            = require 'http'
 WebSocketClient = require('websocket').client
 _               = require 'underscore'
 Q               = require 'q'
+{EventEmitter}  = require 'events'
+
 
 PORT = 50001
+
+mockConnection = ->
+  new EventEmitter
 
 newBrowserConnection = (projectName, callback) ->
   client = new WebSocketClient()
@@ -38,7 +43,7 @@ newBrowserConnection = (projectName, callback) ->
 describe 'BrowserManager', ->
   before (done) ->
     @webServer      = http.createServer()
-    @browserManager = new BrowserManager(
+    @browserManager = new browser.Manager(
       webServer : @webServer
       logger    : testLogger
     )
@@ -55,14 +60,14 @@ describe 'BrowserManager', ->
 
       browserList().should.be.empty
 
-      Q.nfcall(newBrowserConnection, 'some_project')
+      Q.nfcall(newBrowserConnection, 'project1')
         .then (@connection1) ->
           browserList().length.should.equal(1)
           @browser1    = browserList()[0]
-          Q.nfcall(newBrowserConnection, 'some_project')
+          Q.nfcall(newBrowserConnection, 'project2')
         .then (@connection2) ->
           browserList().length.should.equal(2)
-          Q.nfcall(newBrowserConnection, 'some_project')
+          Q.nfcall(newBrowserConnection, 'project3')
         .then (@connection3) ->
           browserList().length.should.equal(3)
           @connection1.close()
@@ -118,15 +123,56 @@ describe 'BrowserManager', ->
       
 
   context 'when the browser sends styleheet:listen', ->
-    it 'should add it to the watchers list'
-  
-  describe 'watchedStylesheetsForProject', ->
-    it 'should return the set of stylesheets that are being watched accross all browsers'
 
-  describe 'notifyBrowsersOfRender', ->
+    beforeEach (done) ->
+      @payload = id: 'stylesheet1'
+      newBrowserConnection 'some_project', (e, @connection) => done()
+
+    afterEach ->
+      @connection.close()
+
+    it 'should add it to the watchers list', (done) ->
+      browserList    = => _.values(@browserManager.browsers)
+      
+      @browserManager.once 'stylesheet:listen', =>
+        browserList()[0].watchedStylesheets.should.containEql(@payload.id)
+        done()
+
+      @connection.sendMessage 'stylesheet:listen', @payload
+      
+    
+    it 'should emit styleheet:listen', (done) ->
+      @browserManager.once 'stylesheet:listen', ->
+        done()
+
+      @connection.sendMessage 'stylesheet:listen', @payload
+
+
+  describe 'watchedStylesheetsForProject', ->
+    it 'should return the set of stylesheets that are being watched accross all browsers', ->
+      browser1 = new browser.Browser(
+        connection  : mockConnection()
+        projectName : 'a_project'
+      )
+
+      browser2 = new browser.Browser(
+        connection  : mockConnection()
+        projectName : 'a_project'
+      )
+
+      browser1.watchedStylesheets.push(1)
+      browser2.watchedStylesheets.push(2)
+
+      @browserManager.browsers[browser1.id] = browser1
+      @browserManager.browsers[browser2.id] = browser2
+
+      @browserManager.watchedStylesheetsForProject('a_project').should.eql([1,2])
+
+  describe 'stylesheetRendered', ->
     it 'should notify interested browsers that a render has occurred'
 
 
+describe 'Browser', ->
 
 
   

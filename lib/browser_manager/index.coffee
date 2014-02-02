@@ -3,7 +3,7 @@ WebSocketConnection = require('websocket').connection
 logger              = require '../support/logger'
 helpers             = require '../support/helpers'
 {EventEmitter}      = require 'events'
-
+_                   = require 'underscore'
 
 
 class Browser extends EventEmitter
@@ -17,7 +17,16 @@ class Browser extends EventEmitter
     if !@connection || !@projectName
       throw 'Browser not instantiated with correct options'
 
-  handleMessage: (event, data) ->
+    @connection.on 'message:parsed', @handleMessage.bind(@)
+
+
+
+  handleMessage: (message) ->
+    event = message.event
+    data  = message.data
+
+    @logger.trace "received event: '#{message.event}', data:", message.data
+
     switch event
       when 'stylesheet:resolve'
         @emit 'stylesheet:resolve', data, (id) =>
@@ -25,10 +34,12 @@ class Browser extends EventEmitter
           @connection.sendMessage 'stylesheet:resolved', data
 
       when 'stylesheet:listen'
-        @watchedStylesheets.push data.stylesheet_id
-        @emit 'stylesheet:listen', data.stylesheet_id
+        @watchedStylesheets.push data.id
+        @emit 'stylesheet:listen', data.id
 
-class BrowserManager extends EventEmitter
+  stylesheetRendered: (stylesheet, updateUrl) ->
+
+class Manager extends EventEmitter
   constructor: (@options={}) ->
     @logger          = @options.logger || logger.silentLogger()
     @webServer       = @options.webServer
@@ -37,6 +48,18 @@ class BrowserManager extends EventEmitter
     if !@webServer
       throw 'BrowserManager not instantiated with correct options'
 
+  watchedStylesheetsForProject: ->
+
+  addBrowser: (browser) ->
+    helpers.pipeEvent('stylesheet:resolve', browser, @)
+    helpers.pipeEvent('stylesheet:listen', browser, @)
+
+    @browsers[browser.id] = browser
+
+    browser.connection.on 'close', =>
+      @logger.debug "browser disconnected from", browser.projectName 
+      browser.connection.removeAllListeners()
+      delete @browsers[browser.id]
 
   start: ->
     @websocketServer = new WebSocketServer(
@@ -47,42 +70,49 @@ class BrowserManager extends EventEmitter
     @websocketServer.on 'request', (request) =>
       return unless request.resourceURL.pathname == '/browser'
       connection            = request.accept()
-      browser               = new Browser(
-        connection  : connection
-        projectName : request.resourceURL.query.project_name
-      )
 
-      helpers.pipeEvent('stylesheet:resolve', browser, @)
-      helpers.pipeEvent('stylesheet:listen', browser, @)
-
-      @browsers[browser.id] = browser
-
-      @logger.debug "browser connected to project '#{browser.projectName}'"
-
-      connection.on 'message', (message) =>
+      connection.on 'message', (message) ->
         message = if message.binaryData
           JSON.parse(message.binaryData.toString())
         else if message.utf8Data
           JSON.parse(message.utf8Data)
 
-        @logger.trace "received event: '#{message.event}', data:", message.data
+        @emit 'message:parsed', message
 
-        browser.handleMessage(message.event, message.data)
-      
+    
       connection.sendMessage = (event, data) ->
         @sendUTF JSON.stringify(
           event : event
           data  : data
         )
 
-      connection.on 'close', =>
-        @logger.debug "browser disconnected"
-        connection.removeAllListeners()
-        delete @browsers[browser.id]
 
+
+      browser               = new Browser(
+        connection  : connection
+        projectName : request.resourceURL.query.project_name
+        logger      : @logger
+      )
+
+      @logger.debug "browser connected to '#{browser.projectName}'"
+      @addBrowser(browser)
 
   stop: ->
-      
+  
+  allBrowsers: ->
+    _.values(@browsers)
 
-module.exports = BrowserManager
+  watchedStylesheetsForProject: ->
+    stylesheets = []
+    @allBrowsers().forEach (browser) ->
+      stylesheets = stylesheets.concat(browser.watchedStylesheets)
+    stylesheets
+
+  stylesheetRendered: (projectName, stylesheet, updateUrl) ->
+    browsers.forEach (browser) ->
+      browser.stylesheetRendered(stylesheet, updateUrl) if browser.projectName == projectName
+
+
+exports.Manager = Manager
+exports.Browser = Browser
 
