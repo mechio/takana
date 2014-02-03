@@ -47,7 +47,7 @@ class EditorManager extends EventEmitter
     buffer     = data.buffer
     timestamp  = data.created_at
 
-    @logger.debug "Update", path    
+    @logger.debug "update", path    
     @emit 'buffer:update', {
       path      : path
       buffer    : buffer

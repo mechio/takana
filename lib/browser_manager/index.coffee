@@ -29,13 +29,15 @@ class Browser extends EventEmitter
 
     switch event
       when 'stylesheet:resolve'
+        data.project_name ?= @projectName 
         @emit 'stylesheet:resolve', data, (id) =>
           data.id = id
           @connection.sendMessage 'stylesheet:resolved', data
 
       when 'stylesheet:listen'
         @watchedStylesheets.push data.id
-        @emit 'stylesheet:listen', data.id
+        data.project_name ?= @projectName 
+        @emit 'stylesheet:listen', data
 
   stylesheetRendered: (stylesheetId, url) ->
     @logger.trace 'sending stylesheet update to browser'
@@ -75,6 +77,8 @@ class Manager extends EventEmitter
 
     @websocketServer.on 'request', (request) =>
       return unless request.resourceURL.pathname == '/browser'
+      return unless request.resourceURL.query.project_name
+
       connection            = request.accept()
 
       connection.on 'message', (message) ->

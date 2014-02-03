@@ -2,7 +2,7 @@ helpers         = require './support/helpers'
 renderer        = require './renderer'
 log             = require './support/logger'
 EditorManager   = require './editor_manager'
-BrowserManager  = require './browser_manager'
+browser         = require './browser_manager'
 connect         = require 'connect'
 http            = require 'http'
 shell           = require 'shelljs'
@@ -41,16 +41,28 @@ editorManager.on 'buffer:reset', ->
 
 webServer      = http.createServer(connect())
 
-browserManager = new BrowserManager(
+browserManager = new browser.Manager(
   webServer : webServer
   logger    : log.getLogger('BrowserManager')
 )
 
-browserManager.on 'stylesheet:resolve', (projectName, stylesheetHref, callback) ->
-  callback
+browserManager.on 'stylesheet:resolve', (data, callback) =>
+  console.log "GOT RESOLVE REQUEST", data.project_name, data
+  id = 'BARNABY-' + data.href
+  callback?(id)
 
-browserManager.watchedStylesheetsForProject('some project')
-browserManager.nofifyBrowsersOfRender
+
+browserManager.on 'stylesheet:listen', (data) =>
+  console.log "Got listen event", data
+  setTimeout ->
+    browserManager.stylesheetRendered(data.project_name, data.id, '/path/tp/some.css')
+  , 500
+
+# browserManager.on 'stylesheet:resolve', (projectName, stylesheetHref, callback) ->
+#   callback
+
+# browserManager.watchedStylesheetsForProject('some project')
+# browserManager.nofifyBrowsersOfRender
 
 exports.start = ->
   logger.info "starting up..."

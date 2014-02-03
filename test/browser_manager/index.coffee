@@ -104,8 +104,7 @@ describe 'BrowserManager', ->
 
     beforeEach (done) ->
       @payload = 
-        project_name : 'project'
-        href         : 'http://reddit.com/stylesheet.css'
+        href: 'http://reddit.com/stylesheet.css'
 
       newBrowserConnection 'some_project', (e, @connection) => done()
 
@@ -114,7 +113,8 @@ describe 'BrowserManager', ->
 
     it 'should emit a styleheet:resolve message', (done) ->
       @browserManager.once 'stylesheet:resolve', (data, callback) =>
-        data.should.eql(@payload)
+        data.should.have.property('href', @payload.href)
+        data.should.have.property('project_name', 'some_project')
         callback.should.be.a.Function
         done()
 
@@ -129,7 +129,7 @@ describe 'BrowserManager', ->
         
       @connection.once 'message:parsed', (message) =>
         message.event.should.equal('stylesheet:resolved')
-        message.data.project_name.should.equal(@payload.project_name)
+        # message.data.project_name.should.equal('project_name')
         message.data.href.should.equal(@payload.href)
         message.data.id.should.equal(resolvedId)
         done()
@@ -157,8 +157,9 @@ describe 'BrowserManager', ->
       
     
     it 'should emit styleheet:listen', (done) ->
-      @browserManager.once 'stylesheet:listen', (id) =>
-        id.should.equal(@payload.id)
+      @browserManager.once 'stylesheet:listen', (data) =>
+        data.should.have.property('id', @payload.id)
+        data.should.have.property('project_name', 'some_project')
         done()
 
       @connection.sendMessage 'stylesheet:listen', @payload
