@@ -142,7 +142,8 @@ describe 'BrowserManager', ->
       
     
     it 'should emit styleheet:listen', (done) ->
-      @browserManager.once 'stylesheet:listen', ->
+      @browserManager.once 'stylesheet:listen', (id) =>
+        id.should.equal(@payload.id)
         done()
 
       @connection.sendMessage 'stylesheet:listen', @payload
@@ -163,13 +164,43 @@ describe 'BrowserManager', ->
       browser1.watchedStylesheets.push(1)
       browser2.watchedStylesheets.push(2)
 
-      @browserManager.browsers[browser1.id] = browser1
-      @browserManager.browsers[browser2.id] = browser2
+      @browserManager.addBrowser browser1
+      @browserManager.addBrowser browser2
 
       @browserManager.watchedStylesheetsForProject('a_project').should.eql([1,2])
 
+      @browserManager.browsers = {}
+
   describe 'stylesheetRendered', ->
-    it 'should notify interested browsers that a render has occurred'
+    # it ''
+
+    beforeEach (done) ->
+      console.log  'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
+      # done()
+      @payload = id: 'stylesheet1'
+      Q.nfcall(newBrowserConnection, 'project1')
+       .then (@connection1) => 
+          Q.nfcall(newBrowserConnection, 'project2')
+       .then (@connection2) => 
+
+        done()
+       .fail (e) -> throw e
+       .done()
+
+    afterEach ->
+      @connection1.close()
+      @connection2.close()
+
+    it 'should notify interested browsers that a render has occurred', (done) ->
+      done()
+      # browserList    = => _.values(@browserManager.browsers)
+      
+      # @browserManager.once 'stylesheet:listen', =>
+      #   browserList()[0].watchedStylesheets.should.containEql(@payload.id)
+      #   done()
+
+      # @connection.sendMessage 'stylesheet:listen', @payload
+      
 
 
 describe 'Browser', ->

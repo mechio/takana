@@ -51,6 +51,8 @@ class Manager extends EventEmitter
   watchedStylesheetsForProject: ->
 
   addBrowser: (browser) ->
+    @logger.debug "browser connected to '#{browser.projectName}'"
+
     helpers.pipeEvent('stylesheet:resolve', browser, @)
     helpers.pipeEvent('stylesheet:listen', browser, @)
 
@@ -86,16 +88,11 @@ class Manager extends EventEmitter
           data  : data
         )
 
-
-
-      browser               = new Browser(
+      @addBrowser new Browser(
         connection  : connection
         projectName : request.resourceURL.query.project_name
         logger      : @logger
       )
-
-      @logger.debug "browser connected to '#{browser.projectName}'"
-      @addBrowser(browser)
 
   stop: ->
   
