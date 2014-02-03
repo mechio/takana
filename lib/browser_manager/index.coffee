@@ -37,7 +37,11 @@ class Browser extends EventEmitter
         @watchedStylesheets.push data.id
         @emit 'stylesheet:listen', data.id
 
-  stylesheetRendered: (stylesheet, updateUrl) ->
+  stylesheetRendered: (stylesheetId, url) ->
+    @logger.trace 'sending stylesheet update to browser'
+
+    if @watchedStylesheets.indexOf(stylesheetId) > -1
+      @connection.sendMessage 'stylesheet:updated', id: stylesheetId, url: url
 
 class Manager extends EventEmitter
   constructor: (@options={}) ->
@@ -105,9 +109,9 @@ class Manager extends EventEmitter
       stylesheets = stylesheets.concat(browser.watchedStylesheets)
     stylesheets
 
-  stylesheetRendered: (projectName, stylesheet, updateUrl) ->
-    browsers.forEach (browser) ->
-      browser.stylesheetRendered(stylesheet, updateUrl) if browser.projectName == projectName
+  stylesheetRendered: (projectName, stylesheetId, url) ->
+    @allBrowsers().forEach (browser) ->
+      browser.stylesheetRendered(stylesheetId, url) if browser.projectName == projectName
 
 
 exports.Manager = Manager

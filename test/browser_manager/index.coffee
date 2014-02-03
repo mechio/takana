@@ -9,6 +9,21 @@ Q               = require 'q'
 
 PORT = 50001
 
+promiseListen = (eventemitter, event, options={}) ->
+  deferred = Q.defer()
+  called   = false
+  timeout  = options.timeout || 1000
+
+  eventemitter.once event, ->
+    called = true
+    deferred.resolve(arguments)
+
+  setTimeout ->
+    deferred.reject('timeout') if !called
+  , timeout
+
+  deferred.promise
+
 mockConnection = ->
   new EventEmitter
 
@@ -172,38 +187,57 @@ describe 'BrowserManager', ->
       @browserManager.browsers = {}
 
   describe 'stylesheetRendered', ->
-    # it ''
+
 
     beforeEach (done) ->
-      console.log  'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'
-      # done()
       @payload = id: 'stylesheet1'
       Q.nfcall(newBrowserConnection, 'project1')
-       .then (@connection1) => 
-          Q.nfcall(newBrowserConnection, 'project2')
-       .then (@connection2) => 
-
-        done()
+       .then (@connection1) => Q.nfcall(newBrowserConnection, 'project1')
+       .then (@connection2) => Q.nfcall(newBrowserConnection, 'project1')
+       .then (@connection3) => done()
        .fail (e) -> throw e
        .done()
 
     afterEach ->
       @connection1.close()
       @connection2.close()
+      @connection3.close()
 
     it 'should notify interested browsers that a render has occurred', (done) ->
-      done()
-      # browserList    = => _.values(@browserManager.browsers)
-      
-      # @browserManager.once 'stylesheet:listen', =>
-      #   browserList()[0].watchedStylesheets.should.containEql(@payload.id)
-      #   done()
-
-      # @connection.sendMessage 'stylesheet:listen', @payload
-      
+      @connection1.sendMessage 'stylesheet:listen', id: 'stylesheet1'
+      @connection2.sendMessage 'stylesheet:listen', id: 'stylesheet1'
+      @connection2.sendMessage 'stylesheet:listen', id: 'stylesheet2'
 
 
-describe 'Browser', ->
+      # Connection 3 should never get a message
+      promiseListen(@connection3, 'message:parsed', timeout: 60)
+        .fail -> done()
+        .done()
+
+      Q.allSettled([
+
+        promiseListen(@connection1, 'message:parsed')
+        promiseListen(@connection2, 'message:parsed')
+
+      ]).then (results) ->
+          states = results.map( (r) -> r.state )
+          values = results.map( (r) -> r.value[0] )
+
+          states.should.eql(['fulfilled', 'fulfilled'])
+
+          values.forEach (value) ->
+            value.should.have.property('event', 'stylesheet:updated')
+            value.data.should.have.property('id', 'stylesheet1')
+            value.data.should.have.property('url', 'http://localhost:48626/stylesheet.css')
+
+        .fail (e) -> 
+          throw e
+        .done()
+
+
+      setTimeout =>
+        @browserManager.stylesheetRendered 'project1', 'stylesheet1', 'http://localhost:48626/stylesheet.css'
+      , 10
 
 
   
