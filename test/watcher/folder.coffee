@@ -1,4 +1,4 @@
-Folder  = require '../../lib/filesystem/folder'
+Folder  = require '../../lib/watcher/folder'
 shell   = require 'shelljs'
 path    = require 'path'
 sinon   = require 'sinon'

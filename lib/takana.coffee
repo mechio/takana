@@ -1,8 +1,8 @@
 helpers         = require './support/helpers'
 renderer        = require './renderer'
 log             = require './support/logger'
-EditorManager   = require './editor_manager'
-browser         = require './browser_manager'
+editor          = require './editor'
+browser         = require './browser'
 connect         = require 'connect'
 http            = require 'http'
 shell           = require 'shelljs'
@@ -27,7 +27,7 @@ config =
 logger = log.getLogger('Core')
 
 
-editorManager = new EditorManager(
+editorManager = new editor.Manager(
   port   : config.editor_port
   logger : log.getLogger('EditorManager')
 )

@@ -1,4 +1,4 @@
-browser         = require '../../lib/browser_manager'
+browser         = require '../../lib/browser'
 sinon           = require 'sinon'
 http            = require 'http'
 WebSocketClient = require('websocket').client
@@ -55,12 +55,12 @@ newBrowserConnection = (projectName, callback) ->
   client.connect "ws://localhost:#{PORT}/browser?project_name=#{projectName}"
 
 
-describe 'BrowserManager', ->
+describe 'browser.Manager', ->
   before (done) ->
     @webServer      = http.createServer()
     @browserManager = new browser.Manager(
       webServer : @webServer
-      logger    : testLogger
+      # logger    : testLogger
     )
     @browserManager.start()
     @webServer.listen PORT, done
@@ -121,7 +121,6 @@ describe 'BrowserManager', ->
       @connection.sendMessage('stylesheet:resolve', @payload)
       
     it 'should send styleheet:resolved to the browser after it is called back', (done) ->
-      console.log @connection.sendMessage
       resolvedId = '698726429736'
 
       @browserManager.once 'stylesheet:resolve', (data, callback) =>

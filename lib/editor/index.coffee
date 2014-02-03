@@ -2,7 +2,7 @@ nssocket          = require 'nssocket'
 logger            = require '../support/logger'
 {EventEmitter}    = require 'events'
 
-class EditorManager extends EventEmitter
+class Manager extends EventEmitter
 
   # send: (event, data) ->
   #   outbound = new nssocket.NsSocket()
@@ -55,4 +55,4 @@ class EditorManager extends EventEmitter
     }
 
 
-module.exports = EditorManager
+exports.Manager = Manager
