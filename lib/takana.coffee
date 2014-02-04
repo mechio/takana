@@ -7,7 +7,10 @@ connect         = require 'connect'
 http            = require 'http'
 shell           = require 'shelljs'
 path            = require 'path'
+express         = require 'express'
 Project         = require './project'
+
+
 
 config = 
   editor_port    : 48627
@@ -29,7 +32,25 @@ class Takana
       # logger : log.getLogger('EditorManager')
     )
 
-    @webServer      = http.createServer(connect())
+    app             = express()
+
+    app.get '/project/:project_name/:stylesheet', (req, res) =>
+      projectName = req.params.project_name
+      stylesheet  = req.params.stylesheet
+      href        = req.query.href
+
+      project     = @getProject(projectName)
+      body        = project.getBodyForStylesheet(stylesheet)
+      
+      if body
+        res.setHeader 'Content-Type', 'text/css'
+        res.setHeader 'Content-Length', Buffer.byteLength(body)
+        res.end(body)
+      else
+        res.end()
+
+
+    @webServer      = http.createServer(app)
 
     @browserManager = new browser.Manager(
       webServer : @webServer
@@ -55,7 +76,7 @@ class Takana
     project.start()
     @projects[project.name] = project
     
-
+  getProject: (name) -> @projects[name]
 
   start: ->
     @logger.info "starting up..."
