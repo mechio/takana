@@ -43,7 +43,7 @@ class Project
       @logger.debug 'processing buffer:update', data.path
       @folder.bufferUpdate(data.path, data.buffer)
 
-    @editorManager.on 'buffer:reset', =>
+    @editorManager.on 'buffer:reset', (data) =>
       return unless data.path.indexOf(@path) == 0
       
       @logger.debug 'processing buffer:reset', data.path
@@ -78,7 +78,7 @@ class Project
             fileHash = hashCode(file.path)
             @bodyCache[fileHash] = body
             @browserManager.stylesheetRendered(@name, file.path, "project/#{@name}/#{fileHash}")
-            
+
           else
             @logger.warn 'error rendering', file.scratchPath, ':', error
       else

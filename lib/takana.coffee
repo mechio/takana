@@ -57,10 +57,6 @@ class Takana
       # logger    : log.getLogger('BrowserManager')
     )
 
-    @addProject(
-      name: 'attribs'
-      path: '/Users/barnaby/tmp/attribs'
-    )
 
   addProject: (options={}) ->
     @logger.debug 'adding project', options
@@ -86,34 +82,6 @@ class Takana
     @webServer.listen config.webserver_port, =>
       @logger.info "webserver listening on #{config.webserver_port}"
 
-
-
-
-# supportDir      = helpers.sanitizePath('~/.takana')
-# projectIndexDir = helpers.sanitizePath('~/.takana/projects')
-# scratchDir      = 
-
-# shell.mkdir('-p', supportDir)
-# shell.mkdir('-p', projectIndexDir)
-# shell.mkdir('-p', scratchDir)
-
-# helpers.resolveSymlinksInDirectory projectIndexDir, ->
-#   console.log arguments
-
-
-
-
-
-
-
-
-
-
-# browserManager.on 'stylesheet:resolve', (projectName, stylesheetHref, callback) ->
-#   callback
-
-# browserManager.watchedStylesheetsForProject('some project')
-# browserManager.nofifyBrowsersOfRender
 
 exports.Core = Takana
 
