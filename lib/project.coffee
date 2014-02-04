@@ -54,6 +54,7 @@ class Project
 
   handleFolderUpdate: ->
     @logger.error 'processing folder update event'
+    @bodyCache = []
 
     watchedStylesheets = @browserManager.watchedStylesheetsForProject(@name)
     watchedStylesheets.forEach (path) =>
@@ -62,12 +63,15 @@ class Project
         @logger.debug 'rendering ', file.scratchPath
         renderer.for(file.scratchPath).render {file: file.scratchPath}, (error, body) =>
           if !error
+            @bodyCache[file] = body
             @browserManager.stylesheetRendered(@name, file.path, '/path/tp/some.css')
           else
             @logger.warn 'error rendering', file.scratchPath, ':', error
       else
         @logger.warn "couldn't find a file for watched stylesheet", path
 
+  getBodyForStylesheet: (id) ->
+    @bodyCache[id]
 
   start: (callback) ->
     @logger.debug 'starting'
