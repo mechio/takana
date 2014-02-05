@@ -24,6 +24,7 @@ class Project
     @scratchPath    = @options.scratchPath
     @editorManager  = @options.editorManager
     @browserManager = @options.browserManager
+    @bodyCache      = {}
 
     if !@path || !@name || !@scratchPath || !@browserManager || !@editorManager
       throw('Project not instantiated with required options')
@@ -33,8 +34,11 @@ class Project
       path        : @path
       scratchPath : @scratchPath
       extensions  : ['scss', 'css']
+      logger      : @logger
     ) 
-
+    @bindEvents()
+    
+  bindEvents: ->
     @folder.on 'updated', @handleFolderUpdate.bind(@)
 
     @editorManager.on 'buffer:update', (data) =>
@@ -65,8 +69,6 @@ class Project
       @handleFolderUpdate()
 
   handleFolderUpdate: ->
-    @logger.error 'processing folder update event'
-    @bodyCache = []
 
     watchedStylesheets = @browserManager.watchedStylesheetsForProject(@name)
     watchedStylesheets.forEach (path) =>
@@ -76,6 +78,7 @@ class Project
         renderer.for(file.scratchPath).render {file: file.scratchPath}, (error, body) =>
           if !error
             fileHash = hashCode(file.path)
+
             @bodyCache[fileHash] = body
             @browserManager.stylesheetRendered(@name, file.path, "project/#{@name}/#{fileHash}")
 
@@ -85,7 +88,10 @@ class Project
         @logger.warn "couldn't find a file for watched stylesheet", path
 
   getBodyForStylesheet: (id) ->
-    @bodyCache[id]
+    body = @bodyCache[id]
+    # console.log "GETTING #{id} BODY :", body
+
+    body
 
   start: (callback) ->
     @logger.debug 'starting'

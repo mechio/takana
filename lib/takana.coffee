@@ -29,7 +29,7 @@ class Takana
 
     @editorManager = new editor.Manager(
       port   : config.editor_port
-      # logger : log.getLogger('EditorManager')
+      logger : log.getLogger('EditorManager')
     )
 
     app             = express()
@@ -47,14 +47,14 @@ class Takana
         res.setHeader 'Content-Length', Buffer.byteLength(body)
         res.end(body)
       else
-        res.end()
+        res.end("couldn't find a body for stylesheet: #{stylesheet}")
 
 
     @webServer      = http.createServer(app)
 
     @browserManager = new browser.Manager(
       webServer : @webServer
-      # logger    : log.getLogger('BrowserManager')
+      logger    : log.getLogger('BrowserManager')
     )
 
 

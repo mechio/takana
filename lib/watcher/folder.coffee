@@ -8,6 +8,22 @@ glob              = require 'glob'
 path              = require 'path'
 {EventEmitter}    = require 'events'
 _                 = require 'underscore'
+logger            = require '../support/logger'
+
+
+
+fastFind = (path, extensions, callback) ->
+  p   = helpers.sanitizePath(path)
+  p   = p.substring(0, p.length - 1);
+
+  console.log "---", p
+
+  cmd = "find #{p} " + extensions.map( (e) -> "-name '*.#{e}'" ).join(' -o ')
+
+  exec cmd, (error, stdout, stderr) =>
+    files = stdout.trim().split("\n")
+
+    callback?(error, files)
 
 
 class Folder extends EventEmitter
@@ -16,6 +32,7 @@ class Folder extends EventEmitter
     @path           = @options.path
     @scratchPath    = @options.scratchPath
     @extensions     = @options.extensions
+    @logger         = @options.logger || logger.silentLogger()
 
     @throttledEmitUpdateMessage = _.throttle @emitUpdateMessage.bind(@), 100
 
@@ -44,14 +61,17 @@ class Folder extends EventEmitter
     destination = @scratchPath
     includes    = @extensions.map( (ext) -> "--include='*.#{ext}'").join(' ')
     cmd         = "rsync -arq --delete --copy-links --exclude='node_modules/' --exclude='.git' --include='+ */' #{includes} --exclude='- *' '#{source}' '#{destination}'"
-
+    @logger.debug 'starting rsync'
     exec cmd, (error, stdout, stderr) =>
+      @logger.debug 'rsymc finished'
       callback?(error)
 
   start: (callback) ->
     shell.mkdir('-p', @scratchPath)
     @runRsync =>
-      glob path.join(@path, "**/*.{" + @extensions.join(',') + "}"), (e, files) =>
+      @logger.debug 'running glob'
+      fastFind @path, @extensions, (e, files) =>
+        @logger.debug 'glob finished'
         files.forEach @addFile.bind(@)
         @startWatching()
         callback?()
@@ -91,6 +111,8 @@ class Folder extends EventEmitter
       @_handleFSEvent(event, path, info)
 
   _handleFSEvent: (event, path, info={}) ->
+    @logger.trace 'processing fsevent:', event, path, info
+    
     if path == @path && event == 'deleted'
       @stop()
       @emit 'deleted', @
@@ -107,6 +129,8 @@ class Folder extends EventEmitter
 
         when 'modified'
           file = @getFile(path) 
+          @logger.error 'MMMMMMM'
+          @logger.error file.scratchPath
           file.syncToScratch()
           file.clearBuffer()
 
