@@ -1,0 +1,8 @@
+language: objective-c
+
+before_install: "./bin/setup"
+script: "./bin/ci"
+
+cache:
+  directories:
+    - node_modules
