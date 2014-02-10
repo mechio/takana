@@ -20,51 +20,18 @@ config =
 
 shell.mkdir('-p', config.scratch_path)
 
-class Takana
+class ProjectManager
   constructor: (@options={}) ->
+    @logger         = log.getLogger('ProjectManager')
+    @projects       = {}
+    @editorManager  = @options.editorManager
+    @browserManager = @options.browserManager
 
-    @projects = {}
-
-    @logger = log.getLogger('Core')
-
-    @editorManager = new editor.Manager(
-      port   : config.editor_port
-      logger : log.getLogger('EditorManager')
-    )
-
-    app             = express()
+    if !@browserManager || !@editorManager
+      throw('ProjectManager not instantiated with required options')
 
 
-    app.use(express.static(path.join(__dirname, '..', '/www')));
-
-    app.get '/project/:project_name/:stylesheet', (req, res) =>
-      projectName = req.params.project_name
-      stylesheet  = req.params.stylesheet
-      href        = req.query.href
-
-      project     = @getProject(projectName)
-      body        = project.getBodyForStylesheet(stylesheet)
-      
-      if body
-        if href
-          body = helpers.absolutizeUrls(body, href)
-
-        res.setHeader 'Content-Type', 'text/css'
-        res.setHeader 'Content-Length', Buffer.byteLength(body)
-        res.end(body)
-      else
-        res.end("couldn't find a body for stylesheet: #{stylesheet}")
-
-
-    @webServer      = http.createServer(app)
-
-    @browserManager = new browser.Manager(
-      webServer : @webServer
-      logger    : log.getLogger('BrowserManager')
-    )
-
-
-  addProject: (options={}) ->
+  add: (options={}) ->
     @logger.debug 'adding project', options
 
     project = new Project(
@@ -78,7 +45,72 @@ class Takana
     project.start()
     @projects[project.name] = project
     
-  getProject: (name) -> @projects[name]
+  get: (name) -> @projects[name]
+
+
+
+class Takana
+  constructor: (@options={}) ->
+    @logger = log.getLogger('Core')
+
+    
+
+
+    app             = express()
+
+
+    app.use(express.static(path.join(__dirname, '..', '/www')));
+
+    app.get '/project/:project_name/:stylesheet', (req, res) =>
+      projectName = req.params.project_name
+      stylesheet  = req.params.stylesheet
+      href        = req.query.href
+
+      project     = @projectManager.get(projectName)
+      
+      
+      if project && body = project.getBodyForStylesheet(stylesheet)
+        
+        body = helpers.absolutizeUrls(body, href) if href
+
+        res.setHeader 'Content-Type', 'text/css'
+        res.setHeader 'Content-Length', Buffer.byteLength(body)
+        res.end(body)
+      else
+        # res.status(404)
+        res.end("couldn't find a body for stylesheet: #{stylesheet}")
+
+
+    app.post '/projects', (req, res) =>
+
+    app.get '/projects', (req, res) =>
+
+    app.delete '/projects/:id', (req, res) =>
+
+    @webServer      = http.createServer(app)
+
+    @editorManager = new editor.Manager(
+      port   : config.editor_port
+      logger : log.getLogger('EditorManager')
+    )
+
+    @browserManager = new browser.Manager(
+      webServer : @webServer
+      logger    : log.getLogger('BrowserManager')
+    )
+
+    @projectManager = new ProjectManager(
+      browserManager : @browserManager
+      editorManager  : @editorManager
+    )
+
+    @projectManager.add(
+      name: 'toyota-backend'
+      path: '/Users/barnaby/Dropbox/Projects/toyota-backend/'
+    )
+
+
+
 
   start: ->
     @logger.info "starting up..."
