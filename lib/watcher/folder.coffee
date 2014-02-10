@@ -10,20 +10,6 @@ path              = require 'path'
 _                 = require 'underscore'
 logger            = require '../support/logger'
 
-
-
-fastFind = (path, extensions, callback) ->
-  p   = helpers.sanitizePath(path)
-  p   = p.substring(0, p.length - 1);
-
-  cmd = "find #{p} " + extensions.map( (e) -> "-name '*.#{e}'" ).join(' -o ')
-
-  exec cmd, (error, stdout, stderr) =>
-    files = stdout.trim().split("\n")
-
-    callback?(error, files)
-
-
 class Folder extends EventEmitter
   constructor: (@options={}) ->
     @files          = {}
@@ -66,12 +52,12 @@ class Folder extends EventEmitter
 
   start: (callback) ->
     shell.mkdir('-p', @scratchPath)
+    @logger.debug 'Staring...'
     @runRsync =>
-      @logger.debug 'running glob'
-      fastFind @path, @extensions, (e, files) =>
-        @logger.debug 'glob finished'
+      helpers.fastFind @path, @extensions, (e, files) =>
         files.forEach @addFile.bind(@)
         @startWatching()
+        @logger.debug 'started'
         callback?()
 
   stop: ->

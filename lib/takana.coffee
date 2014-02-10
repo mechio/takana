@@ -34,6 +34,9 @@ class Takana
 
     app             = express()
 
+
+    app.use(express.static(path.join(__dirname, '..', '/www')));
+
     app.get '/project/:project_name/:stylesheet', (req, res) =>
       projectName = req.params.project_name
       stylesheet  = req.params.stylesheet
@@ -43,6 +46,9 @@ class Takana
       body        = project.getBodyForStylesheet(stylesheet)
       
       if body
+        if href
+          body = helpers.absolutizeUrls(body, href)
+
         res.setHeader 'Content-Type', 'text/css'
         res.setHeader 'Content-Length', Buffer.byteLength(body)
         res.end(body)

@@ -4,18 +4,6 @@ renderer   = require './renderer'
 helpers    = require './support/helpers'
 _          = require 'underscore'
 
-hashCode = (string) ->
-  hash = 0
-  return hash if string.length is 0
-  i = 0
-  l = string.length
-
-  while i < l
-    char = string.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash |= 0 # Convert to 32bit integer
-    i++
-  hash
 
 class Project
   constructor: (@options={}) ->
@@ -77,7 +65,7 @@ class Project
         @logger.debug 'rendering ', file.scratchPath
         renderer.for(file.scratchPath).render {file: file.scratchPath}, (error, body) =>
           if !error
-            fileHash = hashCode(file.path)
+            fileHash = helpers.hashCode(file.path)
 
             @bodyCache[fileHash] = body
             @browserManager.stylesheetRendered(@name, file.path, "project/#{@name}/#{fileHash}")

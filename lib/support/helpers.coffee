@@ -4,12 +4,41 @@ path       = require 'path'
 _          = require 'underscore'
 url        = require 'url'
 algo       = require './algo'
+{exec}     = require 'child_process'
 
 exports.guid = ->
   "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace /[xy]/g, (c) ->
     r = Math.random() * 16 | 0
     v = (if c is "x" then r else (r & 0x3 | 0x8))
     v.toString 16
+
+
+exports.fastFind = (path, extensions, callback) ->
+  p   = sanitizePath(path)
+  p   = p.substring(0, p.length - 1);
+
+  cmd = "find #{p} " + extensions.map( (e) -> "-name '*.#{e}'" ).join(' -o ')
+
+  exec cmd, (error, stdout, stderr) =>
+    files = stdout.trim().split("\n")
+
+    callback?(error, files)
+
+
+# implmentation of Java's String hashcode
+exports.hashCode = (string) ->
+  hash = 0
+  return hash if string.length is 0
+  i = 0
+  l = string.length
+
+  while i < l
+    char = string.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash |= 0 # Convert to 32bit integer
+    i++
+  hash
+
 
 # pipes event from eventemitter a through eventemitter b
 exports.pipeEvent = (event, a, b) ->

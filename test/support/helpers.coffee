@@ -21,6 +21,9 @@ describe 'helpers', ->
     it 'should return false if the file is not one of the types', ->
       helpers.isFileOfType('/path/to/blah.scss', ['css']).should.be.false
 
+  describe 'fastFind', ->
+    it 'should have the same output as glob'
+
 
   describe 'absolutizeUrls', ->
     it "should absolutize all urls in a template", ->
