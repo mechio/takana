@@ -16,8 +16,6 @@ fastFind = (path, extensions, callback) ->
   p   = helpers.sanitizePath(path)
   p   = p.substring(0, p.length - 1);
 
-  console.log "---", p
-
   cmd = "find #{p} " + extensions.map( (e) -> "-name '*.#{e}'" ).join(' -o ')
 
   exec cmd, (error, stdout, stderr) =>
@@ -63,7 +61,7 @@ class Folder extends EventEmitter
     cmd         = "rsync -arq --delete --copy-links --exclude='node_modules/' --exclude='.git' --include='+ */' #{includes} --exclude='- *' '#{source}' '#{destination}'"
     @logger.debug 'starting rsync'
     exec cmd, (error, stdout, stderr) =>
-      @logger.debug 'rsymc finished'
+      @logger.debug 'rsync finished'
       callback?(error)
 
   start: (callback) ->
@@ -84,9 +82,10 @@ class Folder extends EventEmitter
   bufferUpdate: (path, buffer, callback) ->
     if file = @getFile(path)
       file.updateBuffer(buffer)
-      file.syncToScratch(callback)
+      file.syncToScratch =>
+        @emitUpdateMessage()
+        callback?()
 
-      @emitUpdateMessage()
     else
       callback?()
     
@@ -129,10 +128,8 @@ class Folder extends EventEmitter
 
         when 'modified'
           file = @getFile(path) 
-          @logger.error 'MMMMMMM'
-          @logger.error file.scratchPath
+          file.clearBuffer()          
           file.syncToScratch()
-          file.clearBuffer()
 
     else if event == 'deleted' && info.type == 'directory'
       for k, v of @files

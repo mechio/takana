@@ -88,10 +88,7 @@ class Project
         @logger.warn "couldn't find a file for watched stylesheet", path
 
   getBodyForStylesheet: (id) ->
-    body = @bodyCache[id]
-    # console.log "GETTING #{id} BODY :", body
-
-    body
+    @bodyCache[id]
 
   start: (callback) ->
     @logger.debug 'starting'
