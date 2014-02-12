@@ -10,13 +10,10 @@ path            = require 'path'
 express         = require 'express'
 Project         = require './project'
 
-
-
 config = 
   editor_port    : 48627
   webserver_port : 48626
   scratch_path   : helpers.sanitizePath('~/.takana/scratch')
-
 
 shell.mkdir('-p', config.scratch_path)
 
@@ -33,7 +30,6 @@ class Takana
     )
 
     app             = express()
-
 
     app.use(express.static(path.join(__dirname, '..', '/www')));
 
@@ -70,6 +66,7 @@ class Takana
     project = new Project(
       path           : options.path
       name           : options.name
+      includePaths   : options.includePaths
       scratchPath    : path.join(config.scratch_path, options.path)
       browserManager : @browserManager
       editorManager  : @editorManager
