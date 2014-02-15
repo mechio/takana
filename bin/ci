@@ -1,0 +1,2 @@
+#!/bin/bash
+node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --compilers coffee:coffee-script
