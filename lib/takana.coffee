@@ -10,24 +10,15 @@ path            = require 'path'
 express         = require 'express'
 Project         = require './project'
 
-
-
-config = 
-  editor_port    : 48627
-  webserver_port : 48626
-  scratch_path   : helpers.sanitizePath('~/.takana/scratch')
-
-
-shell.mkdir('-p', config.scratch_path)
-
 class ProjectManager
   constructor: (@options={}) ->
     @logger         = log.getLogger('ProjectManager')
     @projects       = {}
     @editorManager  = @options.editorManager
     @browserManager = @options.browserManager
+    @scratchPath    = @options.scratchPath
 
-    if !@browserManager || !@editorManager
+    if !@browserManager || !@editorManager || !@scratchPath
       throw('ProjectManager not instantiated with required options')
 
 
@@ -37,7 +28,7 @@ class ProjectManager
     project = new Project(
       path           : options.path
       name           : options.name
-      scratchPath    : path.join(config.scratch_path, options.path)
+      scratchPath    : path.join(@scratchPath, options.path)
       browserManager : @browserManager
       editorManager  : @editorManager
       logger         : log.getLogger("Project[#{options.name}]")
@@ -77,7 +68,6 @@ class Takana
         res.setHeader 'Content-Length', Buffer.byteLength(body)
         res.end(body)
       else
-        # res.status(404)
         res.end("couldn't find a body for stylesheet: #{stylesheet}")
 
 
@@ -90,7 +80,7 @@ class Takana
     @webServer      = http.createServer(app)
 
     @editorManager = new editor.Manager(
-      port   : config.editor_port
+      port   : @options.editorPort
       logger : log.getLogger('EditorManager')
     )
 
@@ -102,6 +92,7 @@ class Takana
     @projectManager = new ProjectManager(
       browserManager : @browserManager
       editorManager  : @editorManager
+      scratchPath    : @options.scratchPath
     )
 
     @projectManager.add(
@@ -117,9 +108,12 @@ class Takana
     @editorManager.start()
     @browserManager.start()
 
-    @webServer.listen config.webserver_port, =>
-      @logger.info "webserver listening on #{config.webserver_port}"
+    shell.mkdir('-p', @options.scratchPath)
+
+
+    @webServer.listen @options.httpPort, =>
+      @logger.info "webserver listening on #{@options.httpPort}"
 
 
 exports.Core = Takana
-
+exports.helpers = helpers
