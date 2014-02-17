@@ -1,10 +1,11 @@
 {
   "name": "takana-server",
   "version": "0.0.0",
+  "repository": "git@github.com:mechio/takana.git",
   "description": "Takana live stylesheet server",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --watch  --compilers coffee:coffee-script "
+    "test": "node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --watch --compilers coffee:coffee-script"
   },
   "author": "",
   "license": "BSD",

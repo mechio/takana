@@ -1,0 +1,10 @@
+language: objective-c
+
+before_install: "./bin/setup"
+script: "./bin/ci"
+notifications:
+  email:
+    - code@mech.io
+cache:
+  directories:
+    - node_modules

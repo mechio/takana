@@ -14,6 +14,7 @@ describe 'scss', ->
 
     it 'should have the same output as the sass compiler', (done) ->
       file = fixturePath('scss/foundation/style.scss')
+
       scss.render file: file, (error, body) ->
         body.should.be.type('string')
         (error == null).should.be.true
@@ -23,3 +24,20 @@ describe 'scss', ->
             sassBody.should.equal(body)
             done()
         )
+
+    it 'should work with includePaths', (done) ->
+      file = fixturePath('scss/include-paths/style.scss')
+      
+      options = { 
+        file: file,
+        includePaths: [fixturePath('scss')]
+      }
+
+      scss.render options, (error, body) ->
+        body.should.be.type('string')
+        (error == null).should.be.true
+        
+        options["success"] = (sassBody) =>
+          sassBody.should.equal(body)
+          done()
+        sass.render(options)
