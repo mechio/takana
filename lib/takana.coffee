@@ -28,6 +28,7 @@ class ProjectManager
     project = new Project(
       path           : options.path
       name           : options.name
+      includePaths   : options.includePaths 
       scratchPath    : path.join(@scratchPath, options.path)
       browserManager : @browserManager
       editorManager  : @editorManager
@@ -38,17 +39,10 @@ class ProjectManager
     
   get: (name) -> @projects[name]
 
-
-
 class Takana
   constructor: (@options={}) ->
     @logger = log.getLogger('Core')
-
-    
-
-
-    app             = express()
-
+    app     = express()
 
     app.use(express.static(path.join(__dirname, '..', '/www')));
 
@@ -69,7 +63,6 @@ class Takana
         res.end(body)
       else
         res.end("couldn't find a body for stylesheet: #{stylesheet}")
-
 
     app.post '/projects', (req, res) =>
 
@@ -100,16 +93,12 @@ class Takana
       path: '/Users/barnaby/Dropbox/Projects/toyota-backend/'
     )
 
-
-
-
   start: ->
     @logger.info "starting up..."
     @editorManager.start()
     @browserManager.start()
 
     shell.mkdir('-p', @options.scratchPath)
-
 
     @webServer.listen @options.httpPort, =>
       @logger.info "webserver listening on #{@options.httpPort}"
