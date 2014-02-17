@@ -3,8 +3,9 @@ takana = require('./lib/takana')
 
 core = new takana.Core
 core.addProject(
-  name: 'toyota-backend'
-  path: '/Users/barnaby/Dropbox/Projects/toyota-backend/'
+  name: 'eindx-prototype-discover'
+  path: '/Users/nc/Workspace/listora/eindx-prototype-discover/'
+  includePaths: ['/Users/nc/Workspace/listora/eindx-prototype-discover/app/components/']
 )
 
 

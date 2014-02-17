@@ -11,6 +11,7 @@ class Project
     @name           = @options.name
     @scratchPath    = @options.scratchPath
     @editorManager  = @options.editorManager
+    @includePaths   = @options.includePaths 
     @browserManager = @options.browserManager
     @bodyCache      = {}
 
@@ -57,13 +58,16 @@ class Project
       @handleFolderUpdate()
 
   handleFolderUpdate: ->
-
     watchedStylesheets = @browserManager.watchedStylesheetsForProject(@name)
+
     watchedStylesheets.forEach (path) =>
       file = @folder.getFile(path)
       if file
         @logger.debug 'rendering ', file.scratchPath
-        renderer.for(file.scratchPath).render {file: file.scratchPath}, (error, body) =>
+        renderer.for(file.scratchPath).render {
+          file: file.scratchPath, 
+          includePaths: @includePaths
+        }, (error, body) =>
           if !error
             fileHash = helpers.hashCode(file.path)
 
