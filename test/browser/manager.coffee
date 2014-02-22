@@ -119,22 +119,35 @@ describe 'browser.Manager', ->
         done()
 
       @connection.sendMessage('stylesheet:resolve', @payload)
-      
-    it 'should send styleheet:resolved to the browser after it is called back', (done) ->
-      resolvedId = '698726429736'
+    
+    context 'after callback', ->
+      it 'should send styleheet:resolved to the browser with the resolved id', (done) ->
+        resolvedId = '698726429736'
 
-      @browserManager.once 'stylesheet:resolve', (data, callback) =>
-        callback(resolvedId)
-        
-      @connection.once 'message:parsed', (message) =>
-        message.event.should.equal('stylesheet:resolved')
-        # message.data.project_name.should.equal('project_name')
-        message.data.href.should.equal(@payload.href)
-        message.data.id.should.equal(resolvedId)
-        done()
+        @browserManager.once 'stylesheet:resolve', (data, callback) =>
+          callback(null, resolvedId)
+          
+        @connection.once 'message:parsed', (message) =>
+          message.event.should.equal('stylesheet:resolved')
+          # message.data.project_name.should.equal('project_name')
+          message.data.href.should.equal(@payload.href)
+          message.data.id.should.equal(resolvedId)
+          done()
 
-      @connection.sendMessage('stylesheet:resolve', @payload)
-      
+        @connection.sendMessage('stylesheet:resolve', @payload)
+
+      context 'with error', ->
+        it 'should send styleheet:resolved to the browser with an error', (done) ->
+          @browserManager.once 'stylesheet:resolve', (data, callback) =>
+            callback('error')
+            
+          @connection.once 'message:parsed', (message) =>
+            message.event.should.equal('stylesheet:resolved')
+            message.data.should.have.property 'error'
+            done()
+
+          @connection.sendMessage('stylesheet:resolve', @payload)
+
 
   context 'when the browser sends styleheet:listen', ->
 

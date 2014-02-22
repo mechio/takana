@@ -10405,6 +10405,10 @@ window.Takana.$ = jQuery;
     return console.log.apply(console, arguments);
   };
 
+  Takana.error = function() {
+    return console.error.apply(console, arguments);
+  };
+
   Takana.start = function(projectName) {
     if (Takana.started) {
       return;
@@ -10617,16 +10621,20 @@ window.Takana.$ = jQuery;
         });
       });
       Takana.backend.on('stylesheet:resolved', function(data) {
-        Takana.log("matched ", data.href, " --> ", data.id);
-        return stylesheets.forEach(function(stylesheet) {
-          if (stylesheet.href === data.href) {
-            return new Takana.Util.Stylesheet({
-              cssStyleSheet: stylesheet,
-              project: this,
-              id: data.id
-            }).start();
-          }
-        });
+        if (data.error) {
+          return Takana.error('resolve error', data.error);
+        } else {
+          Takana.log("matched ", data.href, " --> ", data.id);
+          return stylesheets.forEach(function(stylesheet) {
+            if (stylesheet.href === data.href) {
+              return new Takana.Util.Stylesheet({
+                cssStyleSheet: stylesheet,
+                project: this,
+                id: data.id
+              }).start();
+            }
+          });
+        }
       });
     }
 

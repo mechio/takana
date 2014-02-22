@@ -153,7 +153,17 @@ describe 'helpers', ->
       match = helpers.pickBestFileForHref href, candidates
       match.should.equal('/Users/nc/Workspace/yourgrind/app/assets/templates/home.css.scss')
 
-  it 'should always choose the .scss file', ->
+    it 'should do somewhere', ->
+      href = 'http://localhost:3000/styles/app.css'
+      candidates = [ 
+        '/Users/barnaby/Projects/worldpay-backend/www/build/styles/app.css',
+        '/Users/barnaby/Projects/worldpay-backend/www/source/styles/app.scss',
+        '/Users/barnaby/Projects/worldpay-backend/www/source/styles/bourbon/css3/_appearance.scss' 
+      ]
+      match = helpers.pickBestFileForHref href, candidates      
+      match.should.equal('/Users/barnaby/Projects/worldpay-backend/www/source/styles/app.scss')
+
+    it 'should always choose the .scss file', ->
       href = "http://mac.dev/build/templates/panel.css"
       candidates = [ 
         '/panel.scss',

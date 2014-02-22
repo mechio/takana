@@ -27,8 +27,9 @@ class Browser extends EventEmitter
     switch event
       when 'stylesheet:resolve'
         data.project_name ?= @projectName 
-        @emit 'stylesheet:resolve', data, (id) =>
-          data.id = id
+        @emit 'stylesheet:resolve', data, (error, id) =>
+          data.error = error
+          data.id    = id
           @connection.sendMessage 'stylesheet:resolved', data
 
       when 'stylesheet:listen'

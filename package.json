@@ -1,5 +1,5 @@
 {
-  "name": "takana-server",
+  "name": "takana",
   "version": "0.0.0",
   "repository": "git@github.com:mechio/takana.git",
   "description": "Takana live stylesheet server",
@@ -20,12 +20,14 @@
     "fsevents": "~0.1.6",
     "js-yaml": "~3.0.1",
     "websocket": "~1.0.8",
-    "express": "~3.4.8"
+    "express": "~3.4.8",
+    "restler": "~3.2.0",
+    "coffee-script": "~1.6.3",    
+    "commander": "~2.1.0"
   },
   "devDependencies": {
     "mocha": "~1.17.0",
     "should": "~3.0.1",
-    "coffee-script": "~1.6.3",
     "checksum": "~0.1.1",
     "glob": "~3.2.8",
     "sinon": "~1.7.3"
