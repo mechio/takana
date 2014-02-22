@@ -21,7 +21,7 @@ class Manager extends EventEmitter
       @socket.data ['editor', 'reset'], @handleReset.bind(@)
       @socket.data ['editor', 'update'], @handleUpdate.bind(@)
 
-      @socket.on 'close', ->
+      @socket.on 'close', =>
         @logger.warn "editor disconnected"
 
   start: (callback) ->
