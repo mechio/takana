@@ -1,7 +1,7 @@
-logger     = require './support/logger'
-watcher    = require './watcher'
-renderer   = require './renderer'
-helpers    = require './support/helpers'
+logger     = require '../support/logger'
+watcher    = require '../watcher'
+renderer   = require '../renderer'
+helpers    = require '../support/helpers'
 _          = require 'underscore'
 
 
@@ -45,11 +45,14 @@ class Project
     @browserManager.on 'stylesheet:resolve', (data, callback) =>
       return unless data.project_name == @name
 
-      if match = helpers.pickBestFileForHref(data.href, _.keys(@folder.files))
+      match = helpers.pickBestFileForHref(data.href, _.keys(@folder.files))
+
+      if typeof(match) == 'string'
         @logger.debug 'stylesheet', data.href, 'matched to', match
-        callback(match) 
+        callback(null, match) 
       else
-        @logger.warn "coulnd't find a matching file for", data.href
+        callback("coulnd't find a matching file for #{data.href}") 
+        @logger.warn "coulnd't find a matching file for", data.href, match
 
     @browserManager.on 'stylesheet:listen', (data) =>
       return unless data.project_name == @name

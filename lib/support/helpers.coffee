@@ -111,6 +111,9 @@ exports.findBestFile = findBestFile = (filePath, candidates) ->
   regexp = ".*#{basename}[^\/]\.*$"
   candidates = _.select candidates, (c) -> new RegExp(regexp).test(c)
 
+  # remove all partials
+  candidates = _.reject candidates, (c) -> path.basename(c)[0] == '_'
+
   if candidates.length == 1
     # If there is only one match, pick that one
     return candidates[0]

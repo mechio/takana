@@ -8,36 +8,7 @@ http            = require 'http'
 shell           = require 'shelljs'
 path            = require 'path'
 express         = require 'express'
-Project         = require './project'
-
-class ProjectManager
-  constructor: (@options={}) ->
-    @logger         = log.getLogger('ProjectManager')
-    @projects       = {}
-    @editorManager  = @options.editorManager
-    @browserManager = @options.browserManager
-    @scratchPath    = @options.scratchPath
-
-    if !@browserManager || !@editorManager || !@scratchPath
-      throw('ProjectManager not instantiated with required options')
-
-
-  add: (options={}) ->
-    @logger.debug 'adding project', options
-
-    project = new Project(
-      path           : options.path
-      name           : options.name
-      includePaths   : options.includePaths 
-      scratchPath    : path.join(@scratchPath, options.path)
-      browserManager : @browserManager
-      editorManager  : @editorManager
-      logger         : log.getLogger("Project[#{options.name}]")
-    )
-    project.start()
-    @projects[project.name] = project
-    
-  get: (name) -> @projects[name]
+livestyles      = require './livestyles'
 
 class Takana
   constructor: (@options={}) ->
@@ -53,7 +24,8 @@ class Takana
 
       project     = @projectManager.get(projectName)
       
-      
+      @logger.debug "GET ", req.path
+
       if project && body = project.getBodyForStylesheet(stylesheet)
         
         body = helpers.absolutizeUrls(body, href) if href
@@ -82,15 +54,15 @@ class Takana
       logger    : log.getLogger('BrowserManager')
     )
 
-    @projectManager = new ProjectManager(
+    @projectManager = new livestyles.ProjectManager(
       browserManager : @browserManager
       editorManager  : @editorManager
       scratchPath    : @options.scratchPath
     )
 
     @projectManager.add(
-      name: 'toyota-backend'
-      path: '/Users/barnaby/Dropbox/Projects/toyota-backend/'
+      name: 'worldpay-backend'
+      path: '/Users/barnaby/Dropbox/Projects/worldpay-backend'
     )
 
   start: ->
