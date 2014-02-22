@@ -22,8 +22,8 @@ class Core
       next()
 
 
-    app.get '/project/:project_name/:stylesheet', (req, res) =>
-      projectName = req.params.project_name
+    app.get '/projects/:name/:stylesheet', (req, res) =>
+      projectName = req.params.name
       stylesheet  = req.params.stylesheet
       href        = req.query.href
 

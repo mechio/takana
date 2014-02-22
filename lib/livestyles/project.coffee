@@ -75,7 +75,7 @@ class Project
             fileHash = helpers.hashCode(file.path)
 
             @bodyCache[fileHash] = body
-            @browserManager.stylesheetRendered(@name, file.path, "project/#{@name}/#{fileHash}")
+            @browserManager.stylesheetRendered(@name, file.path, "projects/#{@name}/#{fileHash}")
 
           else
             @logger.warn 'error rendering', file.scratchPath, ':', error

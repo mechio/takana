@@ -1,7 +1,6 @@
 rest = require 'restler'
 url  = require 'url'
 
-
 class Client 
   constructor: (@options={}) ->
     @url = @options.url || 'http://localhost:48626/'
@@ -25,20 +24,4 @@ class Client
         callback?(null, data)
 
 
-
-
-client = new Client
-
-client.addProject {name: 'Hello', path: '/Path/tp/ss'}
-
-client.getProjects (error, projects) ->
-  console.log "Projects: ", projects
-
-  client.removeProject 'Hello'
-
-
-  client.getProjects (error, projects) ->
-    console.log "Projects: ", projects
-
-
-
+module.exports = Client
