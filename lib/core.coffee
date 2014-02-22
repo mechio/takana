@@ -84,6 +84,13 @@ class Core
       path: '/Users/barnaby/Dropbox/Projects/worldpay-backend'
     )
 
+
+    @projectManager.add(
+      name: 'eindx-prototype-discover'
+      path: '/Users/nc/Workspace/listora/eindx-prototype-discover'
+      includePaths: ['/Users/nc/Workspace/listora/eindx-prototype-discover/app/components']
+    )
+
   start: ->
     @logger.info "starting up..."
     @editorManager.start()
