@@ -5,6 +5,17 @@ class Client
   constructor: (@options={}) ->
     @url = @options.url || 'http://localhost:48626/'
 
+  getStatus: (callback) ->
+    rest.head(@url)
+      .on 'complete', (data, response) ->
+        if !response
+          callback?(running: false)
+        else
+          callback?(running: (response.headers && response.headers['x-powered-by'] == 'Takana'))
+
+  start: ->
+  stop: ->
+
   getProjects: (callback) ->
     rest.get(url.resolve(@url, '/projects'))
       .on('error', callback)

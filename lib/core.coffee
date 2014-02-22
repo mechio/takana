@@ -17,6 +17,11 @@ class Core
 
     app.use express.static(path.join(__dirname, '..', '/www'))
     app.use express.bodyParser()
+
+    app.use (req, res, next) =>
+      res.setHeader 'X-Powered-By', 'Takana'
+      next()
+
     app.use (req, res, next) =>
       @logger.trace "[#{req.socket.remoteAddress}] #{req.method} #{req.headers.host} #{req.url}"
       next()

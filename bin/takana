@@ -28,6 +28,17 @@ function printJS(projectName){
   console.log('<script type="text/javascript" data-project="' + projectName + '" src="http://localhost:48626/takana.js"></script>');
 }
 
+function ensureServerRunning(callback) {
+  client.getStatus(function(status){
+    if (status.running){
+      callback();
+    }
+    else {
+      console.error("The server is not running");
+    }
+  });
+}
+
 program
  .command('start')
  .description('start the server')
@@ -42,67 +53,77 @@ program
    console.log('stop');
  });
 
-program
- .command('status')
- .description('print server status')
- .action(function(){
-   console.log('list');
- });
+command('status', 'print server status', function(){
+  client.getStatus(function(status){
+    if (!status.running){
+      console.log("Server OFF");
+    }
+    else {
+      console.log("Server ON");
+    }
+  });
+});
 
 command('list', 'list all projects', function(){
-  client.getProjects(function(error, projects){
-    if (error){
-      console.error("Oops,", error.toString());
-      return;
-    } 
+  ensureServerRunning(function(){
+    client.getProjects(function(error, projects){
+      if (error){
+        console.error("Oops,", error.toString());
+        return;
+      } 
 
-    var table = new Table({ 
-      head: ['Name', 'Path']
+      var table = new Table({ 
+        head: ['Name', 'Path']
+      });
+
+      projects.forEach(function(p){
+        table.push([p.name, p.path]);  
+      });
+
+      console.log(table.toString());
     });
-
-    projects.forEach(function(p){
-      table.push([p.name, p.path]);  
-    });
-
-    console.log(table.toString());
   });
 });
 
 command('add <path> [name]', 'add a project', function(projectPath, name){
-  if (!fs.existsSync(projectPath)){
-    console.error("Oops, no such file or directory '%s'", projectPath);
-    return;
-  }
-  
-  if (!fs.statSync(projectPath).isDirectory()){
-    console.error("Oops, '%s' is not a directory", projectPath);
-    return;
-  }
-
-  var projectPath = fs.realpathSync(helpers.sanitizePath(projectPath));
-
-  var project = {
-    path: projectPath,
-    name: (name || path.basename(projectPath))
-  }
-
-  client.addProject(project, function(error){
-    if (error){
-      console.log("Oops,", error.toString());
+  ensureServerRunning(function(){
+    if (!fs.existsSync(projectPath)){
+      console.error("Oops, no such file or directory '%s'", projectPath);
       return;
     }
-    console.log("Your project was successfully added, now add this any page you want to live-update:");
-    console.log();
-    printJS(project.name);
+    
+    if (!fs.statSync(projectPath).isDirectory()){
+      console.error("Oops, '%s' is not a directory", projectPath);
+      return;
+    }
+
+    projectPath = fs.realpathSync(helpers.sanitizePath(projectPath));
+
+    var project = {
+      path: projectPath,
+      name: (name || path.basename(projectPath))
+    }
+
+    client.addProject(project, function(error){
+      if (error){
+        console.log("Oops,", error.toString());
+        return;
+      }
+      console.log("Your project was successfully added, now add this any page you want to live-update:");
+      console.log();
+      printJS(project.name);
+    });
   });
 });
 
 command('remove <name>', 'remove a project', function(name){
-  client.removeProject(name, function(error){
-    if (error){
-      console.log("Oops,", error.toString());
-      return;
-    }
+  ensureServerRunning(function(){
+    client.removeProject(name, function(error){
+      if (error){
+        console.log("Oops,", error.toString());
+        return;
+      }
+    });
   });
 });
 
