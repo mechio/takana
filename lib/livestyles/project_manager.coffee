@@ -1,6 +1,7 @@
 log     = require '../support/logger'
 path    = require 'path'
 Project = require './project'
+_       = require 'underscore'
 
 class ProjectManager
   constructor: (@options={}) ->
@@ -9,12 +10,15 @@ class ProjectManager
     @editorManager  = @options.editorManager
     @browserManager = @options.browserManager
     @scratchPath    = @options.scratchPath
+    @projectDB      = @options.projectDB
 
     if !@browserManager || !@editorManager || !@scratchPath
       throw('ProjectManager not instantiated with required options')
 
 
   add: (options={}) ->
+    return if @get(options.name)
+
     @logger.debug 'adding project', options
 
     project = new Project(
@@ -31,5 +35,12 @@ class ProjectManager
     
   get: (name) -> @projects[name]
 
+  allProjects: ->
+    _.values(@projects)
+
+  remove: (name) ->
+    if project = @get(name)
+      project.stop()
+      delete @projects[project.name]
 
 module.exports = ProjectManager

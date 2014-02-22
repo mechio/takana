@@ -86,7 +86,6 @@ class Project
     @bodyCache[id]
 
   start: (callback) ->
-    @logger.debug 'starting'
     @folder.start ->
       callback?()
 

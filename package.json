@@ -20,7 +20,9 @@
     "fsevents": "~0.1.6",
     "js-yaml": "~3.0.1",
     "websocket": "~1.0.8",
-    "express": "~3.4.8"
+    "express": "~3.4.8",
+    "restler": "~3.2.0",
+    "commander": "~2.1.0"
   },
   "devDependencies": {
     "mocha": "~1.17.0",
