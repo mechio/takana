@@ -1,0 +1,39 @@
+{
+  "name": "takana",
+  "version": "0.0.1",
+  "description": "Live edit SCSS and CSS files from Sublime Text",
+  "main": "index.js",
+  "dependencies": {
+    "grunt": "~0.4.2"
+  },
+  "devDependencies": {
+    "grunt-cli": "~0.1.13",
+    "bower": "~1.2.8",
+    "karma": "~0.10.9",
+    "grunt-karma": "~0.6.2",
+    "grunt-wrap": "~0.3.0",
+    "grunt-contrib-coffee": "~0.10.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "karma-mocha": "~0.1.1",
+    "karma-chai-sinon": "~0.1.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.5.0",
+    "karma-safari-launcher": "~0.1.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mechio/takana"
+  },
+  "keywords": [
+    "SCSS"
+  ],
+  "author": "Mechio",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mechio/takana/issues"
+  },
+  "homepage": "https://github.com/mechio/takana"
+}
