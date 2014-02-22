@@ -1,0 +1,18 @@
+#!/usr/bin/env node
+
+'use strict';
+
+process.title = 'takana-server';
+
+require("coffee-script");
+
+var path     = require('path'),
+    Core     = require(path.join(__dirname, '../lib/core')),
+    helpers  = require(path.join(__dirname, '../lib/support/helpers'));
+
+new Core({
+  editorPort:  48627,
+  httpPort:    48626,
+  scratchPath: helpers.sanitizePath('~/.takana/scratch'),
+  projectDB:   helpers.sanitizePath('~/.takana/projects.yaml')
+}).start()

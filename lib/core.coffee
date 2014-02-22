@@ -42,18 +42,29 @@ class Core
 
 
     app.delete '/projects/:name', (req, res) =>
-      @projectManager.remove req.params.name
-      res.statusCode = 201
-      res.end()
+      name = req.params.name
+      if @projectManager.get(name)
+        @projectManager.remove name
+        res.statusCode = 201
+        res.end()
+      else
+        res.statusCode = 404
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify(error: "no project named '#{name}'"))
 
     app.post '/projects', (req, res) =>
-      @projectManager.add(
-        name: req.body.name
-        path: req.body.path
-      )
-
-      res.statusCode = 201
-      res.end()
+      name = req.body.name
+      if !@projectManager.get(name)
+        @projectManager.add(
+          name: name
+          path: req.body.path
+        )
+        res.statusCode = 201
+        res.end()
+      else 
+        res.statusCode = 409
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify(error: "a project named '#{name}' already exists"))
 
     app.get '/projects', (req, res) =>
       data = @projectManager.allProjects().map (p) -> {name: p.name, path: p.path}
@@ -95,5 +106,4 @@ class Core
       @logger.info "webserver listening on #{@options.httpPort}"
 
 
-exports.Core = Core
-exports.helpers = helpers
+module.exports = Core

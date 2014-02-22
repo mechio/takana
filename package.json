@@ -22,8 +22,9 @@
     "websocket": "~1.0.8",
     "express": "~3.4.8",
     "restler": "~3.2.0",
-    "coffee-script": "~1.6.3",    
-    "commander": "~2.1.0"
+    "coffee-script": "~1.6.3",
+    "commander": "~2.1.0",
+    "cli-table": "~0.3.0"
   },
   "devDependencies": {
     "mocha": "~1.17.0",

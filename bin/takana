@@ -1,0 +1,116 @@
+#!/usr/bin/env node
+
+'use strict';
+
+process.title = 'takana';
+
+require("coffee-script");
+
+var path      = require('path'),
+    fs        = require('fs'),
+    Table     = require('cli-table'),
+    program   = require('commander'),
+    Client    = require(path.join(__dirname, '../lib/client')),
+    helpers   = require(path.join(__dirname, '../lib/support/helpers'));
+
+var client = new Client();
+
+program.version('0.0.1');
+
+function command(command, description, action){
+  program
+   .command(command)
+   .description(description)
+   .action(action);
+}
+
+function printJS(projectName){
+  console.log('<script type="text/javascript" data-project="' + projectName + '" src="http://localhost:48626/takana.js"></script>');
+}
+
+program
+ .command('start')
+ .description('start the server')
+ .action(function(){
+   console.log('start');
+ });
+
+program
+ .command('stop')
+ .description('stop the server')
+ .action(function(){
+   console.log('stop');
+ });
+
+program
+ .command('status')
+ .description('print server status')
+ .action(function(){
+   console.log('list');
+ });
+
+command('list', 'list all projects', function(){
+  client.getProjects(function(error, projects){
+    if (error){
+      console.error("Oops,", error.toString());
+      return;
+    } 
+
+    var table = new Table({ 
+      head: ['Name', 'Path']
+    });
+
+    projects.forEach(function(p){
+      table.push([p.name, p.path]);  
+    });
+
+    console.log(table.toString());
+  });
+});
+
+command('add <path> [name]', 'add a project', function(projectPath, name){
+  if (!fs.existsSync(projectPath)){
+    console.error("Oops, no such file or directory '%s'", projectPath);
+    return;
+  }
+  
+  if (!fs.statSync(projectPath).isDirectory()){
+    console.error("Oops, '%s' is not a directory", projectPath);
+    return;
+  }
+
+  var projectPath = fs.realpathSync(helpers.sanitizePath(projectPath));
+
+  var project = {
+    path: projectPath,
+    name: (name || path.basename(projectPath))
+  }
+
+  client.addProject(project, function(error){
+    if (error){
+      console.log("Oops,", error.toString());
+      return;
+    }
+    console.log("Your project was successfully added, now add this any page you want to live-update:");
+    console.log();
+    printJS(project.name);
+  });
+});
+
+command('remove <name>', 'remove a project', function(name){
+  client.removeProject(name, function(error){
+    if (error){
+      console.log("Oops,", error.toString());
+      return;
+    }
+  });
+});
+
+command('js <name>', 'print the js snippet for a project', function(name){
+  printJS(name);
+});
+
+
+program.parse(process.argv);
+
+if (!program.args.length) program.help();
