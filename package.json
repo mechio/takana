@@ -1,14 +1,19 @@
 {
   "name": "takana",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "repository": "git@github.com:mechio/takana.git",
-  "description": "Takana live stylesheet server",
+  "description": "Takana live editor server",
   "main": "index.js",
   "scripts": {
     "test": "node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --watch --compilers coffee:coffee-script"
   },
-  "author": "",
-  "license": "BSD",
+  "bin": {
+    "takana": "bin/takana",
+    "takana-server": "bin/takana-server"
+  },
+  "preferGlobal": true,
+  "author": "mech.io",
+  "license": "MIT",
   "dependencies": {
     "underscore": "~1.5.2",
     "nssocket": "~0.5.1",
