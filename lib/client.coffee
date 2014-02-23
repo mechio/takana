@@ -21,9 +21,6 @@ class Client
     forever.list false, (e, processes) =>
       callback?(forever.findByScript(@serverPath, processes))
 
-  tailLog: ->
-
-
   start: (callback) ->
     pollStatus = =>
       @getStatus (status) ->
