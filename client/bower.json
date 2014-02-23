@@ -1,0 +1,21 @@
+{
+  "name": "client",
+  "version": "0.0.1",
+  "homepage": "https://github.com/mechio/takana",
+  "authors": [
+    "Barnaby Malet <barnaby@mech.io>",
+    "Namit Chadha <namit@mech.io>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "microevent": "~1.1.1"
+  }
+}
