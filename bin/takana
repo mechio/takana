@@ -127,8 +127,8 @@ command('js <name>', 'print the js snippet for a project', function(name){
   printJS(name);
 });
 
-command('sublime:install', 'installs the sublime plugin', function(){
-  console.log('stop');
+command('sublime:install', 'install the Sublime Text plugin - also available via Package Control', function(){
+  helpers.installSublimePlugin();
 });
 
 program.parse(process.argv);
