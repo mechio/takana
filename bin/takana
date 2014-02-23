@@ -39,19 +39,14 @@ function ensureServerRunning(callback) {
   });
 }
 
-program
- .command('start')
- .description('start the server')
- .action(function(){
-   console.log('start');
- });
+command('start', 'start the server', function(){
+  console.log('stop');
+});
 
-program
- .command('stop')
- .description('stop the server')
- .action(function(){
-   console.log('stop');
- });
+command('stop', 'stop the server', function(){
+  console.log('stop');
+});
+
 
 command('status', 'print server status', function(){
   client.getStatus(function(status){
@@ -62,6 +57,10 @@ command('status', 'print server status', function(){
       console.log("Server ON");
     }
   });
+});
+
+command('log', 'tail the log', function(){
+  console.log('stop');
 });
 
 command('list', 'list all projects', function(){
@@ -131,6 +130,9 @@ command('js <name>', 'print the js snippet for a project', function(name){
   printJS(name);
 });
 
+command('sublime:install', 'installs the sublime plugin', function(){
+  console.log('stop');
+});
 
 program.parse(process.argv);
 
