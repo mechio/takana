@@ -25,13 +25,15 @@ class Client
     pollStatus = =>
       @getStatus (status) ->
         if status.running
-          console.log "okay"
           callback?(status)
         else
           setTimeout pollStatus, 5
 
     @getServerProcess (process) =>
-      return if process
+      if process
+        pollStatus()
+        return 
+
       console.log "starting takana..."
       forever.startDaemon(@serverPath,
         logFile: path.join(helpers.sanitizePath('~/.takana/'), 'takana.log')
