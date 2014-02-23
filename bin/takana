@@ -34,19 +34,18 @@ function ensureServerRunning(callback) {
       callback();
     }
     else {
-      console.error("The server is not running");
+      console.error("The server is not running, run 'takana start'");
     }
   });
 }
 
 command('start', 'start the server', function(){
-  console.log('stop');
+  client.start();
 });
 
 command('stop', 'stop the server', function(){
-  console.log('stop');
+  client.stop();
 });
-
 
 command('status', 'print server status', function(){
   client.getStatus(function(status){

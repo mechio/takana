@@ -24,7 +24,8 @@
     "restler": "~3.2.0",
     "coffee-script": "~1.6.3",
     "commander": "~2.1.0",
-    "cli-table": "~0.3.0"
+    "cli-table": "~0.3.0",
+    "forever": "~0.10.11"
   },
   "devDependencies": {
     "mocha": "~1.17.0",
