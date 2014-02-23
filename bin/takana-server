@@ -14,5 +14,5 @@ new Core({
   editorPort:  48627,
   httpPort:    48626,
   scratchPath: helpers.sanitizePath('~/.takana/scratch'),
-  projectDB:   helpers.sanitizePath('~/.takana/projects.yaml')
+  database:    (helpers.sanitizePath('~/.takana/') + 'database.yaml')
 }).start()
