@@ -19,18 +19,12 @@ class Client
 
   getServerProcess: (callback) ->
     forever.list false, (e, processes) =>
-      process = null
-      if processes
-        for i in [0..processes.length]
-          if processes[i].file == @serverPath
-            process = processes[i]
-            process.index = i
-            break
+      callback?(forever.findByScript(@serverPath, processes))
 
-      callback?(process)
+  tailLog: ->
+
 
   start: (callback) ->
-
     pollStatus = =>
       @getStatus (status) ->
         if status.running
@@ -49,10 +43,10 @@ class Client
       pollStatus()
 
   stop: ->
-    @getServerProcess (process) ->
+    @getServerProcess (process) =>
       return if !process
       console.log "stopping takana..."
-      forever.stop(process.index)
+      forever.stop(@serverPath)
 
   getProjects: (callback) ->
     rest.get(url.resolve(@url, '/projects'))
