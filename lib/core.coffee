@@ -13,6 +13,19 @@ livestyles      = require './livestyles'
 class Core
   constructor: (@options={}) ->
     @logger = log.getLogger('Core')
+
+    # use a different db for testing
+    # it would be nice to use a config file to define this rather than environments
+    # 
+    if process.env.TAKANA_ENV && process.env.TAKANA_ENV == 'test'
+      testDB = helpers.sanitizePath(process.cwd()) + '/database.yml'
+      @logger.info "test environment, using db:", testDB
+      
+      # remove and create a new database file
+      shell.rm testDB
+      shell.exec "touch #{testDB}"
+      @options.database = testDB
+
     app     = express()
 
     app.use express.static(path.join(__dirname, '..', '/www'))
@@ -63,6 +76,7 @@ class Core
         @projectManager.add(
           name: name
           path: req.body.path
+          includePaths: req.body.includePaths
         )
         res.statusCode = 201
         res.end()
@@ -72,7 +86,11 @@ class Core
         res.end(JSON.stringify(error: "a project named '#{name}' already exists"))
 
     app.get '/projects', (req, res) =>
-      data = @projectManager.allProjects().map (p) -> {name: p.name, path: p.path}
+      data = @projectManager.allProjects().map (project) -> {
+        name: project.name, 
+        path: project.path,
+        includePaths: project.includePaths
+      }
 
       res.setHeader('Content-Type', 'application/json')
       res.end(JSON.stringify(data))

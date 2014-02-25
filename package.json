@@ -5,7 +5,7 @@
   "description": "Takana live editor server",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --watch --compilers coffee:coffee-script"
+    "test": "TAKANA_ENV=test node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --watch --compilers coffee:coffee-script"
   },
   "bin": {
     "takana": "bin/takana",
@@ -37,6 +37,7 @@
     "should": "~3.0.1",
     "checksum": "~0.1.1",
     "glob": "~3.2.8",
-    "sinon": "~1.7.3"
+    "sinon": "~1.7.3",
+    "chai": "~1.9.0"
   }
 }

@@ -38,6 +38,7 @@ class Client
       forever.startDaemon(@serverPath,
         logFile: path.join(helpers.sanitizePath('~/.takana/'), 'takana.log')
         pidFile: path.join(helpers.sanitizePath('~/.takana/'), 'takana.pid')
+        max: 20
       )
       pollStatus()
 
