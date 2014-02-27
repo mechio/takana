@@ -60,7 +60,9 @@ Now all you need to do is add the JavaScript snippit to any page you want to liv
 
 Just replace `YOUR_PROJECT_NAME` with the name of your project. If you're unsure, you can list all projects by running `takana list` from the command line.
 
+### 6. You're all set
 
+Open the web page that you pasted the snippit into on the previous step. Then open one of it's referenced stylesheets in Sublime and start live-editing!
 
 ## Usage
 
