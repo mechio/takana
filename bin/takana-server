@@ -8,7 +8,11 @@ require("coffee-script");
 
 var path     = require('path'),
     Core     = require(path.join(__dirname, '../lib/core')),
-    helpers  = require(path.join(__dirname, '../lib/support/helpers'));
+    helpers  = require(path.join(__dirname, '../lib/support/helpers')),
+    shell    = require('shelljs');
+
+
+shell.mkdir('-p', '~/.takana/')
 
 new Core({
   editorPort:  48627,
