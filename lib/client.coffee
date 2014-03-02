@@ -3,11 +3,12 @@ url     = require 'url'
 forever = require 'forever'
 path    = require 'path'
 helpers = require './support/helpers'
-
+shell   = require 'shelljs'
 class Client 
   constructor: (@options={}) ->
     @url        = @options.url || 'http://localhost:48626/'
     @serverPath = @options.serverPath || path.join(__dirname, '../bin/takana-server')
+    @serverUid  = 'takana-server'
 
   getStatus: (callback) ->
     rest.head(@url)
@@ -19,7 +20,12 @@ class Client
 
   getServerProcess: (callback) ->
     forever.list false, (e, processes) =>
-      callback?(forever.findByScript(@serverPath, processes))
+      process         = forever.findByUid(@serverUid, processes)
+      
+      if process && process = process[0]
+        process.index   = processes.indexOf(process)
+
+      callback?(process)
 
   start: (callback) ->
     pollStatus = =>
@@ -35,10 +41,12 @@ class Client
         return 
 
       console.log "starting takana..."
+      shell.mkdir('-p', helpers.sanitizePath('~/.takana/'))
+
       forever.startDaemon(@serverPath,
-        logFile: path.join(helpers.sanitizePath('~/.takana/'), 'takana.log')
-        pidFile: path.join(helpers.sanitizePath('~/.takana/'), 'takana.pid')
-        max: 20
+        logFile : path.join(helpers.sanitizePath('~/.takana/'), 'takana.log')
+        pidFile : path.join(helpers.sanitizePath('~/.takana/'), 'takana.pid')
+        uid     : @serverUid 
       )
       pollStatus()
 
@@ -46,7 +54,7 @@ class Client
     @getServerProcess (process) =>
       return if !process
       console.log "stopping takana..."
-      forever.stop(@serverPath)
+      forever.stop(process.index)
 
   getProjects: (callback) ->
     rest.get(url.resolve(@url, '/projects'))
