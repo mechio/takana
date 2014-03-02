@@ -64,7 +64,7 @@ class ProjectManager
 
       catch e
         @logger.error('error reading project database:', e.toString())
-
+  
   writeDB: ->
     return unless @database
     @logger.debug "writing to project database"
