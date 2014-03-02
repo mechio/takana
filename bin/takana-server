@@ -12,7 +12,7 @@ var path     = require('path'),
     shell    = require('shelljs');
 
 
-shell.mkdir('-p', '~/.takana/')
+shell.mkdir('-p', helpers.sanitizePath('~/.takana/'))
 
 new Core({
   editorPort:  48627,
