@@ -1,6 +1,6 @@
 {
   "name": "takana",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "repository": "git@github.com:mechio/takana.git",
   "description": "Takana live editor server",
   "main": "index.js",
