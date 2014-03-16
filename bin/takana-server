@@ -12,11 +12,7 @@ var path     = require('path'),
     shell    = require('shelljs');
 
 
-shell.mkdir('-p', helpers.sanitizePath('~/.takana/'))
+new Core().start();
 
-new Core({
-  editorPort:  48627,
-  httpPort:    48626,
-  scratchPath: helpers.sanitizePath('~/.takana/scratch'),
-  database:    (helpers.sanitizePath('~/.takana/') + 'database.yaml')
-}).start()
+
+

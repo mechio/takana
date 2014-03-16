@@ -40,7 +40,6 @@ class Client
         pollStatus()
         return 
 
-      console.log "starting takana..."
       shell.mkdir('-p', helpers.sanitizePath('~/.takana/'))
 
       forever.startDaemon(@serverPath,
@@ -50,11 +49,13 @@ class Client
       )
       pollStatus()
 
-  stop: ->
+  stop:  (callback) ->
     @getServerProcess (process) =>
-      return if !process
-      console.log "stopping takana..."
+      if !process
+        callback?()
+        return 
       forever.stop(process.index)
+      callback?()
 
   getProjects: (callback) ->
     rest.get(url.resolve(@url, '/projects'))

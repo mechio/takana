@@ -61,6 +61,7 @@ class Folder extends EventEmitter
 
   stop: ->
     if @watcher
+      @watcher.stop()
       @watcher.removeAllListeners()
       delete @watcher
 

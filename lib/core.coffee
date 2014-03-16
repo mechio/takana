@@ -10,21 +10,24 @@ path            = require 'path'
 express         = require 'express'
 livestyles      = require './livestyles'
 
+
+
+Config = 
+  editorPort:  48627
+  httpPort:    48626
+  rootDir:     helpers.sanitizePath('~/.takana/')
+  scratchPath: helpers.sanitizePath('~/.takana/scratch')
+  database:    (helpers.sanitizePath('~/.takana/') + 'database.yaml')
+
 class Core
   constructor: (@options={}) ->
-    @logger = log.getLogger('Core')
+    @logger = @options.logger || log.getLogger('Core')
 
-    # use a different db for testing
-    # it would be nice to use a config file to define this rather than environments
-    # 
-    if process.env.TAKANA_ENV && process.env.TAKANA_ENV == 'test'
-      testDB = helpers.sanitizePath(process.cwd()) + '/database.yml'
-      @logger.info "test environment, using db:", testDB
-      
-      # remove and create a new database file
-      shell.rm testDB
-      shell.exec "touch #{testDB}"
-      @options.database = testDB
+    @options.editorPort   ?= Config.editorPort
+    @options.rootDir      ?= Config.rootDir
+    @options.httpPort     ?= Config.httpPort
+    @options.scratchPath  ?= Config.scratchPath
+    @options.database     ?= Config.database
 
     app     = express()
 
@@ -115,15 +118,25 @@ class Core
     )
 
 
-  start: ->
+  start: (callback) ->
     @logger.info "starting up..."
     @editorManager.start()
     @browserManager.start()
+    @projectManager.start()
 
+    shell.mkdir('-p', @options.rootDir)
     shell.mkdir('-p', @options.scratchPath)
 
     @webServer.listen @options.httpPort, =>
       @logger.info "webserver listening on #{@options.httpPort}"
+      callback?()
+
+
+  stop: (callback) ->
+    @projectManager.stop()
+    @editorManager.stop =>
+      @webServer.close ->
+        callback?()
 
 
 module.exports = Core

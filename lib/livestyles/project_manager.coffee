@@ -17,7 +17,6 @@ class ProjectManager
     if !@browserManager || !@editorManager || !@scratchPath
       throw('ProjectManager not instantiated with required options')
 
-    @readDB() if @database
 
   add: (options={}) ->
     return if @get(options.name)
@@ -49,6 +48,14 @@ class ProjectManager
       delete @projects[project.name]
       @writeDB()
 
+  start: ->
+    @readDB() if @database
+
+  stop: ->
+    @allProjects().forEach (project) ->
+      project.stop()
+
+
   readDB: ->
     return unless @database
     @logger.debug "reading project database"
@@ -76,8 +83,10 @@ class ProjectManager
             path         : project.path
             includePaths : project.includePaths
           }
-
-    fs.writeFileSync @database, yaml.safeDump(data), flags: 'w'
+    try 
+      fs.writeFileSync @database, yaml.safeDump(data), flags: 'w'
+    catch e
+      @logger.error('error writing project database:', e.toString())
 
 
 module.exports = ProjectManager

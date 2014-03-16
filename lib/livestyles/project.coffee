@@ -89,8 +89,9 @@ class Project
     @folder.start ->
       callback?()
 
-  stop: ->
+  stop: (callback) ->
     @folder.stop()
+    callback?()
 
 module.exports = Project
 
