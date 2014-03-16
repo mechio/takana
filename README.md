@@ -1,4 +1,4 @@
-![Takana Logo](https://raw.github.com/mechio/takana/master/takana.png?token=480673__eyJzY29wZSI6IlJhd0Jsb2I6bWVjaGlvL3Rha2FuYS9tYXN0ZXIvdGFrYW5hLnBuZyIsImV4cGlyZXMiOjEzOTM3OTM4NjV9--39a09bc005c68415cb371a0f48a366bc58952ac0)
+![Takana Logo](https://raw.github.com/mechio/takana/master/takana.png)
 
 By [mech.io](http://mech.io/)
 
