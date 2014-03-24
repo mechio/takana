@@ -2,21 +2,63 @@
 
 'use strict';
 
-process.title = 'takana-server';
+process.title = 'takana';
 
 require("coffee-script");
-
-var Log4js = require('log4js');
-
-Log4js.setGlobalLogLevel(Log4js.levels.INFO)
 
 var path     = require('path'),
     Core     = require(path.join(__dirname, '../lib/core')),
     helpers  = require(path.join(__dirname, '../lib/support/helpers')),
-    shell    = require('shelljs');
+    shell    = require('shelljs'),
+    Log4js   = require('log4js'),
+    logger   = Log4js.getDefaultLogger();
 
 
-new Core().start();
+Log4js.setGlobalLogLevel(Log4js.levels.INFO);
+Log4js.configure({
+    appenders: [
+    {
+      type: 'console',
+      layout: {
+        type: 'pattern',
+        pattern: "%[[%r] [%p] - %]%m"
+      }
+    }
+  ]
+});
+
+var core        = new Core(),
+    projectPath = '/Users/barnaby/Dropbox/Projects/myworldpay/';
+
+console.log();
+console.log();
+console.log('      _        _                     ');
+console.log('     | |_ __ _| | ____ _ _ __   __ _ ');
+console.log('     | __/ _` | |/ / _` | \'_ \\ / _` |');
+console.log('     | || (_| |   < (_| | | | | (_| |');
+console.log('      \\__\\__,_|_|\\_\\__,_|_| |_|\\__,_|');
+console.log('                                     ');
+console.log();
+console.log('     Paste this snippet inside <head> to live-edit your stylesheets:');
+console.log('     <script type="text/javascript" src="http://localhost:48626/takana.js"></script>');
+console.log();
+console.log();
+core.start(function(){
+
+
+  helpers.installSublimePlugin()
+
+  logger.info('adding project folder', projectPath);
+
+  core.projectManager.add({
+    name: 'default',
+    path: projectPath
+  });
+
+});
+
+
+
 
 
 

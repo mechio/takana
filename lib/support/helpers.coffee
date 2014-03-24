@@ -6,6 +6,7 @@ url        = require 'url'
 algo       = require './algo'
 {exec}     = require 'child_process'
 shell      = require 'shelljs'
+logger     = require './logger'
 
 exports.guid = ->
   "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace /[xy]/g, (c) ->
@@ -147,19 +148,23 @@ exports.findBestFile = findBestFile = (filePath, candidates) ->
 
 
 exports.installSublimePlugin = ->
+
+  logger = logger.getLogger('sublimeInstaller')
+
   st2PackagePath    = sanitizePath('~/Library/Application Support/Sublime Text 2/Packages/')
   st3PackagePath    = sanitizePath('~/Library/Application Support/Sublime Text 3/Packages/')
   takanaPackagePath = null 
 
   if fs.existsSync(st3PackagePath)
     takanaPackagePath = path.join(st3PackagePath, 'Takana')
-    console.log "found Sublime Text 3"
+    logger.info "found Sublime Text 3"
   else if fs.existsSync(st2PackagePath)
     takanaPackagePath = path.join(st2PackagePath, 'Takana')
-    console.log "found Sublime Text 2"
+    logger.info "found Sublime Text 2"
   else 
-    console.log "couldn't find Sublime Text install, aborting"
+    logger.error "couldn't find a Sublime Text installation"
     return
-  console.log "installing plugin to '%s'", takanaPackagePath
+    
+  logger.info "installing plugin to '%s'", takanaPackagePath
   shell.mkdir('-p', takanaPackagePath)
   shell.cp '-f', path.join(__dirname, '../../sublime-plugin/takana.py'), path.join(takanaPackagePath, 'takana.py')

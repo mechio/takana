@@ -113,9 +113,9 @@ class Folder extends EventEmitter
           file.syncToScratch()
 
         when 'modified'
-          file = @getFile(path) 
-          file.clearBuffer()          
-          file.syncToScratch()
+          if file = @getFile(path) 
+            file.clearBuffer()          
+            file.syncToScratch()
 
     else if event == 'deleted' && info.type == 'directory'
       for k, v of @files

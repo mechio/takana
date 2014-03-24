@@ -32,7 +32,8 @@ class Core
     app     = express()
 
     app.use express.static(path.join(__dirname, '..', '/www'))
-    app.use express.bodyParser()
+    app.use express.json()
+    app.use express.urlencoded()
 
     app.use (req, res, next) =>
       res.setHeader 'X-Powered-By', 'Takana'
@@ -114,17 +115,11 @@ class Core
       browserManager : @browserManager
       editorManager  : @editorManager
       scratchPath    : @options.scratchPath
-      database       : @options.database
+      # database       : @options.database
     )
 
 
   start: (callback) ->
-    @logger.info "------------------------------"
-    @logger.info "            TAKANA            "
-    @logger.info "------------------------------"
-    @logger.info "starting up..."
-
-
     @editorManager.start()
     @browserManager.start()
     @projectManager.start()
