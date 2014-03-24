@@ -68,12 +68,13 @@ class Project
 
       file = @folder.getFile(path)
       if file
-        @logger.info 'rendering ', file.scratchPath
         renderer.for(file.scratchPath).render {
           file: file.scratchPath, 
           includePaths: @includePaths
         }, (error, body) =>
           if !error
+            @logger.info 'rendered', file.scratchPath
+
             fileHash = helpers.hashCode(file.path)
 
             @bodyCache[fileHash] = body

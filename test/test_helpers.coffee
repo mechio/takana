@@ -6,6 +6,9 @@ fs       = require 'fs'
 glob     = require 'glob'
 assert   = require 'assert'
 logger   = require '../lib/support/logger'
+Log4js   = require 'log4js'
+
+Log4js.setGlobalLogLevel(Log4js.levels.OFF)
 
 global.testLogger = logger.getLogger('Test')
 

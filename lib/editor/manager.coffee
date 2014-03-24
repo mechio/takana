@@ -35,7 +35,7 @@ class Manager extends EventEmitter
 
   handleReset: (data={}) ->    
     path       = data.path
-    @logger.debug "Buffer reset", path
+    @logger.debug "buffer reset", path
     @emit 'buffer:reset', path : path
 
   handleUpdate: (data={}) ->
@@ -47,7 +47,7 @@ class Manager extends EventEmitter
     buffer     = data.buffer
     timestamp  = data.created_at
 
-    @logger.info "updated '#{path}'"
+    @logger.info "buffer updated for #{path}"
     @emit 'buffer:update', {
       path      : path
       buffer    : buffer
