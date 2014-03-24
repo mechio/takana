@@ -153,14 +153,13 @@ exports.installSublimePlugin = ->
 
   if fs.existsSync(st3PackagePath)
     takanaPackagePath = path.join(st3PackagePath, 'Takana')
-    console.log "Sublime Text 3 detected, installing to '%s'", takanaPackagePath
+    console.log "found Sublime Text 3"
   else if fs.existsSync(st2PackagePath)
     takanaPackagePath = path.join(st2PackagePath, 'Takana')
-    console.log "Sublime Text 2 detected, installing to '%s'", takanaPackagePath
+    console.log "found Sublime Text 2"
   else 
     console.log "couldn't find Sublime Text install, aborting"
     return
-
+  console.log "installing plugin to '%s'", takanaPackagePath
   shell.mkdir('-p', takanaPackagePath)
   shell.cp '-f', path.join(__dirname, '../../sublime-plugin/takana.py'), path.join(takanaPackagePath, 'takana.py')
-  console.log('')

@@ -39,89 +39,89 @@ function ensureServerRunning(callback) {
   });
 }
 
-command('start', 'start the server', function(){
-  client.start(function(){
-    console.log('okay!');
-  });
-});
+// command('start', 'start the server', function(){
+//   client.start(function(){
+//     console.log('okay!');
+//   });
+// });
 
-command('stop', 'stop the server', function(){
-  client.stop();
-});
+// command('stop', 'stop the server', function(){
+//   client.stop();
+// });
 
-command('status', 'print server status', function(){
-  client.getStatus(function(status){
-    if (!status.running){
-      console.log("Server OFF");
-    }
-    else {
-      console.log("Server ON");
-    }
-  });
-});
+// command('status', 'print server status', function(){
+//   client.getStatus(function(status){
+//     if (!status.running){
+//       console.log("Server OFF");
+//     }
+//     else {
+//       console.log("Server ON");
+//     }
+//   });
+// });
 
-command('list', 'list all projects', function(){
-  ensureServerRunning(function(){
-    client.getProjects(function(error, projects){
-      if (error){
-        console.error("Oops,", error.toString());
-        return;
-      } 
+// command('list', 'list all projects', function(){
+//   ensureServerRunning(function(){
+//     client.getProjects(function(error, projects){
+//       if (error){
+//         console.error("Oops,", error.toString());
+//         return;
+//       } 
 
-      var table = new Table({ 
-        head: ['Name', 'Path']
-      });
+//       var table = new Table({ 
+//         head: ['Name', 'Path']
+//       });
 
-      projects.forEach(function(p){
-        table.push([p.name, p.path]);  
-      });
+//       projects.forEach(function(p){
+//         table.push([p.name, p.path]);  
+//       });
 
-      console.log(table.toString());
-    });
-  });
-});
+//       console.log(table.toString());
+//     });
+//   });
+// });
 
-command('add <path> [name]', 'add a project', function(projectPath, name){
-  ensureServerRunning(function(){
-    if (!fs.existsSync(projectPath)){
-      console.error("Oops, no such file or directory '%s'", projectPath);
-      return;
-    }
+// command('add <path> [name]', 'add a project', function(projectPath, name){
+//   ensureServerRunning(function(){
+//     if (!fs.existsSync(projectPath)){
+//       console.error("Oops, no such file or directory '%s'", projectPath);
+//       return;
+//     }
     
-    if (!fs.statSync(projectPath).isDirectory()){
-      console.error("Oops, '%s' is not a directory", projectPath);
-      return;
-    }
+//     if (!fs.statSync(projectPath).isDirectory()){
+//       console.error("Oops, '%s' is not a directory", projectPath);
+//       return;
+//     }
 
-    projectPath = fs.realpathSync(helpers.sanitizePath(projectPath));
+//     projectPath = fs.realpathSync(helpers.sanitizePath(projectPath));
 
-    var project = {
-      path: projectPath,
-      name: (name || path.basename(projectPath))
-    }
+//     var project = {
+//       path: projectPath,
+//       name: (name || path.basename(projectPath))
+//     }
 
-    client.addProject(project, function(error){
-      if (error){
-        console.log("Oops,", error.toString());
-        return;
-      }
-      console.log("Your project was successfully added, now add this any page you want to live-update:");
-      console.log();
-      printJS(project.name);
-    });
-  });
-});
+//     client.addProject(project, function(error){
+//       if (error){
+//         console.log("Oops,", error.toString());
+//         return;
+//       }
+//       console.log("Your project was successfully added, now add this any page you want to live-update:");
+//       console.log();
+//       printJS(project.name);
+//     });
+//   });
+// });
 
-command('remove <name>', 'remove a project', function(name){
-  ensureServerRunning(function(){
-    client.removeProject(name, function(error){
-      if (error){
-        console.log("Oops,", error.toString());
-        return;
-      }
-    });
-  });
-});
+// command('remove <name>', 'remove a project', function(name){
+//   ensureServerRunning(function(){
+//     client.removeProject(name, function(error){
+//       if (error){
+//         console.log("Oops,", error.toString());
+//         return;
+//       }
+//     });
+//   });
+// });
 
 command('js <name>', 'print the js snippet for a project', function(name){
   printJS(name);

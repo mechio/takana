@@ -48,11 +48,11 @@ class Project
       match = helpers.pickBestFileForHref(data.href, _.keys(@folder.files))
 
       if typeof(match) == 'string'
-        @logger.debug 'stylesheet', data.href, 'matched to', match
+        @logger.info 'matched', data.href, '---->', match
         callback(null, match) 
       else
-        callback("coulnd't find a matching file for #{data.href}") 
-        @logger.warn "coulnd't find a matching file for", data.href, match
+        callback("no match for #{data.href}") 
+        @logger.warn "couldn't find a match for", data.href, match || ''
 
     @browserManager.on 'stylesheet:listen', (data) =>
       return unless data.project_name == @name
@@ -64,9 +64,11 @@ class Project
     watchedStylesheets = @browserManager.watchedStylesheetsForProject(@name)
 
     watchedStylesheets.forEach (path) =>
+      return if !path
+
       file = @folder.getFile(path)
       if file
-        @logger.debug 'rendering ', file.scratchPath
+        @logger.info 'rendering ', file.scratchPath
         renderer.for(file.scratchPath).render {
           file: file.scratchPath, 
           includePaths: @includePaths

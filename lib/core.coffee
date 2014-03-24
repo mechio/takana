@@ -119,7 +119,12 @@ class Core
 
 
   start: (callback) ->
+    @logger.info "------------------------------"
+    @logger.info "            TAKANA            "
+    @logger.info "------------------------------"
     @logger.info "starting up..."
+
+
     @editorManager.start()
     @browserManager.start()
     @projectManager.start()

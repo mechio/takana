@@ -30,7 +30,7 @@ class ProjectManager
       scratchPath    : path.join(@scratchPath, options.path)
       browserManager : @browserManager
       editorManager  : @editorManager
-      logger         : log.getLogger("Project[#{options.name}]")
+      logger         : log.getLogger("Project[#{options.name}]")#log.getLogger("Project[#{options.name}]")
     )
     project.start()
     @projects[project.name] = project

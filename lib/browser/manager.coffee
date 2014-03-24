@@ -19,7 +19,7 @@ class Manager extends EventEmitter
   watchedStylesheetsForProject: ->
 
   addBrowser: (browser) ->
-    @logger.debug "browser connected to '#{browser.projectName}'"
+    @logger.info "browser connected to '#{browser.projectName}'"
 
     helpers.pipeEvent('stylesheet:resolve', browser, @)
     helpers.pipeEvent('stylesheet:listen', browser, @)
@@ -27,7 +27,7 @@ class Manager extends EventEmitter
     @browsers[browser.id] = browser
 
     browser.connection.on 'close', =>
-      @logger.debug "browser disconnected from", browser.projectName 
+      @logger.info "browser disconnected from", browser.projectName 
       browser.connection.removeAllListeners()
       delete @browsers[browser.id]
 

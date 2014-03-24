@@ -47,7 +47,7 @@ class Manager extends EventEmitter
     buffer     = data.buffer
     timestamp  = data.created_at
 
-    @logger.debug "update", path    
+    @logger.info "updated '#{path}'"
     @emit 'buffer:update', {
       path      : path
       buffer    : buffer
