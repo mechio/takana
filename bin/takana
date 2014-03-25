@@ -6,131 +6,64 @@ process.title = 'takana';
 
 require("coffee-script");
 
-var path      = require('path'),
+var program   = require('commander'),
+    helpers   = require('../lib/support/helpers'),
     fs        = require('fs'),
-    Table     = require('cli-table'),
-    program   = require('commander'),
-    Client    = require(path.join(__dirname, '../lib/client')),
-    helpers   = require(path.join(__dirname, '../lib/support/helpers'));
+    Log4js    = require('log4js'),
+    takana    = require('../index');
 
-var client = new Client();
+program
+  .version('0.0.1')
+  .option('-p, --path <path>', 'use a custom path instead of cwd')
+  .option('-i, --includes <paths>', 'set include paths (comma separated)', function(val) { return val.split(','); })
+  .parse(process.argv);
 
-program.version('0.0.1');
+//
+// Check params
+//
+var projectPath = program.path || process.cwd();
+var includes    = program.includes || [];
 
-function command(command, description, action){
-  program
-   .command(command)
-   .description(description)
-   .action(action);
+if (!fs.existsSync(projectPath)){
+  console.error("no such file or directory '%s'", projectPath);
+  return;
 }
 
-function printJS(projectName){
-  console.log('<script type="text/javascript" data-project="' + projectName + '" src="http://localhost:48626/takana.js"></script>');
+if (!fs.statSync(projectPath).isDirectory()){
+  console.error("'%s' is not a directory", projectPath);
+  return;
 }
 
-function ensureServerRunning(callback) {
-  client.getStatus(function(status){
-    if (status.running){
-      callback();
+projectPath = fs.realpathSync(helpers.sanitizePath(projectPath));
+
+//
+// Configure logging
+//
+Log4js.setGlobalLogLevel(Log4js.levels.INFO);
+Log4js.configure({
+    appenders: [
+    {
+      type: 'console',
+      layout: {
+        type: 'pattern',
+        pattern: "%[[%r] [%p] - %]%m"
+      }
     }
-    else {
-      console.error("The server is not running, run 'takana start'");
-    }
-  });
-}
-
-// command('start', 'start the server', function(){
-//   client.start(function(){
-//     console.log('okay!');
-//   });
-// });
-
-// command('stop', 'stop the server', function(){
-//   client.stop();
-// });
-
-// command('status', 'print server status', function(){
-//   client.getStatus(function(status){
-//     if (!status.running){
-//       console.log("Server OFF");
-//     }
-//     else {
-//       console.log("Server ON");
-//     }
-//   });
-// });
-
-// command('list', 'list all projects', function(){
-//   ensureServerRunning(function(){
-//     client.getProjects(function(error, projects){
-//       if (error){
-//         console.error("Oops,", error.toString());
-//         return;
-//       } 
-
-//       var table = new Table({ 
-//         head: ['Name', 'Path']
-//       });
-
-//       projects.forEach(function(p){
-//         table.push([p.name, p.path]);  
-//       });
-
-//       console.log(table.toString());
-//     });
-//   });
-// });
-
-// command('add <path> [name]', 'add a project', function(projectPath, name){
-//   ensureServerRunning(function(){
-//     if (!fs.existsSync(projectPath)){
-//       console.error("Oops, no such file or directory '%s'", projectPath);
-//       return;
-//     }
-    
-//     if (!fs.statSync(projectPath).isDirectory()){
-//       console.error("Oops, '%s' is not a directory", projectPath);
-//       return;
-//     }
-
-//     projectPath = fs.realpathSync(helpers.sanitizePath(projectPath));
-
-//     var project = {
-//       path: projectPath,
-//       name: (name || path.basename(projectPath))
-//     }
-
-//     client.addProject(project, function(error){
-//       if (error){
-//         console.log("Oops,", error.toString());
-//         return;
-//       }
-//       console.log("Your project was successfully added, now add this any page you want to live-update:");
-//       console.log();
-//       printJS(project.name);
-//     });
-//   });
-// });
-
-// command('remove <name>', 'remove a project', function(name){
-//   ensureServerRunning(function(){
-//     client.removeProject(name, function(error){
-//       if (error){
-//         console.log("Oops,", error.toString());
-//         return;
-//       }
-//     });
-//   });
-// });
-
-command('js <name>', 'print the js snippet for a project', function(name){
-  printJS(name);
+  ]
 });
 
-command('sublime:install', 'install the Sublime Text plugin - also available via Package Control', function(){
-  
+
+//
+// Run takana
+//
+takana.run({
+  path:         projectPath,
+  includePaths: includes
 });
 
-program.parse(process.argv);
 
-if (!program.args.length) program.help();
+
+
+
+
+

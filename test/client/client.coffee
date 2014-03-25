@@ -11,7 +11,7 @@ describe 'Client', ->
   context 'server running', ->
     before (done) ->
       testDB = path.join(__dirname, '..', 'tmp', 'database.yml')
-      shell.rm testDB
+      shell.rm '-f', testDB
 
       @core = new Core( 
         database: testDB 
@@ -73,25 +73,25 @@ describe 'Client', ->
           done()
   
 
-  context 'process managemant', ->
-    describe 'start', ->
-      it 'should start Takana and callback when booted', (done) ->
-        @timeout(5000)
-        @client.start (status) =>
-          status.running.should.equal(true)
-          @client.stop ->
-            done()
+  # context 'process managemant', ->
+  #   describe 'start', ->
+  #     it 'should start Takana and callback when booted', (done) ->
+  #       @timeout(5000)
+  #       @client.start (status) =>
+  #         status.running.should.equal(true)
+  #         @client.stop ->
+  #           done()
 
-    describe 'stop', ->
-      it 'should stop Takana', (done) ->
-        @client.start (status) =>
-          status.running.should.equal.true
-          @client.stop =>
-            setTimeout =>
-              @client.getStatus (status) ->
-                status.running.should.be.false
-                done()
-            , 100
+  #   describe 'stop', ->
+  #     it 'should stop Takana', (done) ->
+  #       @client.start (status) =>
+  #         status.running.should.equal.true
+  #         @client.stop =>
+  #           setTimeout =>
+  #             @client.getStatus (status) ->
+  #               status.running.should.be.false
+  #               done()
+  #           , 100
           
 
     describe 'getServerProcess', ->
