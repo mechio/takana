@@ -9,12 +9,12 @@ require("coffee-script");
 var program   = require('commander'),
     helpers   = require('../lib/support/helpers'),
     fs        = require('fs'),
-    Log4js    = require('log4js'),
     takana    = require('../index');
 
 program
   .version('0.0.1')
   .usage('[options] <path>')
+  .option('-v, --verbose', 'verbose logging')
   .option('-i, --includes <paths>', 'set include paths (comma separated)', function(val) { return val.split(','); })
   .parse(process.argv);
 
@@ -42,28 +42,12 @@ if (!fs.statSync(projectPath).isDirectory()){
 projectPath = fs.realpathSync(helpers.sanitizePath(projectPath));
 
 //
-// Configure logging
-//
-Log4js.setGlobalLogLevel(Log4js.levels.INFO);
-Log4js.configure({
-    appenders: [
-    {
-      type: 'console',
-      layout: {
-        type: 'pattern',
-        pattern: "%[[%r] [%p] - %]%m"
-      }
-    }
-  ]
-});
-
-
-//
 // Run takana
 //
 takana.run({
   path:         projectPath,
-  includePaths: includes
+  includePaths: includes,
+  verbose:      program.verbose
 });
 
 

@@ -35,14 +35,3 @@ Now add the JavaScript snippit to any page you want to live update:
 ### 4. You're all set
 
 Finally open the web page that you pasted the snippit into on the previous step. Then open one of it's referenced stylesheets in Sublime and start live-editing!
-
-## Troubleshooting
-
-### Make sure that your editor and browser are connected
-
-TODO
-
-
-### Check that your stylesheets are being matched
-
-TODO

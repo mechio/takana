@@ -21,6 +21,21 @@ exports.run = function(options){
     throw('not invoked with required parameters');
   }
 
+  if (!options.verbose) {
+    Log4js.setGlobalLogLevel(Log4js.levels.INFO);
+    Log4js.configure({
+        appenders: [
+        {
+          type: 'console',
+          layout: {
+            type: 'pattern',
+            pattern: "%[[%r] [%p] - %]%m"
+          }
+        }
+      ]
+    });
+  }
+
   var core        = new Server();
 
   console.log();
