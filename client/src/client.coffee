@@ -1,16 +1,15 @@
 class Takana.Client
   constructor: ->
-    @scriptTag    = document.querySelectorAll("script[data-project]")[0]
-    @projectName  = 'default'#@scriptTag.getAttribute("data-project")
-
+    # @scriptTag    = document.querySelectorAll("script[data-project]")[0]
+    @projectName            = 'default'#@scriptTag.getAttribute("data-project")
     Takana.Config.port      = 48626
-
-    Takana.Config.hostname  = if src = @scriptTag.getAttribute('src') 
-                                parser = document.createElement('a')
-                                parser.href = src
-                                parser.hostname
-                              else
-                                'localhost'
+    Takana.Config.hostname  = 'localhost'
+                              # if src = @scriptTag.getAttribute('src') 
+                              #   parser = document.createElement('a')
+                              #   parser.href = src
+                              #   parser.hostname
+                              # else
+                              #   'localhost'
     
     Takana.Server.instance = @server = new Takana.Server projectName: @projectName, =>
       @project = new Takana.Project(name: @projectName)

@@ -220,11 +220,9 @@ Takana.StyleSheet = (function() {
 
 Takana.Client = (function() {
   function Client() {
-    var parser, src;
-    this.scriptTag = document.querySelectorAll("script[data-project]")[0];
     this.projectName = 'default';
     Takana.Config.port = 48626;
-    Takana.Config.hostname = (src = this.scriptTag.getAttribute('src')) ? (parser = document.createElement('a'), parser.href = src, parser.hostname) : 'localhost';
+    Takana.Config.hostname = 'localhost';
     Takana.Server.instance = this.server = new Takana.Server({
       projectName: this.projectName
     }, (function(_this) {

@@ -14,15 +14,20 @@ var program   = require('commander'),
 
 program
   .version('0.0.1')
-  .option('-p, --path <path>', 'use a custom path instead of cwd')
+  .usage('[options] <path>')
   .option('-i, --includes <paths>', 'set include paths (comma separated)', function(val) { return val.split(','); })
   .parse(process.argv);
 
 //
 // Check params
 //
-var projectPath = program.path || process.cwd();
+var projectPath = program.args[0];
 var includes    = program.includes || [];
+
+if (!projectPath){
+  program.help();
+  return;
+}
 
 if (!fs.existsSync(projectPath)){
   console.error("no such file or directory '%s'", projectPath);
