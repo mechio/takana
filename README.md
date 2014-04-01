@@ -10,11 +10,7 @@ Takana is a Sass/CSS live-editor. It lets you see your SCSS and CSS style change
 - Takana uses [libsass](https://github.com/hcatlin/libsass) under the hood, if you're using [node-sass](https://github.com/andrew/node-sass) you'll be fine. However, if you're using the ruby compiler, you may need to refactor your code to get it running with libsass.
 
 
-## Getting started guide
-
-### Using Grunt
-
-We maintain a grunt plugin for easy integration with Takana. Head over to [mechio/grunt-takana](https://github.com/mechio/grunt-takana) for instructions on getting started.
+## Getting Started
 
 ### Using the CLI
 
@@ -45,3 +41,8 @@ Now add the JavaScript snippit to any page you want to live update:
 #### 4. You're all set
 
 Finally open the web page that you pasted the snippit into on the previous step. Then open one of its referenced stylesheets in Sublime and start live-editing!
+
+### Using Grunt
+
+We maintain a grunt plugin for easy integration with Takana. Head over to [mechio/grunt-takana](https://github.com/mechio/grunt-takana) for instructions on getting started.
+
