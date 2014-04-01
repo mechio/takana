@@ -1,6 +1,6 @@
 ![Takana Logo](https://raw.github.com/mechio/takana/master/takana.png)
 
-By [mech.io](http://mech.io/)
+[@usetakana](https://twitter.com/usetakana)
 
 Takana is a Sass/CSS live-editor. It lets you see your SCSS and CSS style changes live, in the browser, as you type them. 
 
