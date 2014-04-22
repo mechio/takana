@@ -53,13 +53,13 @@ exports.pipeEvent = (event, a, b) ->
 exports.extname = extname = (filePath) ->
   path.extname(filePath).replace('.', '')
 
-# Given a file path and a extension list, 
-# returns true if the file is of one of the given types 
+# Given a file path and a extension list,
+# returns true if the file is of one of the given types
 exports.isFileOfType = isFileOfType = (p, types) ->
   types = [types] if typeof types == 'string'
   types.indexOf(extname(p)) != -1
 
-# Given a path: 
+# Given a path:
 #   1. ensures that it has a trailing slash
 #   2. resolves ~ to the full path of the home directory
 exports.sanitizePath = sanitizePath = (p) ->
@@ -95,13 +95,13 @@ exports.absolutizeUrls = (body, href) ->
       [\"|\']{0,1}
       ([^\)|^\"|^\']+)
       [\"|\']{0,1}
-    \)                  # 
+    \)                  #
   ///g
   joinUrl  = url.resolve
   protocol = url.parse(href).protocol
   body = body.replace urlRegex, (m, url) ->
     url = protocol + url if /^\/\/.*/.test(url)
-    url = joinUrl(href, url)   
+    url = joinUrl(href, url)
     "url('#{url}')"
   body
 
@@ -116,12 +116,14 @@ exports.findBestFile = findBestFile = (filePath, candidates) ->
   # remove all partials
   candidates = _.reject candidates, (c) -> path.basename(c)[0] == '_'
 
+
   if candidates.length == 1
     # If there is only one match, pick that one
     return candidates[0]
   else if candidates.length == 0
     return null
-  else 
+  else
+
     # reject all css
     candidatesNoCss = _.reject candidates, (c) -> path.extname(c) == '.css'
     if candidatesNoCss.length == 1
@@ -136,16 +138,22 @@ exports.findBestFile = findBestFile = (filePath, candidates) ->
 
       # Find our candidate, the tuple with the highest score
       tuples    = _.sortBy tuples, (c) -> c[1]
+      best      = _.last(tuples)
 
-      best      = _.last(tuples) 
-
+      # If the candidate has a unique high score, choose it
       bestScore = best[1]
-      if _.select(tuples, (t) -> t[1] == bestScore).length == 1
-        # If the candidate has a unique high score, choose it
-        return best[0]
-        
-  candidates
+      bestOnes  = _.select(tuples, (t) -> t[1] == bestScore )
+      return best[0] if bestOnes.length == 1
 
+      # now try without css files, if possible
+      bestOnesNoCss = _.reject bestOnes, (t) -> path.extname(t[0]) == '.css'
+      return bestOnesNoCss[0][0] if bestOnesNoCss.length == 1
+
+      # now try exact name match
+      bestOnesExact = _.select bestOnesNoCss, (t) -> exports.basename(t[0]) == basename
+      return bestOnesExact[0] if bestOnesExact.length == 1
+
+  candidates
 
 exports.installSublimePlugin = ->
 
@@ -153,7 +161,7 @@ exports.installSublimePlugin = ->
 
   st2PackagePath    = sanitizePath('~/Library/Application Support/Sublime Text 2/Packages/')
   st3PackagePath    = sanitizePath('~/Library/Application Support/Sublime Text 3/Packages/')
-  takanaPackagePath = null 
+  takanaPackagePath = null
 
   if fs.existsSync(st3PackagePath)
     takanaPackagePath = path.join(st3PackagePath, 'Takana')
@@ -161,10 +169,10 @@ exports.installSublimePlugin = ->
   else if fs.existsSync(st2PackagePath)
     takanaPackagePath = path.join(st2PackagePath, 'Takana')
     logger.info "found Sublime Text 2"
-  else 
+  else
     logger.error "couldn't find a Sublime Text installation"
     return
-    
+
   logger.info "installing plugin to '%s'", takanaPackagePath
   shell.mkdir('-p', takanaPackagePath)
   shell.cp '-f', path.join(__dirname, '../../sublime-plugin/takana.py'), path.join(takanaPackagePath, 'takana.py')
