@@ -2,7 +2,7 @@
 
 [@usetakana](https://twitter.com/usetakana)
 
-Takana is a Sass/CSS live-editor. It lets you see your SCSS and CSS style changes live, in the browser, as you type them. 
+Takana is a Sass/CSS live-editor. It lets you see your SCSS and CSS style changes live, in the browser, as you type them.
 
 ## Requirements
 
@@ -46,3 +46,14 @@ Finally open the web page that you pasted the snippit into on the previous step.
 
 We maintain a grunt plugin for easy integration with Takana. Head over to [mechio/grunt-takana](https://github.com/mechio/grunt-takana) for instructions on getting started.
 
+
+
+### Contributing
+
+You can install your development folder with
+
+    $ npm -g install .
+
+Please adjust unit tests, if you change code. Run tests with:
+
+    $ ./bin/ci
