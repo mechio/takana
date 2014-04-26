@@ -51,10 +51,3 @@ takana.run({
   includePaths: includes,
   verbose:      program.verbose
 });
-
-
-
-
-
-
-

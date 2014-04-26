@@ -108,7 +108,7 @@ describe 'FileMatcher', ->
       match = FileMatcher.pickBestFileForHref href, candidates
       match.should.equal("/panel.scss")
 
-    it "chooses exactly on basename matching file", ->
+    it "chooses the exactly basename-matching file, if present", ->
       href       = "http://localhost:3000/dev-assets/application.css?body=1"
       candidates = [
         '/Users/some/app/assets/stylesheets/application.css.scss',
@@ -119,3 +119,16 @@ describe 'FileMatcher', ->
 
       match = FileMatcher.pickBestFileForHref href, candidates
       match.should.equal('/Users/some/app/assets/stylesheets/application.css.scss')
+
+
+    it "also chooses .scss files while in scoredMatching", ->
+      href       = "http://localhost:8080/styleguide/css/styleguide.css?1398520261"
+      candidates = [
+        '/Users/user/style-guides/styleguide-app/core/styleguide/css/styleguide-specific.css',
+        '/Users/user/style-guides/styleguide-app/core/styleguide/css/styleguide-specific.scss',
+        '/Users/user/style-guides/styleguide-app/core/styleguide/css/styleguide.css',
+        '/Users/user/style-guides/styleguide-app/core/styleguide/css/styleguide.scss',
+      ]
+
+      match = FileMatcher.pickBestFileForHref href, candidates
+      match.should.equal('/Users/user/style-guides/styleguide-app/core/styleguide/css/styleguide.scss')
