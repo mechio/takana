@@ -12,24 +12,24 @@ Log4js.setGlobalLogLevel(Log4js.levels.OFF)
 
 global.testLogger = logger.getLogger('Test')
 
-global.fixturePath = (fixture) -> 
+global.fixturePath = (fixture) ->
   path.join(__dirname, 'fixtures', fixture)
 
 global.createEmptyTmpDir = (suffix='') ->
-  tmpDir = path.join(__dirname, '..', 'tmp', 'test' + suffix)  
+  tmpDir = path.join(__dirname, '..', 'tmp', 'test' + suffix)
   shell.mkdir('-p', tmpDir)
   shell.rm('-rf', path.join(tmpDir, '*'))
   tmpDir
 
 global.assertFilesSame = (file1, file2, done) ->
   Q.nfcall(checksum.file, file1)
-    .then (hash1) ->  
+    .then (hash1) ->
       Q.nfcall(checksum.file, file2)
         .then (hash2) ->
           [hash1, hash2]
     .spread (hash1, hash2) ->
       hash1.should.equal(hash2)
-      done?()            
+      done?()
     .fail (e) ->
       throw e
     .done()
@@ -38,12 +38,12 @@ global.assertFileHasBody = (file, body, done) ->
   checksum.file file, (e, hash1) ->
     hash1.should.equal(checksum(body))
     done?()
-  
+
 global.assertIsFolder = (existance, folder, done) ->
   Q.nfcall(fs.lstat, folder)
     .then (stats) ->
       stats.isDirectory().should.equal(existance)
-      done?()            
+      done?()
     .fail (e) ->
       throw e
     .done()
@@ -51,7 +51,7 @@ global.assertIsFolder = (existance, folder, done) ->
 global.assertFileExistance = (existance, file, done) ->
   fs.exists file, (exists) ->
     (!!exists).should.equal(existance)
-    done?()            
+    done?()
 
 global.assertFoldersEqual = (pattern, folder1, folder2, done) ->
   Q.nfcall(glob, path.join(folder1, pattern))
@@ -72,9 +72,9 @@ global.assertFolderEmpty = (folder, done) ->
     done?()
 
 
-# 
+#
 #  These should all pass
-# 
+#
 require 'should'
 #
 # assertFilesSame fixturePath('test_helpers/index.html'), fixturePath('test_helpers/index.html-copy')
