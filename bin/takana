@@ -6,13 +6,15 @@ process.title = 'takana';
 
 require("coffee-script");
 
-var program   = require('commander'),
-    helpers   = require('../lib/support/helpers'),
-    fs        = require('fs'),
-    takana    = require('../index');
+var program     = require('commander'),
+    helpers     = require('../lib/support/helpers'),
+    fs          = require('fs'),
+    packageJson = require('../package.json'),
+    takana      = require('../index');
+
 
 program
-  .version('0.0.1')
+  .version(packageJson.version)
   .usage('[options] <path>')
   .option('-v, --verbose', 'verbose logging')
   .option('-i, --includes <paths>', 'set include paths (comma separated)', function(val) { return val.split(','); })
