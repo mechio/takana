@@ -1,6 +1,6 @@
 ![Takana Logo](https://raw.github.com/mechio/takana/master/takana.png)
 
-[@usetakana](https://twitter.com/usetakana)
+[http://usetakana.com](http://usetakana.com)
 
 Takana is a Sass/CSS live-editor. It lets you see your SCSS and CSS style changes live, in the browser, as you type them.
 
@@ -19,7 +19,7 @@ Takana is a Sass/CSS live-editor. It lets you see your SCSS and CSS style change
 Install the `takana` command to your system path:
 
 ```
-npm install -g takana
+$ npm install -g takana
 ```
 
 #### 2. Start takana
@@ -27,7 +27,7 @@ npm install -g takana
 Run takana by specifying the root of your project directory:
 
 ```
-takana /path/to/project_folder
+$ takana /path/to/project_folder
 ```
 
 #### 3. Add the JavaScript snippit to your HTML
@@ -52,8 +52,8 @@ We maintain a grunt plugin for easy integration with Takana. Head over to [mechi
 
 You can install your development folder with
 
-    $ npm -g install .
+    $ npm install
 
 Please adjust unit tests, if you change code. Run tests with:
 
-    $ ./bin/ci
+    $ npm test
