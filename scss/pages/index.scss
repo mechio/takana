@@ -1,0 +1,219 @@
+@import "index/intro";
+@import "index/testimonials";
+@import "index/get-started";
+@import "index/video";
+
+// .line {
+//   display: block;
+//   width: 100%;
+//   height: 1px;
+//   border-bottom: 1px solid $border-color;
+
+//   &.light {
+//     border-color: #f2f2f2;
+//   }
+// }
+
+// .outer-container, video {
+//   -webkit-filter: blur(10px);
+// }
+
+// .sign-up {
+//   position: fixed;
+//   top: 0;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
+//   z-index: 1;
+
+//   .post-sign-up {
+//     @include span-columns(4);
+//     @include media($s) {
+//       @include span-columns(5);
+//     }
+//     @include omega();
+//     margin-top: _(0);
+//     @include pad;
+//     @include transition;
+//     opacity: 1;
+//     z-index: 20;
+//     position: relative;
+//     background: #ddd;
+//     padding-bottom: 0;
+
+//     &.hidden {
+//       opacity: 0;
+//     }
+
+//     p {
+//       font-size: _(1);
+//     }
+//   }
+
+//   .close {
+//     position: absolute;
+//     right: flex-gutter();
+//     top: _(0);
+//     color: #eee;
+//     @include ss-standard;
+//     font-size: _(0);
+
+//     &:hover {
+//       color: #aaa;
+//     }
+//   }
+
+//   background: transparentize($text-color, 0.2);
+//   @include transition;
+
+//   &.hidden {
+//     opacity: 0;
+//     z-index: -1;
+//   }
+
+//   form {
+//     position: absolute;
+//     margin: auto;
+//     @include span-columns(3);
+//     @include shift(1);
+//     @include omega();
+//     @include pad();
+//     padding-top: 0;
+
+//     @include media($s) {
+//       @include span-columns(5);
+//       @include shift(0);
+//       top: 10%;
+//     }
+
+//     @include media($m) {
+//       @include span-columns(5);
+//       @include shift(0);
+//     }
+
+//     display: table;
+//     top: 35%;
+    
+//     &[data-state=submitted] {
+//       input[type=submit] {
+//         background: transparent;
+//         color: $dark-blue;
+
+//         @include media($s) {
+//           background: $dark-blue;
+//           color: white;
+//         }
+//       }
+//     }
+//   }
+
+//   input {
+//     @include span-columns(5);
+//     font-size: _(1);
+//     height: _(3);
+//     line-height: _(1);
+//     @include pad;
+//     border: none;
+//     border-radius: 0px;
+//     font-family: $avenir-light;
+//     color: $text-color;
+
+//     outline: none;
+
+//     @include media($s) {
+//       height: _(4);
+//     }
+
+//     &[type=email] {
+//       @include span-columns(4);
+//       padding-left: flex-gutter();
+
+//       @include omega();
+
+//       @include media($s) {
+//         @include span-columns(5);
+//       }
+
+//       background: #ddd;
+
+//       &:focus {
+//         background: white;
+//       }
+
+
+//       @include placeholder {
+//         padding-top: _(-3);
+//       }
+//     }
+
+//     &[type=submit] {
+//       background: $dark-blue;
+//       @include transition;
+//       @include ss-standard;
+//       @include span-columns(1);
+//       color: white;
+//       padding-top: 1.1rem;
+
+//       @include media($s) {
+//         margin-top: _(0);
+//         @include span-columns(5);
+//       }
+
+//       &:hover {
+//         background: shade($dark-blue, 10%);
+//       }
+
+//       &:active {
+//         background: shade($dark-blue, 20%);
+//       }
+//     }
+//   }
+// }
+
+a.cta {
+  font-size: _(1);
+  text-decoration: none;
+  background: $dark-blue;
+  color: white;
+  @include span-columns(2);
+  @include omega();
+  @include sm-full-width;
+
+  height: 4rem;
+  line-height: 4rem;
+  text-align: center;
+
+  margin-bottom: _(0);
+
+  &.buy {
+    background: $orange;
+
+    &:hover {
+      background: shade($orange, 10%);
+    }
+
+    &:active {
+      background: shade($orange, 20%);
+    }
+  }
+}
+
+// div.logo {
+//   @include span-columns(3);
+
+//   @include media($s) {
+//     @include span-columns(5);
+//   }
+
+//   img {
+//     height: _(2);
+//     &:first-of-type{
+//       margin-right: flex-gutter()/2;
+//     }
+//   }
+// }
+
+// footer {
+//   @include span-columns(5);
+//   @include v;
+// }

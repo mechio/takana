@@ -1,0 +1,20 @@
+section.intro {
+  // background-color: red;
+  h1 {
+    font-weight: bold;
+  }
+
+  p {
+    font-size: _(1);
+    line-height: 1.5em;
+
+    
+    @include sm-full-width;
+  }
+
+  // @include span-columns(6 of 12);
+  @include media($s) {
+    // @include span-columns(12 of 12);
+  }
+  
+}

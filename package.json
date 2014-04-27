@@ -1,0 +1,21 @@
+{
+  "name": "takana-website",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github-barnaby:mechio/takana.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.6.0",
+    "gulp-connect": "^2.0.5",
+    "gulp-sass": "^0.7.1",
+    "gulp-watch": "^0.5.4"
+  }
+}

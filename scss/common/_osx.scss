@@ -1,0 +1,76 @@
+$osx-blue: #3C77D4;
+$text-color: #4D4D4D;
+
+$window-background-color: #EDEDED;
+$control-text-color: #000000;
+$disabled-text-color: #808080;
+
+$connected-color: #3FB24D;
+$error-color: #E8492D;
+$warning-color: #FFA53A;
+
+$header-background-color: #F6F6F6;
+$header-border-color: rgba(0,0,0,.25);
+
+$border-color: #ddd;
+$background-color: #eee;
+
+$drop-shadow: 0px 1px 0px rgba(255,255,255,.4);
+$text-drop-shadow: 0px 1px 0px rgba(255,255,255,.5);
+$icon-drop-shadow: 0px 1px 0px rgba(255,255,255,.75);
+$button-border: #868686;
+// $button-border: red;
+
+// chooose_template / add new
+$panel-section-color: #000;
+
+// The system font (Lucida Grande Regular 13 point) is used for text in menus, dialogs, and full-size controls.
+$system-font: normal normal 13px "Lucida Grande", sans-serif;
+
+// The emphasized system font (Lucida Grande Bold 13 point) is used sparingly, most often in the message of an alert.
+$emphasized-system-font: bold normal 12px Lucida Grande;
+
+// The small system font (Lucida Grande Regular 11 point) is used for the informative text in alerts. It is also the default font for column headings in lists, for help tags, and for small controls.
+$small-system-font: normal normal 12px Lucida Grande;
+
+// The emphasized small system font (Lucida Grande Bold 11 point) is used occasionally, most often to title a group of settings that appear without a group box, or for brief informative text below a text field.
+$emphasized-small-system-font: bold normal 11pt Lucida Grande;
+
+// The mini system font (Lucida Grande Regular 9 point) is used for mini controls. It is also used for panel labels and text.
+$mini-system-font: normal normal 11px Lucida Grande;
+
+// An emphasized mini system font (Lucida Grande Bold 9 point) is used in cases in which the emphasized small system font is too large.
+$emphasized-mini-system-font: bold normal 9pt Lucida Grande;
+
+// The app font (Lucida Grande Regular 13 point) is used as the default font for user-created content.
+$app-font: normal normal 13pt Lucida Grande;
+
+// The label font (Lucida Grande Regular 10 point) is used for the labels on toolbar buttons and to label tick marks on full-size sliders.
+$label-font: normal normal 15px Lucida Grande;
+
+// The view font (Lucida Grande Regular 12 point) is the default font used for text in lists and tables.
+$view-font: normal normal 12pt Lucida Grande;
+
+// The Lucida Grande font family also includes mono-spaced numeric characters and variably-spaced alphabetics.
+$code-font: 13pt monospace;
+
+$window-radius: 5px;
+
+@mixin mac-button($color) {
+  @include span-columns(16);
+  @include background(linear-gradient($color, shade($color, 10%))); 
+  @include pad;
+
+  border-radius: 3px;
+  font: $system-font;
+  box-shadow: none !important;
+  border: 1px solid shade($color, 10%);
+  border-bottom-color: shade($color, 15%);
+  text-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+  color: white;
+
+  &:active {
+    @include background(linear-gradient(shade($color, 10%), shade($color, 20%)));
+  }
+}
+

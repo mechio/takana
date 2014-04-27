@@ -1,0 +1,57 @@
+.video-container {
+  // height: 30rem;
+  position: relative;
+
+
+  margin-top: $vertical-margin;
+
+  @include media($m) {
+    margin-top: _(2);
+    
+
+    // height: 18rem;
+  }
+
+  overflow: hidden;
+  @include span-columns(5);
+  @include omega();
+  margin-bottom: _(2);
+  background-color: #eee;
+  @include media($s) {
+    // height: _(2);
+    // position: relative;
+    // display: none;
+
+  }
+
+
+  a.play {
+    $size: _(5);
+    width: $size;
+    height: $size;
+    border-radius: 400px;
+    font-family: "SSStandard";
+
+    font-size: _(3);
+
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    padding-top: _(3);
+    padding-left: 4px;
+    display: block;
+    background-color: #222;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -$size / 2;
+    margin-top: -$size / 2;
+  }
+
+  video {
+    @include span-columns(5);
+    margin: 0 auto;
+    display: table;
+    // display: none;;
+  }
+}

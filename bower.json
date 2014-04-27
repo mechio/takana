@@ -1,0 +1,18 @@
+{
+  "name": "takana-website",
+  "version": "0.0.0",
+  "authors": [
+    "Barnaby Malet <bmalet@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "github-fork-ribbon-css": "~0.1.0"
+  }
+}

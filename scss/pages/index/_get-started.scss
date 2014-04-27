@@ -1,0 +1,136 @@
+section.getting-started {
+  margin-top: $vertical-margin;
+
+  code {
+    background-color: #f1f1f1;
+    padding: _(0) _(1);
+    font-size: _(1);
+    display: block;;
+    margin-bottom: _(1);
+    border-radius: 3px;
+    word-wrap: break-word;
+    background-color: #444;
+    color: white;
+
+    // background-color: tint(#6CC9D2, 40%);
+  // }
+
+  // a.github {
+  //   background-color: #6CC9D2;
+  }
+
+
+
+  h1 {
+    // font-weight: 500;
+  }
+
+  h2 {
+    font-size: _(1);
+
+    font-weight: 500;
+    font-size: _(2);
+    
+    // font-weight: normal;
+    
+      
+  }
+  code + h2 {
+    margin-top: _(3);
+  }  
+
+  p {
+    font-size: _(1);
+    line-height: 1.5em;
+    
+    // @include sm-full-width;
+  }
+}
+
+// section.get-started {
+//   margin-top: $vertical-margin;
+
+//   @include media($s) {
+//     margin-top: _(3);
+//   }
+
+//   @include span-columns(5);
+
+//   > h1 {
+//     font-size: _(3);
+//     margin-bottom: _(4);
+
+//     @include media($s) {
+//       margin-bottom: _(2);
+//     }
+//     @include span-columns(5);
+//   }
+
+//   .image-container {
+//     @include span-columns(3);
+//     @include sm-full-width;
+//   }
+
+//   img {
+//     @include span-columns(4);
+//     @include sm-full-width;
+//   }
+
+//   ol {
+//     list-style: none;
+//     padding: 0;
+//     @include span-columns(2);
+//     @include sm-full-width;
+
+//     li {
+//       @include span-columns(5);
+//       margin-bottom: _(3);
+
+//       @include media($s) {
+//         @include span-columns(5);
+//         text-align: center;
+//         margin-bottom: _(0);
+//       }
+
+//       @include media($m) {
+//         text-align: center;
+//         margin-bottom: _(0);
+//         @include span-columns(5);
+//       }
+
+//       &:nth-of-type(1) {
+//         h1 { 
+//           color: $light-blue;
+//         }
+//       }
+
+//       &:nth-of-type(2) {
+//         h1 { 
+//           color: $medium-blue;
+//         }
+//       }
+
+//       &:nth-of-type(3) {
+//         h1 { 
+//           color: $dark-blue;
+//         }
+//       }
+
+//       h1 {
+//         font-size: _(1);
+//         line-height: 1.6em;
+//         font-family: $avenir-light;
+
+//         @include media($s) {
+//           font-size: _(2);
+//           font-weight: normal;
+//         }
+//       }
+
+//       a {
+//         font-size: _(1);
+//         @include span-columns(5);
+//       }
+//     }
+//   }   
+// }

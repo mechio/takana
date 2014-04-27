@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="takana">
+<head>
+  <title>Takana: live edit Sass</title>
+  <link href="/css/application.css" media="all" rel="stylesheet" type="text/css" />
+  <link type="text/css" rel="stylesheet" href="http://fast.fonts.net/cssapi/dd731a20-27ef-4146-bd26-988fce61468e.css"/>
+  <script type="text/javascript" src="components/angular/angular.js"></script>
+
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="http://localhost:48626/takana.js"></script>
+  <meta name="viewport" content = "width = device-width, initial-scale = 1, user-scalable = no" />    
+</head>
+<body>
+  <div class="outer-container">
+    <header>
+      <div class="logo">
+        <img class="bolt" src="/images/takana_logo_bolt.svg"/>
+        <img class="type" src="/images/takana_logo_type.svg"/>
+      </div>
+
+    </header>
+
+    <section class="intro">
+      <h1 class="tagline">Finally, a SCSS Live Editor.</h1>
+
+
+
+
+        <p>Takana lets you see your <b>SCSS</b> and <b>CSS</b> style changes live, in the browser, as you type them.</p>
+
+<!--           <a class="cta buy">Join the beta</a>
+-->       
+    </section>
+
+<!--
+    <section class="video">
+      <div class="video-container">
+        <a href="#" class="play">&#x25B6;</a>
+        <video id="video">
+
+
+
+<!- -             <source src="http://d1ocf0dqi2wm1d.cloudfront.net/quickcast-high.mp4" type="video/mp4">
+          <source src="http://d1ocf0dqi2wm1d.cloudfront.net/quickcast.ogg" type="video/ogg">
+          <source src="http://d1ocf0dqi2wm1d.cloudfront.net/quickcast.webm" type="video/webm">
+          Your browser does not support the video tag.
+- ->          </video>
+      </div>
+      <script>
+        document.getElementById("video").play();
+      </script>
+    </section>
+-->
+
+    <section class="getting-started">
+      
+      <h1>Getting Started</h1>
+
+      
+
+      <h2>1. Install the CLI</h2>
+      <p>
+      Install the takana command to your system path:
+      </p>
+      <code>$ npm install -g takana</code>
+
+      <h2>2. Start takana</h2>
+      <p>
+      Run takana by specifying the root of your project directory:
+      </p>
+      <code>$ takana /path/to/project_folder</code>
+
+      <h2>3. Add the JavaScript snippit to your HTML</h2>
+      <p>
+      Now add the JavaScript snippit to any page you want to live update:
+      </p>
+      <code>&lt;script type="text/javascript" src="http://localhost:48626/takana.js"&gt;&lt;/script&gt;
+      </code>
+
+      <h2>4. You're all set</h2>
+      <p>
+      Finally open the web page that you pasted the snippit into on the previous step. Then open one of its referenced stylesheets in Sublime and start live-editing!
+      </p>
+
+
+    </section>
+
+  </div>
+
+
+  <div class="outer-container">
+    <section class="testimonials" ng-controller="TestimonialsCtrl">
+      <h1>What people are saying</h1>
+      <ul>
+        <li ng-repeat="t in testimonials">
+          <p>
+            &ldquo;{{t.body}}&rdquo; &mdash; <a href="{{t.url}}" target="_blank">{{t.name}}</a>
+          </p>        
+        </li>
+      </ul>
+    </section>
+  </div>
+      <div class="line"/>
+
+      <div class="outer-container">
+        <footer>
+      <div class="social">
+        <a href="https://twitter.com/usetakana" target="_blank" class="twitter">Twitter</a>
+        <a href="https://github.com/mechio/takana" target="_blank" class="github">Github</a>
+      </div>
+
+<!--       <div class="logo">
+        <img class="bolt" src="/images/takana_logo_bolt.svg"/>
+        <img class="type" src="/images/takana_logo_type.svg"/>
+      </div> -->
+          <p class="mechio">a <a href="http://mech.io">mechio</a> production.</p>
+        </footer>
+      </div>
+
+</body>
+</html>

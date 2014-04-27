@@ -1,0 +1,13 @@
+header {
+  @include span-columns(5);
+  margin: $vertical-margin auto;
+
+  @include media($s) {
+    margin: _(3) auto;
+  }
+
+  .social {
+    @include span-columns(2);
+  }
+
+}

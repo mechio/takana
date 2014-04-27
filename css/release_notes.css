@@ -1,0 +1,23 @@
+.development.release-notes-frame {
+  background: url('/assets/release-notes-frame.png');
+  width: 700px;
+  height: 506px;
+  position: relative; }
+  .development.release-notes-frame .container {
+    position: absolute;
+    left: 167px;
+    top: 153px;
+    overflow: scroll; }
+
+.release-notes-frame .container {
+  width: 440px;
+  height: 197px;
+  padding: 0px 11px;
+  box-sizing: border-box;
+  font-family: "Helvetica Neue";
+  color: #444;
+  font-size: 14px; }
+  .release-notes-frame .container h1 {
+    color: #222; }
+  .release-notes-frame .container ol li:first-letter {
+    text-transform: capitalize; }

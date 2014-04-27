@@ -1,0 +1,45 @@
+section.testimonials {
+  margin-top: $vertical-margin;
+  margin-bottom: $vertical-margin - _(1);
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    @include span-columns(12 of 12);
+
+    // 
+
+    li {
+      display: block;
+      @include span-columns(6 of 12);
+      @include omega(2n);
+
+      @include media($m) {
+        @include span-columns(12 of 12);
+      }
+
+      // margin-right: 0px;
+      padding: _(-2);
+      margin-bottom: _(1);
+    }
+
+    // margin-bottom: _(3);
+  }
+
+
+  p {
+    @include span-columns(5);
+
+    // margin-top: _(0);
+    font-size: _(1);
+    margin-bottom: _(-1);
+    a {
+      font-style: italic;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }       
+    }
+  }
+}
