@@ -19,9 +19,9 @@ Config =
   scratchPath: helpers.sanitizePath('~/.takana/scratch')
   database:    (helpers.sanitizePath('~/.takana/') + 'database.yaml')
 
-class Core
+class Server
   constructor: (@options={}) ->
-    @logger = @options.logger || log.getLogger('Core')
+    @logger = @options.logger || log.getLogger('Server')
 
     @options.editorPort   ?= Config.editorPort
     @options.rootDir      ?= Config.rootDir
@@ -139,4 +139,4 @@ class Core
         callback?()
 
 
-module.exports = Core
+module.exports = Server

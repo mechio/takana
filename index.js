@@ -10,7 +10,7 @@ var path     = require('path'),
 
 exports.Client  = require('./lib/client');
 
-var Server  = exports.Server  = require('./lib/core');
+var Server  = exports.Server  = require('./lib/server');
 var helpers = exports.helpers = require('./lib/support/helpers');
 
 exports.run = function(options){
@@ -36,7 +36,7 @@ exports.run = function(options){
     });
   }
 
-  var core        = new Server();
+  var server       = new Server();
 
   console.log();
   console.log();
@@ -51,7 +51,7 @@ exports.run = function(options){
   console.log('     <script type="text/javascript" src="http://localhost:48626/takana.js"></script>');
   console.log();
   console.log();
-  core.start(function(){
+  server.start(function(){
 
     if (!options.skipSublime){
       helpers.installSublimePlugin();
@@ -59,7 +59,7 @@ exports.run = function(options){
 
     logger.info('adding project folder', options.path);
 
-    core.projectManager.add({
+    server.projectManager.add({
       name:         'default',
       path:         options.path,
       includePaths: options.includePaths

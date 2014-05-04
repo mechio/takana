@@ -1,5 +1,5 @@
 Client = require '../../lib/client'
-Core   = require '../../lib/core'
+Server = require '../../lib/server'
 path   = require 'path'
 shell  = require 'shelljs'
 
@@ -13,15 +13,15 @@ describe 'Client', ->
       testDB = path.join(__dirname, '..', 'tmp', 'database.yml')
       shell.rm '-f', testDB
 
-      @core = new Core( 
+      @server = new Server( 
         database: testDB 
         logger:   testLogger
       )
-      @core.start ->
+      @server.start ->
         done()
 
     after (done) ->
-      @core.stop ->
+      @server.stop ->
         done()
 
     describe 'getStatus', ->
@@ -72,42 +72,6 @@ describe 'Client', ->
           status.running.should.be.false
           done()
   
-
-  # context 'process managemant', ->
-  #   describe 'start', ->
-  #     it 'should start Takana and callback when booted', (done) ->
-  #       @timeout(5000)
-  #       @client.start (status) =>
-  #         status.running.should.equal(true)
-  #         @client.stop ->
-  #           done()
-
-  #   describe 'stop', ->
-  #     it 'should stop Takana', (done) ->
-  #       @client.start (status) =>
-  #         status.running.should.equal.true
-  #         @client.stop =>
-  #           setTimeout =>
-  #             @client.getStatus (status) ->
-  #               status.running.should.be.false
-  #               done()
-  #           , 100
-          
-
-    describe 'getServerProcess', ->
-      # it 'should list running Takana processes', (done) ->
-        # @client.getServerProcess (serverProcess) ->
-        #   serverProcess.cwd.should.equal(process.cwd())
-        #   serverProcess.running.should.equal(true)
-        #   # we should make this test more comprehensive
-        #   #
-        #   done()
-
-
-
-
-
-
 
 
 
