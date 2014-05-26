@@ -1,5 +1,5 @@
 ###
-Stolen from: http://forrst.com/posts/Longest_Common_Subsequence_in_JavaScript-mQB
+Source: http://forrst.com/posts/Longest_Common_Subsequence_in_JavaScript-mQB
 
 Find a longest common subsenquence.
 Note: this is not necessarily the only possible longest common subsequence though!
