@@ -1,4 +1,4 @@
-.video-container {
+.video {
   // height: 30rem;
   position: relative;
 
@@ -17,41 +17,57 @@
   @include omega();
   margin-bottom: _(2);
   background-color: #eee;
-  @include media($s) {
-    // height: _(2);
-    // position: relative;
-    // display: none;
 
+
+  .video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 25px;
+    height: 0;
   }
-
-
-  a.play {
-    $size: _(5);
-    width: $size;
-    height: $size;
-    border-radius: 400px;
-    font-family: "SSStandard";
-
-    font-size: _(3);
-
-    color: white;
-    text-decoration: none;
-    text-align: center;
-    padding-top: _(3);
-    padding-left: 4px;
-    display: block;
-    background-color: #222;
+  
+  .video-container iframe {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-left: -$size / 2;
-    margin-top: -$size / 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
   }
+  // @include media($s) {
+  //   // height: _(2);
+  //   // position: relative;
+  //   // display: none;
 
-  video {
-    @include span-columns(5);
-    margin: 0 auto;
-    display: table;
-    // display: none;;
-  }
+  // }
+
+
+  // a.play {
+  //   $size: _(5);
+  //   width: $size;
+  //   height: $size;
+  //   border-radius: 400px;
+  //   font-family: "SSStandard";
+
+  //   font-size: _(3);
+
+  //   color: white;
+  //   text-decoration: none;
+  //   text-align: center;
+  //   padding-top: _(3);
+  //   padding-left: 4px;
+  //   display: block;
+  //   background-color: #222;
+  //   position: absolute;
+  //   left: 50%;
+  //   top: 50%;
+  //   margin-left: -$size / 2;
+  //   margin-top: -$size / 2;
+  // }
+
+  // video {
+  //   @include span-columns(5);
+  //   margin: 0 auto;
+  //   display: table;
+  //   // display: none;;
+  // }
 }

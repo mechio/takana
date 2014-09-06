@@ -3,11 +3,17 @@ header {
   margin: $vertical-margin auto;
 
   @include media($s) {
-    margin: _(3) auto;
+    margin: _(3) auto;    
   }
 
   .social {
     @include span-columns(2);
+    text-align: right;
+    font-size: _(1);
+
+    @include media($s) {
+      text-align: left;
+    }
   }
 
 }
