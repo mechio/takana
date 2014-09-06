@@ -47,7 +47,7 @@ class Server
       logger    : log.getLogger('BrowserManager')
     )
 
-    # the [Project Manager](livestyles/project_manager.html) Connects the editor and browsers together. 
+    # the [Project Manager](livestyles/project_manager.html) connects the editor and browsers together. 
     # Live compilation happens here
     @projectManager = new livestyles.ProjectManager(
       browserManager : @browserManager

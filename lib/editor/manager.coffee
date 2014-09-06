@@ -1,20 +1,19 @@
+# The `Manager` class is a wrapper around an [nssocket](https://github.com/nodejitsu/nssocket) server.
+# Through this class, editors notify the backend of changes to file buffers. 
+# 
+# The Sublime Text plugin maintains a single TCP socet connection accross all tabs and windows. 
+
 nssocket          = require 'nssocket'
 logger            = require '../support/logger'
 {EventEmitter}    = require 'events'
 
 class Manager extends EventEmitter
-
-  # send: (event, data) ->
-  #   outbound = new nssocket.NsSocket()
-  #   outbound.on 'start', -> outbound.send event, data
-  #   outbound.on 'error', (error) ->
-  #     @logger.warn "Couldn't send #{event} to editor:", error
-  #   outbound.connect Config.sublimeServerPort
     
   constructor: (@options={}) ->
     @port   = @options.port || 48627
     @logger = @options.logger || logger.silentLogger()
 
+    # Create an nssocket server
     @server = nssocket.createServer (@socket) =>
       @logger.info "editor connected"
 
@@ -32,12 +31,13 @@ class Manager extends EventEmitter
   stop: (callback) ->
     @server.close(callback)
     
-
+  # A `buffer:reset` message is emitted by the editor when changes to a file are discarded.
   handleReset: (data={}) ->    
     path       = data.path
     @logger.debug "buffer reset", path
     @emit 'buffer:reset', path : path
 
+  # A `buffer:update` message is emitted by the editor when a file buffer is changed.
   handleUpdate: (data={}) ->
     if !data.path
       @logger.warn 'Regecting update (invalid format)'

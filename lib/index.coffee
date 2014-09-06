@@ -18,13 +18,13 @@ module.exports =
   # The [editor](editor/index.html) module manages the communication with the text editor
   editor:     require './editor'
 
-  # The [support](support/index.html) module provides various helper functions
+  # The support module provides various helper functions
   helpers:    require './support/support'
 
   # The [livestyles](livestyles/index.html) module brokers the relationship between editor and browser
   livestyles: require './livestyles'
 
-  # The [livestyles](livestyles/index.html) module provides wrappers around supported compilers
+  # The [renderer](renderer/index.html) module provides wrappers around supported compilers
   renderer:   require './renderer'
 
   # The [Server](server.html) class runs the http and socket servers. It is the **main entry point** to Takana.
