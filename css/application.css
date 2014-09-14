@@ -434,7 +434,7 @@ section.getting-started {
     font-size: 1.5rem;
     line-height: 1.5em; }
 
-.video-container {
+.video {
   position: relative;
   margin-top: 5.0625rem;
   overflow: hidden;
@@ -446,38 +446,22 @@ section.getting-started {
   margin-bottom: 2.25rem;
   background-color: #eee; }
   @media screen and (max-width: 720px) {
-    .video-container {
+    .video {
       margin-top: 2.25rem; } }
-  .video-container:last-child {
+  .video:last-child {
     margin-right: 0; }
-  @media screen and (max-width: 500px) { }
-  .video-container a.play {
-    width: 7.59375rem;
-    height: 7.59375rem;
-    border-radius: 400px;
-    font-family: "SSStandard";
-    font-size: 3.375rem;
-    color: white;
-    text-decoration: none;
-    text-align: center;
-    padding-top: 3.375rem;
-    padding-left: 4px;
-    display: block;
-    background-color: #222;
+  .video .video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    /* 16:9 */
+    padding-top: 25px;
+    height: 0; }
+  .video .video-container iframe {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-left: -3.79688rem;
-    margin-top: -3.79688rem; }
-  .video-container video {
-    display: block;
-    float: left;
-    margin-right: 2.61317%;
+    top: 0;
+    left: 0;
     width: 100%;
-    margin: 0 auto;
-    display: table; }
-    .video-container video:last-child {
-      margin-right: 0; }
+    height: 100%; }
 
 a.cta {
   font-size: 1.5rem;
@@ -533,9 +517,14 @@ header {
     display: block;
     float: left;
     margin-right: 2.61317%;
-    width: 38.4321%; }
+    width: 38.4321%;
+    text-align: right;
+    font-size: 1.5rem; }
     header .social:last-child {
       margin-right: 0; }
+    @media screen and (max-width: 500px) {
+      header .social {
+        text-align: left; } }
 
 * {
   -webkit-font-smoothing: antialiased; }
