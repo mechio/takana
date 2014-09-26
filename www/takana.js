@@ -5,7 +5,7 @@
  *
  * - pure javascript - server compatible, browser compatible
  * - dont rely on the browser doms
- * - super simple - you get it immediatly, no mistery, no magic involved
+ * - super simple - you get it immediately, no mistery, no magic involved
  *
  * - create a MicroEventDebug with goodies to debug
  *   - make it safer to use
@@ -15,7 +15,7 @@ var MicroEvent	= function(){};
 MicroEvent.prototype	= {
 	bind	: function(event, fct){
 		this._events = this._events || {};
-		this._events[event] = this._events[event]	|| [];
+		this._events[event] = this._events[event] || [];
 		this._events[event].push(fct);
 	},
 	unbind	: function(event, fct){
