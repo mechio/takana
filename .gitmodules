@@ -1,3 +1,0 @@
-[submodule "sublime-plugin"]
-	path = sublime-plugin
-	url = https://github.com/mechio/takana-sublime.git
