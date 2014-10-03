@@ -4,8 +4,8 @@ describe 'css', ->
   describe 'render', ->
     it 'should return the body', (done) ->
       file = fixturePath('css/style.css')
-      css.render file: file, (error, body) ->
+      css.render file: file, (error, data) ->
         (error == null).should.be.true
-        assertFileHasBody(file, body, done)
+        assertFileHasBody(file, data.body, done)
         
 

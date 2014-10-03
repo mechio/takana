@@ -32,6 +32,10 @@ class Server
     @options.httpPort     ?= Config.httpPort
     @options.scratchPath  ?= Config.scratchPath
 
+    if (!@options.path)
+      throw('specify a project path')
+
+
     app         = express()
     @webServer  = http.createServer(app)
 
@@ -49,10 +53,14 @@ class Server
 
     # the [Project Manager](livestyles/project_manager.html) connects the editor and browsers together. 
     # Live compilation happens here
-    @projectManager = new livestyles.ProjectManager(
+    @project = new livestyles.Project(
+      path           : @options.path
+      name           : 'default'
+      includePaths   : (@options.includePaths || [])
+      scratchPath    : @options.scratchPath
       browserManager : @browserManager
       editorManager  : @editorManager
-      scratchPath    : @options.scratchPath
+      logger         : log.getLogger("Project[#{options.name}]")#log.getLogger("Project[#{options.name}]")
     )
 
     # serve the client side JS for browsers that listen to live updates
@@ -68,16 +76,35 @@ class Server
       @logger.trace "[#{req.socket.remoteAddress}] #{req.method} #{req.headers.host} #{req.url}"
       next()
 
-    # returns the latest compiled css for a project & stylesheet
-    app.get '/projects/:name/:stylesheet', (req, res) =>
-      projectName = req.params.name
+
+    # returns the latest sourcemap for a stylesheet
+    app.get '/livestyles/maps/:stylesheet.map', (req, res) =>
       stylesheet  = req.params.stylesheet
       href        = req.query.href
 
-      project     = @projectManager.get(projectName)
-      
+      @logger.error('**********')
+      @logger.error(stylesheet)
 
-      if project && body = project.getBodyForStylesheet(stylesheet)
+
+      if sourceMap = @project.getStylesheetRender(stylesheet).sourceMap
+        
+        console.log('sourceMap')
+
+        # body = helpers.absolutizeUrls(body, href) if href
+
+        res.setHeader 'Content-Type', 'application/octet-stream'
+        res.setHeader 'Content-Length', Buffer.byteLength(sourceMap)
+        res.end(sourceMap)
+      else
+        res.end("couldn't find a sourceMap for stylesheet: #{stylesheet}")
+
+
+    # returns the latest css body for a stylesheet
+    app.get '/livestyles/:stylesheet.css', (req, res) =>
+      stylesheet  = req.params.stylesheet
+      href        = req.query.href
+
+      if body = @project.getStylesheetRender(stylesheet).body
         
         body = helpers.absolutizeUrls(body, href) if href
 
@@ -87,51 +114,11 @@ class Server
       else
         res.end("couldn't find a body for stylesheet: #{stylesheet}")
 
-    # removes project by name
-    app.delete '/projects/:name', (req, res) =>
-      name = req.params.name
-      if @projectManager.get(name)
-        @projectManager.remove name
-        res.statusCode = 201
-        res.end()
-      else
-        res.statusCode = 404
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(error: "no project named '#{name}'"))
-
-    # creates a new project
-    app.post '/projects', (req, res) =>
-      name = req.body.name
-      if !@projectManager.get(name)
-        @projectManager.add(
-          name: name
-          path: req.body.path
-          includePaths: req.body.includePaths
-        )
-        res.statusCode = 201
-        res.end()
-      else 
-        res.statusCode = 409
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(error: "a project named '#{name}' already exists"))
-
-    # lists all projects
-    app.get '/projects', (req, res) =>
-      data = @projectManager.allProjects().map (project) -> {
-        name: project.name, 
-        path: project.path,
-        includePaths: project.includePaths
-      }
-
-      res.setHeader('Content-Type', 'application/json')
-      res.end(JSON.stringify(data))
-
-
 
   start: (callback) ->
     @editorManager.start()
     @browserManager.start()
-    @projectManager.start()
+    @project.start()
 
     shell.mkdir('-p', @options.rootDir)
     shell.mkdir('-p', @options.scratchPath)
@@ -141,7 +128,7 @@ class Server
       callback?()
 
   stop: (callback) ->
-    @projectManager.stop()
+    @project.stop()
     @editorManager.stop =>
       @webServer.close ->
         callback?()

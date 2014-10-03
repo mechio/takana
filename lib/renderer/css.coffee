@@ -5,4 +5,4 @@ exports.render = (options, callback) ->
     if error
       callback?(error, null)
     else 
-      callback?(null, data.toString())
+      callback?(null, body: data.toString())

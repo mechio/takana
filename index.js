@@ -67,7 +67,11 @@ exports.run = function(options){
     });
   }
 
-  var server       = new Server();
+  var server = new Server({
+    name:         'default',
+    path:         options.path,
+    includePaths: options.includePaths
+  });
 
   console.log();
   console.log();
@@ -93,13 +97,8 @@ exports.run = function(options){
       installSublimePlugin();
     }
 
-    logger.info('adding project folder', options.path);
+    logger.info('running on project', options.path);
 
-    server.projectManager.add({
-      name:         'default',
-      path:         options.path,
-      includePaths: options.includePaths
-    });
 
   });  
 }

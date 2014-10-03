@@ -13,15 +13,24 @@ describe 'scss', ->
         done()
 
     it 'should have the same output as the sass compiler', (done) ->
-      file = fixturePath('scss/foundation/style.scss')
+      file  = fixturePath('scss/foundation/style.scss')
+      renderOptions = 
+        file: file
+        sourceMap: 'blob.jsa'
 
-      scss.render file: file, (error, body) ->
-        body.should.be.type('string')
+      scss.render renderOptions, (error, result) ->
+        result.body.should.be.type('string')
+
         (error == null).should.be.true
+
+        stats = {}  
         sass.render(
           file    : file
-          success : (sassBody) =>
-            sassBody.should.equal(body)
+          stats   : stats
+          sourceMap: renderOptions.sourceMap
+          success : (body) =>
+            body.should.equal(result.body)
+            stats.sourceMap.should.equal(result.sourceMap)
             done()
         )
 
@@ -33,11 +42,11 @@ describe 'scss', ->
         includePaths: [fixturePath('scss')]
       }
 
-      scss.render options, (error, body) ->
-        body.should.be.type('string')
+      scss.render options, (error, result) ->
+        result.body.should.be.type('string')
         (error == null).should.be.true
         
         options["success"] = (sassBody) =>
-          sassBody.should.equal(body)
+          sassBody.should.equal(result.body)
           done()
         sass.render(options)

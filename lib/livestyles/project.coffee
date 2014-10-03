@@ -13,7 +13,7 @@ class Project
     @editorManager  = @options.editorManager
     @includePaths   = @options.includePaths 
     @browserManager = @options.browserManager
-    @bodyCache      = {}
+    @resultCache    = {}
 
     if !@path || !@name || !@scratchPath || !@browserManager || !@editorManager
       throw('Project not instantiated with required options')
@@ -68,25 +68,26 @@ class Project
 
       file = @folder.getFile(path)
       if file
+        fileHash = helpers.hashCode(file.path)
         renderer.for(file.scratchPath).render {
           file: file.scratchPath, 
           includePaths: @includePaths
-        }, (error, body) =>
+          sourceMap: "maps/#{fileHash}.map"
+        }, (error, result) =>
           if !error
             @logger.info 'rendered', file.scratchPath
 
-            fileHash = helpers.hashCode(file.path)
 
-            @bodyCache[fileHash] = body
-            @browserManager.stylesheetRendered(@name, file.path, "projects/#{@name}/#{fileHash}")
+            @resultCache[fileHash] = result
+            @browserManager.stylesheetRendered(@name, file.path, "livestyles/#{fileHash}.css")
 
           else
             @logger.warn 'error rendering', file.scratchPath, ':', error
       else
         @logger.warn "couldn't find a file for watched stylesheet", path
 
-  getBodyForStylesheet: (id) ->
-    @bodyCache[id]
+  getStylesheetRender: (id) ->
+    @resultCache[id] 
 
   start: (callback) ->
     @folder.start ->

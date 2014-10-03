@@ -16,6 +16,7 @@ describe 'Client', ->
       @server = new Server( 
         database: testDB 
         logger:   testLogger
+        path:     'path/to/some/'
       )
       @server.start ->
         done()
@@ -29,39 +30,6 @@ describe 'Client', ->
         @client.getStatus (status) ->
           status.running.should.equal(true)
           done()
-
-    describe 'getProjects', ->
-      it 'should list all projects', (done) ->
-        @client.getProjects (error, projects) ->
-          projects.should.be.empty #.to.eql([])
-          done()
-
-    describe 'addProject', ->
-      it 'should add a project', (done) ->
-        projectPath = fixturePath('scss/foundation')
-        # add a project
-        @client.addProject {
-          name: "testProject"
-          path: projectPath
-          includePaths: [process.cwd()]
-        }, (error) => 
-
-          # callback should return no errors
-          (typeof error == 'undefined').should.be.true
-
-          # get the project
-          @client.getProjects (error, projects) =>
-            projects[0].name.should.equal 'testProject'
-            projects[0].path.should.equal projectPath
-            projects[0].includePaths.should.eql [process.cwd()]
-            done()
-
-      it 'should update project path and includePaths if called for an existing project'
-
-    describe 'removeProject', ->
-      it 'should remove a project'
-
-
 
             
 
