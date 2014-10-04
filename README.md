@@ -12,7 +12,7 @@ Takana is a Sass/CSS live-editor. It lets you see your SCSS and CSS style change
 
 ## Requirements
 
-- Currently, Takana only supports OSX and Sublime Text 2 & 3.
+- Currently, Takana supports OSX, Linux and Sublime Text 2 & 3.
 - Takana uses [libsass](https://github.com/hcatlin/libsass) under the hood, if you're using [node-sass](https://github.com/andrew/node-sass) you'll be fine. However, if you're using the ruby compiler, you may need to refactor your code to get it running with libsass.
 
 
