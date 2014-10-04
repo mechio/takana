@@ -4,6 +4,12 @@
 
 Takana is a Sass/CSS live-editor. It lets you see your SCSS and CSS style changes live, in the browser, as you type them.
 
+
+[![Build Status](https://travis-ci.org/mechio/takana.svg?branch=master&style=flat)](https://travis-ci.org/mechio/takana)
+[![npm version](https://badge.fury.io/js/takana.svg)](http://badge.fury.io/js/takana)
+[![Dependency Status](https://david-dm.org/mechio/takana.svg?theme=shields.io)](https://david-dm.org/mechio/takana)
+[![devDependency Status](https://david-dm.org/mechio/takana/dev-status.svg?theme=shields.io)](https://david-dm.org/mechio/takana#info=devDependencies)
+
 ## Requirements
 
 - Currently, Takana only supports OSX and Sublime Text 2 & 3.
@@ -34,8 +40,13 @@ $ takana /path/to/project_folder
 
 Now add the JavaScript snippit to any page you want to live update:
 
-```
+```html
 <script type="text/javascript" src="http://localhost:48626/takana.js"></script>
+<script type="text/javascript">
+  takanaClient.run({
+    host: 'localhost:48626' // optional, defaults to localhost:48626
+  });
+</script>
 ```
 
 #### 4. You're all set
