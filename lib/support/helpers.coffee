@@ -98,29 +98,6 @@ absolutizeUrls = (body, href) ->
 pickBestFileForHref = (href, candidates) ->
   FileMatcher.pickBestFileForHref(href, candidates)
 
-installSublimePlugin = ->
-  logger            = logger.getLogger('sublimeInstaller')
-
-  st2PackagePath    = sanitizePath('~/Library/Application Support/Sublime Text 2/Packages/')
-  st3PackagePath    = sanitizePath('~/Library/Application Support/Sublime Text 3/Packages/')
-  takanaPackagePath = null
-
-  if fs.existsSync(st3PackagePath)
-    takanaPackagePath = path.join(st3PackagePath, 'Takana')
-    logger.info "found Sublime Text 3"
-  else if fs.existsSync(st2PackagePath)
-    takanaPackagePath = path.join(st2PackagePath, 'Takana')
-    logger.info "found Sublime Text 2"
-  else
-    logger.error "couldn't find a Sublime Text installation"
-    return
-
-  logger.info "installing plugin to '%s'", takanaPackagePath
-  shell.mkdir('-p', takanaPackagePath)
-  shell.cp '-f', path.join(__dirname, '../../sublime-plugin/takana.py'), path.join(takanaPackagePath, 'takana.py')
-
-
-
 module.exports =
   guid: guid
   fastFind: fastFind
@@ -132,4 +109,3 @@ module.exports =
   measureTime: measureTime
   absolutizeUrls: absolutizeUrls
   pickBestFileForHref: pickBestFileForHref
-  installSublimePlugin: installSublimePlugin

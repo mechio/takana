@@ -1,4 +1,4 @@
-fsevents          = require 'fsevents'
+chokidar          = require 'chokidar'
 File              = require './file'
 {exec}            = require 'child_process'
 shell             = require 'shelljs'
@@ -60,10 +60,7 @@ class Folder extends EventEmitter
         callback?()
 
   stop: ->
-    if @watcher
-      @watcher.stop()
-      @watcher.removeAllListeners()
-      delete @watcher
+    @watcher.close() if @watcher
 
   bufferUpdate: (path, buffer, callback) ->
     if file = @getFile(path)
@@ -86,18 +83,20 @@ class Folder extends EventEmitter
       callback?()
 
   startWatching: ->
-    @watcher  = fsevents(@path)
+    @watcher = chokidar.watch(@path,
+      ignoreInitial : true
+      persistent    : true
+    )
 
-    @watcher.on 'change', (path, info) =>
-      event = info.event
-      event = 'deleted' if event == 'moved-out'
-      event = 'created' if event == 'moved-in'
-
-      @_handleFSEvent(event, path, info)
-
+    @watcher
+      .on( 'add',       (path) => @_handleFSEvent('created', path) )
+      .on( 'addDir',    (path) => @_handleFSEvent('created', path, type: 'directory') )
+      .on( 'change',    (path) => @_handleFSEvent('modified', path) )
+      .on( 'unlink',    (path) => @_handleFSEvent('deleted', path) )
+      .on( 'unlinkDir', (path) => @_handleFSEvent('deleted', path, type: 'directory') )
+      .on( 'error',     (error) => console.error 'fs watch error:', error )
+  
   _handleFSEvent: (event, path, info={}) ->
-    @logger.trace 'processing fsevent:', event, path, info
-    
     if path == @path && event == 'deleted'
       @stop()
       @emit 'deleted', @
@@ -125,6 +124,7 @@ class Folder extends EventEmitter
     else
       return
 
+    @logger.trace 'processed fsevent:', event, path, info
     @throttledEmitUpdateMessage()
 
 

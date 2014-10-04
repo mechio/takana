@@ -21,7 +21,6 @@
     "connect": "~2.12.0",
     "shelljs": "~0.2.6",
     "q": "~1.0.0",
-    "fsevents": "~0.1.6",
     "js-yaml": "~3.0.1",
     "websocket": "~1.0.8",
     "express": "~3.4.8",
@@ -30,7 +29,8 @@
     "commander": "~2.1.0",
     "cli-table": "~0.3.0",
     "forever": "~0.10.11",
-    "takana-client": "^1.0.3"
+    "takana-client": "^1.0.3",
+    "chokidar": "^0.9.0"
   },
   "devDependencies": {
     "mocha": "~1.17.0",

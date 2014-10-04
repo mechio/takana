@@ -5,6 +5,7 @@ require("coffee-script");
 var path     = require('path'),
     shell    = require('shelljs'),
     Log4js   = require('log4js'),
+    fs       = require('fs'),
     logger   = Log4js.getDefaultLogger();
 
 
@@ -12,6 +13,36 @@ exports.Client  = require('./lib/client');
 
 var Server  = exports.Server  = require('./lib/server');
 var helpers = exports.helpers = require('./lib/support/helpers');
+
+
+function installSublimePlugin(){
+
+  var takanaPackagePath = null,
+      searchPaths = [
+    helpers.sanitizePath('~/Library/Application Support/Sublime Text 3/Packages/'),
+    helpers.sanitizePath('~/Library/Application Support/Sublime Text 2/Packages/'),
+    helpers.sanitizePath('~/.config/sublime-text-3/Packages/') // linux
+  ];
+
+  searchPaths.forEach(function(p){
+    if (takanaPackagePath) return;
+    if (fs.existsSync(p)){
+      takanaPackagePath = path.join(p, 'Takana');
+    }
+  });
+
+  if (takanaPackagePath){
+    logger.info("installing plugin to '%s'", takanaPackagePath);
+    shell.mkdir('-p', takanaPackagePath);
+    shell.cp('-f', path.join(__dirname, './sublime-plugin/takana.py'), path.join(takanaPackagePath, 'takana.py'));
+  }
+  else {
+    logger.error("couldn't find a Sublime Text package directory. Install an editor plugin manually.");
+    logger.error("search paths were:", searchPaths);
+  }
+}
+
+
 
 exports.run = function(options){
 
@@ -59,7 +90,7 @@ exports.run = function(options){
   server.start(function(){
 
     if (!options.skipSublime){
-      helpers.installSublimePlugin();
+      installSublimePlugin();
     }
 
     logger.info('adding project folder', options.path);
