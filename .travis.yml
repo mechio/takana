@@ -1,7 +1,7 @@
 language: objective-c
 
-before_install: "./bin/setup"
-script: "./bin/ci"
+before_install: "brew install node && npm install"
+script: "npm test"
 notifications:
   email:
     - code@mech.io

@@ -48,9 +48,14 @@ exports.run = function(options){
   console.log('                                     ');
   console.log();
   console.log('     Paste this snippet inside <head> to live-edit your stylesheets:');
+  console.log();
   console.log('     <script type="text/javascript" src="http://localhost:48626/takana.js"></script>');
+  console.log('     <script type="text/javascript">');
+  console.log("       takanaClient.run({host: 'localhost:48626'});");
+  console.log('     </script>');
   console.log();
   console.log();
+  logger.warn('if you have just upgraded from version 0.0.10 or below, please update the javascript snippet (above)');
   server.start(function(){
 
     if (!options.skipSublime){

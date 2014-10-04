@@ -56,7 +56,7 @@ class Server
     )
 
     # serve the client side JS for browsers that listen to live updates
-    app.use express.static(path.join(__dirname, '..', '/www'))
+    app.use express.static(path.join(__dirname, '..', '/node_modules/takana-client/dist'))
     app.use express.json()
     app.use express.urlencoded()
 
