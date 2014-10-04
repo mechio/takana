@@ -3,7 +3,7 @@ watcher    = require '../watcher'
 renderer   = require '../renderer'
 helpers    = require '../support/helpers'
 _          = require 'underscore'
-
+relative   = require('path').relative
 
 class Project
   constructor: (@options={}) ->
@@ -13,7 +13,6 @@ class Project
     @editorManager  = @options.editorManager
     @includePaths   = @options.includePaths 
     @browserManager = @options.browserManager
-    @resultCache    = {}
 
     if !@path || !@name || !@scratchPath || !@browserManager || !@editorManager
       throw('Project not instantiated with required options')
@@ -70,23 +69,18 @@ class Project
       if file
         fileHash = helpers.hashCode(file.path)
         renderer.for(file.scratchPath).render {
-          file: file.scratchPath, 
-          includePaths: @includePaths
+          file         : file.scratchPath, 
+          includePaths : @includePaths
+          writeToDisk  : true
         }, (error, result) =>
           if !error
             @logger.info 'rendered', file.scratchPath
-
-
-            @resultCache[fileHash] = result
-            @browserManager.stylesheetRendered(@name, file.path, "livestyles/#{fileHash}.css")
+            @browserManager.stylesheetRendered(@name, file.path, "live/#{relative(@scratchPath, file.scratchPath)}.css")
 
           else
             @logger.warn 'error rendering', file.scratchPath, ':', error
       else
         @logger.warn "couldn't find a file for watched stylesheet", path
-
-  getStylesheetRender: (id) ->
-    @resultCache[id] 
 
   start: (callback) ->
     @folder.start ->

@@ -37,7 +37,6 @@ describe 'scss', ->
         done()
 
     context 'writeToDisk = true', ->
-
       beforeEach ->
         @options =
           file: fixturePath('scss/foundation/style.scss')

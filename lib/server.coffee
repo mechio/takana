@@ -76,44 +76,7 @@ class Server
       @logger.trace "[#{req.socket.remoteAddress}] #{req.method} #{req.headers.host} #{req.url}"
       next()
 
-
-    # returns the latest sourcemap for a stylesheet
-    app.get '/livestyles/maps/:stylesheet.map', (req, res) =>
-      stylesheet  = req.params.stylesheet
-      href        = req.query.href
-
-      @logger.error('**********')
-      @logger.error(stylesheet)
-
-
-      if sourceMap = @project.getStylesheetRender(stylesheet).sourceMap
-        
-        console.log('sourceMap')
-
-        # body = helpers.absolutizeUrls(body, href) if href
-
-        res.setHeader 'Content-Type', 'application/octet-stream'
-        res.setHeader 'Content-Length', Buffer.byteLength(sourceMap)
-        res.end(sourceMap)
-      else
-        res.end("couldn't find a sourceMap for stylesheet: #{stylesheet}")
-
-
-    # returns the latest css body for a stylesheet
-    app.get '/livestyles/:stylesheet.css', (req, res) =>
-      stylesheet  = req.params.stylesheet
-      href        = req.query.href
-
-      if body = @project.getStylesheetRender(stylesheet).body
-        
-        body = helpers.absolutizeUrls(body, href) if href
-
-        res.setHeader 'Content-Type', 'text/css'
-        res.setHeader 'Content-Length', Buffer.byteLength(body)
-        res.end(body)
-      else
-        res.end("couldn't find a body for stylesheet: #{stylesheet}")
-
+    app.use '/live', express.static(@options.scratchPath)
 
   start: (callback) ->
     @editorManager.start()
