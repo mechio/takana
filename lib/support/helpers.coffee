@@ -112,7 +112,7 @@ installSublimePlugin = ->
     takanaPackagePath = path.join(st2PackagePath, 'Takana')
     logger.info "found Sublime Text 2"
   else
-    logger.error "couldn't find a Sublime Text installation"
+    logger.error "couldn't find a Sublime Text installation, please install an editor plugin manually."
     return
 
   logger.info "installing plugin to '%s'", takanaPackagePath
