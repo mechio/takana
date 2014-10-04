@@ -21,9 +21,6 @@ module.exports =
   # The support module provides various helper functions
   helpers:    require './support/support'
 
-  # The [livestyles](livestyles/index.html) module brokers the relationship between editor and browser
-  livestyles: require './livestyles'
-
   # The [renderer](renderer/index.html) module provides wrappers around supported compilers
   renderer:   require './renderer'
 
