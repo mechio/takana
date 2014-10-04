@@ -72,7 +72,6 @@ class Project
         renderer.for(file.scratchPath).render {
           file: file.scratchPath, 
           includePaths: @includePaths
-          sourceMap: "maps/#{fileHash}.map"
         }, (error, result) =>
           if !error
             @logger.info 'rendered', file.scratchPath

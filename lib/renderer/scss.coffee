@@ -1,4 +1,7 @@
-sass         = require 'node-sass'
+sass  = require 'node-sass'
+path  = require 'path'
+Q     = require 'q'
+fs    = require 'fs'
 
 parseError = (errorString) ->
   error = errorString
@@ -11,44 +14,33 @@ parseError = (errorString) ->
   error
 
 exports.render = (options, callback) ->
-  stats = {}
+  file            = options.file
+  outFile         = options.file + '.css'
+  sourceMapFile   = options.file + '.css.map'
+
   sass.render(
-    file         : options.file
-    includePaths : options.includePaths
-    # sourceComments: 'map'
-    sourceMap    : options.sourceMap
-    stats        : stats
-    success: (body) =>
-
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-      console.log('----')
-
-      console.log(options.file)
-      console.log(options.sourceMap)
-
-
-
-      console.log(stats.sourceMap);
-      console.log(body)
-
-      callback?(null, {
-        body:      body
-        sourceMap: stats.sourceMap
-      })
+    file           : file
+    includePaths   : options.includePaths
+    outFile        : outFile
+    sourceComments : 'map'
+    sourceMap      : sourceMapFile
+        
+    success: (css, sourceMap) =>
+      if (options.writeToDisk)
+        Q.nfcall(fs.writeFile, outFile, css, flags: 'w')
+          .then -> Q.nfcall(fs.writeFile, sourceMapFile, sourceMap, flags: 'w')
+          .then -> 
+            callback?(null, 
+              body:      css
+              sourceMap: sourceMap
+            )
+          .fail (e) -> callback?(message: error)      
+          .done()
+      else 
+        callback?(null, {
+          body:      css
+          sourceMap: sourceMap
+        })
     error: (error) =>
       callback?(parseError(error.trim()) || error, null)
   )

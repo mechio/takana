@@ -1,5 +1,29 @@
-scss = require '../../lib/renderer/scss'
-sass = require 'node-sass'
+scss  = require '../../lib/renderer/scss'
+sass  = require 'node-sass'
+path  = require 'path'
+shell = require 'shelljs'
+sassRender = (options, callback) ->
+  outFile       = options.file + '.css'
+  sourceMap     = options.file + '.css.map'
+
+  renderOptions = 
+    file           : options.file
+    includePaths   : options.includePaths
+    outFile        : outFile
+    sourceComments : 'map'
+    sourceMap      : sourceMap
+
+    success: (css, sm) =>
+      callback?(null, {
+        body:      css
+        sourceMap: sm
+      })
+
+    error: (error) =>
+      callback?(error.trim() || error, null)
+
+  sass.render(renderOptions)
+
 
 describe 'scss', ->
   describe 'render', ->
@@ -12,41 +36,49 @@ describe 'scss', ->
         (body == null).should.be.true
         done()
 
-    it 'should have the same output as the sass compiler', (done) ->
-      file  = fixturePath('scss/foundation/style.scss')
-      renderOptions = 
-        file: file
-        sourceMap: 'blob.jsa'
+    context 'writeToDisk = true', ->
 
-      scss.render renderOptions, (error, result) ->
-        result.body.should.be.type('string')
+      beforeEach ->
+        @options =
+          file: fixturePath('scss/foundation/style.scss')
+          writeToDisk: true
 
-        (error == null).should.be.true
-
-        stats = {}  
-        sass.render(
-          file    : file
-          stats   : stats
-          sourceMap: renderOptions.sourceMap
-          success : (body) =>
-            body.should.equal(result.body)
-            stats.sourceMap.should.equal(result.sourceMap)
-            done()
-        )
-
-    it 'should work with includePaths', (done) ->
-      file = fixturePath('scss/include-paths/style.scss')
-      
-      options = { 
-        file: file,
-        includePaths: [fixturePath('scss')]
-      }
-
-      scss.render options, (error, result) ->
-        result.body.should.be.type('string')
-        (error == null).should.be.true
-        
-        options["success"] = (sassBody) =>
-          sassBody.should.equal(result.body)
+      afterEach (done) ->
+        setTimeout =>
+          shell.rm('-f', @options.file + '.css')
+          shell.rm('-f', @options.file + '.css.map')
           done()
-        sass.render(options)
+        , 10
+
+      it 'should write the css and source map to disk', (done) ->
+        scss.render @options, (error, result) =>
+          assertFileHasBody(@options.file + '.css', result.body)
+          assertFileHasBody(@options.file + '.css.map', result.sourceMap)
+          
+          done()
+          
+
+    it 'should return css with a valid source map', ->
+      file     = fixturePath('scss/foundation/style.scss')
+      scss.render file: file, (error, result) ->
+        result.body.should.containDeep('sourceMappingURL=style.scss.css.map');
+        JSON.parse(result.sourceMap).sources[0].should.equal('style.scss')
+
+    it 'should have the same output as the sass compiler', (done) ->
+      file     = fixturePath('scss/foundation/style.scss')
+      sassRender file: file, (error, sassResult) ->
+        scss.render file: file, (error, takanaResult) ->
+          takanaResult.body.should.equal(sassResult.body)
+          takanaResult.sourceMap.should.equal(sassResult.sourceMap)
+          done()
+      
+    it 'should work with includePaths', (done) ->
+      options = 
+        file         : fixturePath('scss/include-paths/style.scss')
+        includePaths : [fixturePath('scss')]
+      
+      sassRender options, (error, sassResult) ->
+        scss.render options, (error, takanaResult) ->
+          takanaResult.body.should.equal(sassResult.body)
+          takanaResult.sourceMap.should.equal(sassResult.sourceMap)
+          done()
