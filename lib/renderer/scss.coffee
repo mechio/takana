@@ -31,8 +31,9 @@ exports.render = (options, callback) ->
           .then -> Q.nfcall(fs.writeFile, sourceMapFile, sourceMap, flags: 'w')
           .then -> 
             callback?(null, 
-              body:      css
-              sourceMap: sourceMap
+              body      : css
+              sourceMap : sourceMap
+              cssFile   : outFile
             )
           .fail (e) -> callback?(message: error)      
           .done()

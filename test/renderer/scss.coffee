@@ -53,7 +53,8 @@ describe 'scss', ->
         scss.render @options, (error, result) =>
           assertFileHasBody(@options.file + '.css', result.body)
           assertFileHasBody(@options.file + '.css.map', result.sourceMap)
-          
+          result.cssFile.should.equal(@options.file + '.css')
+
           done()
           
 
@@ -69,6 +70,7 @@ describe 'scss', ->
         scss.render file: file, (error, takanaResult) ->
           takanaResult.body.should.equal(sassResult.body)
           takanaResult.sourceMap.should.equal(sassResult.sourceMap)
+
           done()
       
     it 'should work with includePaths', (done) ->
