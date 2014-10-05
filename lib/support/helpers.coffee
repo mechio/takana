@@ -2,7 +2,7 @@ Q           = require 'q'
 fs          = require 'fs'
 path        = require 'path'
 _           = require 'underscore'
-{exec}      = require 'child_process'
+{spawn}     = require 'child_process'
 shell       = require 'shelljs'
 logger      = require './logger'
 FileMatcher = require './file_matcher'
@@ -16,15 +16,21 @@ guid = ->
 
 
 fastFind = (path, extensions, callback) ->
-  p   = sanitizePath(path)
-  p   = p.substring(0, p.length - 1);
+  p      = sanitizePath(path)
+  p      = p.substring(0, p.length - 1);
 
-  cmd = "find #{p} " + extensions.map( (e) -> "-name '*.#{e}'" ).join(' -o ')
+  args   = "#{p} " + extensions.map( (e) -> "-name *.#{e}" ).join(' -o ')
+  find   = spawn('find', args.split(' '))
 
-  exec cmd, (error, stdout, stderr) =>
+  stdout     = ''
+
+  find.stdout.on 'data', (data) -> stdout += data
+  find.on 'error', (e) -> 
+    callback?(e)
+
+  find.on 'close', (code) ->
     files = stdout.trim().split("\n")
-
-    callback?(error, files)
+    callback?(null, files)
 
 
 # pipes event from eventemitter a through eventemitter b

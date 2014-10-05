@@ -55,6 +55,11 @@ class FileMatcher
     return bestOnesNoCss[0][0] if bestOnesNoCss.length == 1
 
 
+  @candidatesWithSimilarEnding: (filePath, candidates) ->
+    _.select candidates, (t) => 
+      t = t.replace(/scss/g, 'css')
+      t.indexOf(filePath) == t.length - filePath.length
+
   @findBestFile: (filePath, candidates) ->
     candidates = @candidatesWithoutPartials(filePath, candidates)
 
@@ -66,6 +71,9 @@ class FileMatcher
 
     exactFilename   = @candidatesWithExactFilename(filePath, candidates)
     return exactFilename[0] if exactFilename.length == 1
+
+    similarEnding = @candidatesWithSimilarEnding(filePath, candidatesNoCss)
+    return similarEnding[0] if similarEnding.length == 1    
 
     scored = @scoredMatching(filePath, candidates)
     return scored if scored

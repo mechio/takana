@@ -16,6 +16,19 @@ describe 'FileMatcher', ->
 
   describe 'pickBestFileForHref', ->
 
+    it 'should do somewhere', ->
+      href       = 'http://localhost:8000/css/app.css'
+      candidates = [ 
+        '/Users/barnaby/Dropbox/Projects/lib/foundation-libsass-template/css/app.css'
+        '/Users/barnaby/Dropbox/Projects/lib/foundation-libsass-template/scss/app.scss'         
+        '/Users/barnaby/Dropbox/Projects/lib/foundation-libsass-template/node_modules/node-sass/test/sass-spec/spec/basic/50_wrapped_pseudo_selectors/input.scss',
+        '/Users/barnaby/Dropbox/Projects/lib/foundation-libsass-template/node_modules/node-sass/test/sass-spec/spec/libsass/append/expected_output.css',
+        '/Users/barnaby/Dropbox/Projects/lib/foundation-libsass-template/node_modules/node-sass/test/sass-spec/spec/libsass/append/input.scss',
+      ]
+
+      match = FileMatcher.pickBestFileForHref href, candidates
+      match.should.equal(candidates[1])
+
     it 'should return the only match if there is just one candidate', ->
       href       = 'http://foundation.dev/scss/style.css?jjhs=sfd'
       candidates = [

@@ -23,3 +23,4 @@ describe 'helpers', ->
 
   describe 'fastFind', ->
     it 'should have the same output as glob'
+    it 'should work with huge directories (>2000 files)'

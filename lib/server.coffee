@@ -122,7 +122,7 @@ class Server
       if file
         renderer.for(file.scratchPath).render {
           file         : file.scratchPath, 
-          includePaths : @includePaths
+          includePaths : @options.includePaths
           writeToDisk  : true
         }, (error, result) =>
           if !error

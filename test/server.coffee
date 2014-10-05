@@ -1,4 +1,4 @@
-describe 'Sercer', ->
+describe 'Server', ->
 
   context 'received folder updated event', ->
     it 'should call handleFolderUpdate'
@@ -18,9 +18,13 @@ describe 'Sercer', ->
 
   describe 'handleFolderUpdate', ->
     it 'should render all watched stylesheets on the project'
+    it 'should work with include paths'
     context 'successful render', ->
       it 'should store the rendered body in the bodycache'
       it 'should notify the browser manager'
+  
+  it 'should work for css projects'
+  it 'should work for zurb foundation'
 
   describe 'start', ->
     it 'should start watching its folder'
