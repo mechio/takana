@@ -8,12 +8,8 @@ var path     = require('path'),
     fs       = require('fs'),
     logger   = Log4js.getDefaultLogger();
 
-
-exports.Client  = require('./lib/client');
-
 var Server  = exports.Server  = require('./lib/server');
 var helpers = exports.helpers = require('./lib/support/helpers');
-
 
 function installSublimePlugin(){
 

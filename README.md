@@ -1,14 +1,11 @@
 ![Takana Logo](https://raw.github.com/mechio/takana/master/takana.png)
 
+[![Build Status](https://travis-ci.org/mechio/takana.svg?branch=master&style=flat)](https://travis-ci.org/mechio/takana)
+[![npm version](https://badge.fury.io/js/takana.svg)](http://badge.fury.io/js/takana)
+
 [http://usetakana.com](http://usetakana.com)
 
 Takana is a Sass/CSS live-editor. It lets you see your SCSS and CSS style changes live, in the browser, as you type them.
-
-
-[![Build Status](https://travis-ci.org/mechio/takana.svg?branch=master&style=flat)](https://travis-ci.org/mechio/takana)
-[![npm version](https://badge.fury.io/js/takana.svg)](http://badge.fury.io/js/takana)
-[![Dependency Status](https://david-dm.org/mechio/takana.svg?theme=shields.io)](https://david-dm.org/mechio/takana)
-[![devDependency Status](https://david-dm.org/mechio/takana/dev-status.svg?theme=shields.io)](https://david-dm.org/mechio/takana#info=devDependencies)
 
 ## Requirements
 

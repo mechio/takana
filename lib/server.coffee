@@ -110,15 +110,14 @@ class Server
       @handleFolderUpdate()
 
   handleFolderUpdate: ->
+    @resultCache       ?= {}
     watchedStylesheets = @browserManager.watchedStylesheetsForProject(@projectName)
-    console.log('watched stylesheets are:', watchedStylesheets);
+    
     watchedStylesheets.forEach (p) =>
       return if !p
 
       file = @folder.getFile(p)
       if file
-        console.log('found the file')
-        fileHash = helpers.hashCode(file.path)
         renderer.for(file.scratchPath).render {
           file         : file.scratchPath, 
           includePaths : @includePaths
