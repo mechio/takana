@@ -1,6 +1,7 @@
-url         = require 'url'
+url  = require 'url'
+mime = require('mime')
 
-absolutizeUrls = (body, href) ->
+exports.absolutizeUrls = absolutizeUrls = (body, href) ->
   urlRegex = ///
     url\(
       [\"|\']{0,1}
@@ -16,45 +17,41 @@ absolutizeUrls = (body, href) ->
     "url('#{url}')"
   body
 
-exports.absolutizeCSSUrls = absolutizeCSSUrls = (mutator) ->
-  (req, res, next) ->
-    write = res.write
-    end   = res.end
+exports.absolutizeCSSUrls = absolutizeCSSUrls = (req, res, next) ->
+  write = res.write
+  end   = res.end
 
-    data            = new Buffer(0)
-    transform       = true
-    bodyIsHtml      = false
+  data            = new Buffer(0)
+  transform       = true
+  bodyIsHtml      = false
 
-    res.write = (chunk, encoding) ->
-      # data += chunk.toString()
-      @_implicitHeader() if !@headerSent
-      if bodyIsHtml
-        data = Buffer.concat [data, new Buffer(chunk, encoding)]
+  res.write = (chunk, encoding) ->
+    # data += chunk.toString()
+    @_implicitHeader() if !@headerSent
+    if bodyIsHtml
+      data = Buffer.concat [data, new Buffer(chunk, encoding)]
+    else
+      write.call(res, chunk, encoding)
+
+  res.end = (chunk, encoding) ->            
+    if bodyIsHtml
+      @write(chunk, encoding) if chunk
+
+      href = req.query.href
+
+      if href
+        end.call(res, absolutizeUrls(data.toString(), href))
       else
-        write.call(res, chunk, encoding)
+        end.call(res, data.toString())
 
-    res.end = (chunk, encoding) ->            
-      if bodyIsHtml
-        @write(chunk, encoding) if chunk
+    else
+      end.call(res, chunk, encoding)
 
-        # This is where we start fiddling with the data
+  res.on 'header', ->
+    contentType = res.getHeader('Content-Type') 
+    if contentType && mime.extension( contentType ) == 'css'
+      # We know that it's html
+      res.removeHeader('Content-Length')      
+      bodyIsHtml = true
 
-        document = domstream(data)
-        document.on 'data', (data) ->
-          write.call(res, data)
-
-        document.on 'end', (data) ->
-          end.call(res, data)
-
-        mutator(req, document)
-      else
-        end.call(res, chunk, encoding)
-
-    res.on 'header', ->
-      contentType = res.getHeader('Content-Type') 
-      if contentType && mime.extension( contentType ) == 'html'
-        # We know that it's html
-        res.removeHeader('Content-Length')      
-        bodyIsHtml = true
-
-    next()
+  next()

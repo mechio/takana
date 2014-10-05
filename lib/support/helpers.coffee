@@ -67,26 +67,8 @@ measureTime = ->
 pickBestFileForHref = (href, candidates) ->
   FileMatcher.pickBestFileForHref(href, candidates)
 
-absolutizeUrls = (body, href) ->
-  urlRegex = ///
-    url\(
-      [\"|\']{0,1}
-      ([^\)|^\"|^\']+)
-      [\"|\']{0,1}
-    \)                  #
-  ///g
-  joinUrl  = url.resolve
-  protocol = url.parse(href).protocol
-  body = body.replace urlRegex, (m, url) ->
-    url = protocol + url if /^\/\/.*/.test(url)
-    url = joinUrl(href, url)
-    "url('#{url}')"
-  body
-
-
 module.exports =
   guid: guid
-  absolutizeUrls: absolutizeUrls
   fastFind: fastFind
   pipeEvent: pipeEvent
   extname: extname

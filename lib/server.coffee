@@ -9,6 +9,7 @@ log             = require './support/logger'
 editor          = require './editor'
 browser         = require './browser'
 watcher         = require './watcher'
+middleware      = require './support/middleware'
 connect         = require 'connect'
 http            = require 'http'
 shell           = require 'shelljs'
@@ -78,6 +79,7 @@ class Server
       @logger.trace "[#{req.socket.remoteAddress}] #{req.method} #{req.headers.host} #{req.url}"
       next()
 
+    @app.use middleware.absolutizeCSSUrls
     @app.use '/live', express.static(@options.scratchPath)
 
   setupListeners: ->
@@ -109,7 +111,7 @@ class Server
       @logger.debug 'processing stylesheet:listen', data.id
       @handleFolderUpdate()
 
-  handleFolderUpdate: (stats) ->
+  handleFolderUpdate: (stats={}) ->
     @resultCache       ?= {}
     watchedStylesheets = @browserManager.watchedStylesheetsForProject(@projectName)
     
@@ -124,12 +126,7 @@ class Server
           writeToDisk  : true
         }, (error, result) =>
           if !error
-
-            if stats && stats.timestamp
-              totalTime = Date.now() - stats.timestamp
-              @logger.error 'timestamp', totalTime
-
-            @logger.info 'rendered', file.scratchPath, @projectName, file.path, "live/#{path.relative(@options.scratchPath, file.scratchPath)}.css"
+            @logger.info 'rendered', file.path
             @browserManager.stylesheetRendered(@projectName, file.path, "live/#{path.relative(@options.scratchPath, file.scratchPath)}.css")
           else
             @logger.warn 'error rendering', file.scratchPath, ':', error

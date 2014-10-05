@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+
+
+while getopts ":w" opt; do
+  case $opt in
+    w)
+      node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --compilers coffee:coffee-script --watch
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+
+
+node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --compilers coffee:coffee-script
