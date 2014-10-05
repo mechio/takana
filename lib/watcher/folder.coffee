@@ -86,6 +86,8 @@ class Folder extends EventEmitter
     @watcher = chokidar.watch(@path,
       ignoreInitial : true
       persistent    : true
+      usePolling    : false
+      useFSEvents    : true      
     )
 
     @watcher
