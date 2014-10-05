@@ -87,7 +87,7 @@ class Server
       return unless data.path.indexOf(@options.path) == 0
       
       @logger.debug 'processing buffer:update', data.path
-      @folder.bufferUpdate(data.path, data.buffer)
+      @folder.bufferUpdate(data)
 
     @editorManager.on 'buffer:reset', (data) =>
       return unless data.path.indexOf(@options.path) == 0
@@ -109,7 +109,7 @@ class Server
       @logger.debug 'processing stylesheet:listen', data.id
       @handleFolderUpdate()
 
-  handleFolderUpdate: ->
+  handleFolderUpdate: (stats) ->
     @resultCache       ?= {}
     watchedStylesheets = @browserManager.watchedStylesheetsForProject(@projectName)
     
@@ -124,6 +124,11 @@ class Server
           writeToDisk  : true
         }, (error, result) =>
           if !error
+
+            if stats && stats.timestamp
+              totalTime = Date.now() - stats.timestamp
+              @logger.error 'timestamp', totalTime
+
             @logger.info 'rendered', file.scratchPath, @projectName, file.path, "live/#{path.relative(@options.scratchPath, file.scratchPath)}.css"
             @browserManager.stylesheetRendered(@projectName, file.path, "live/#{path.relative(@options.scratchPath, file.scratchPath)}.css")
           else

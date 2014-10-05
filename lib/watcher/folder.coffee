@@ -36,8 +36,8 @@ class Folder extends EventEmitter
   getFile: (path) ->
     @files[path]
 
-  emitUpdateMessage: ->
-    @emit 'updated', @
+  emitUpdateMessage: (data={}) ->
+    @emit 'updated', data
 
   runRsync: (callback) ->
     source      = helpers.sanitizePath(@path)
@@ -62,11 +62,14 @@ class Folder extends EventEmitter
   stop: ->
     @watcher.close() if @watcher
 
-  bufferUpdate: (path, buffer, callback) ->
-    if file = @getFile(path)
-      file.updateBuffer(buffer)
+  bufferUpdate: (data, callback) ->
+    if file = @getFile(data.path)
+      file.updateBuffer(data.buffer)
       file.syncToScratch =>
-        @emitUpdateMessage()
+        @emitUpdateMessage(
+          file:      data.path
+          timestamp: data.timestamp
+        )
         callback?()
 
     else
