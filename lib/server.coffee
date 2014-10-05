@@ -127,7 +127,7 @@ class Server
         }, (error, result) =>
           if !error
             @logger.info 'rendered', file.path
-            @browserManager.stylesheetRendered(@projectName, file.path, "live/#{path.relative(@options.scratchPath, file.scratchPath)}.css")
+            @browserManager.stylesheetRendered(@projectName, file.path, "live/#{path.relative(@options.scratchPath, result.cssFile)}")
           else
             @logger.warn 'error rendering', file.scratchPath, ':', error
       else

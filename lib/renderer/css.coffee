@@ -5,4 +5,8 @@ exports.render = (options, callback) ->
     if error
       callback?(error, null)
     else 
-      callback?(null, body: data.toString())
+      result = 
+        body: data.toString()
+
+      result.cssFile = options.file if options.writeToDisk
+      callback?(null, result)
