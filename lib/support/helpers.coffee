@@ -2,11 +2,11 @@ Q           = require 'q'
 fs          = require 'fs'
 path        = require 'path'
 _           = require 'underscore'
-url         = require 'url'
 {exec}      = require 'child_process'
 shell       = require 'shelljs'
 logger      = require './logger'
 FileMatcher = require './file_matcher'
+url         = require 'url'
 
 guid = ->
   "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace /[xy]/g, (c) ->
@@ -25,21 +25,6 @@ fastFind = (path, extensions, callback) ->
     files = stdout.trim().split("\n")
 
     callback?(error, files)
-
-
-# implmentation of Java's String hashcode
-hashCode = (string) ->
-  hash = 0
-  return hash if string.length is 0
-  i = 0
-  l = string.length
-
-  while i < l
-    char = string.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash |= 0 # Convert to 32bit integer
-    i++
-  hash
 
 
 # pipes event from eventemitter a through eventemitter b
@@ -79,33 +64,15 @@ measureTime = ->
     elapsed: -> Date.now() - startTime
   }
 
-absolutizeUrls = (body, href) ->
-  urlRegex = ///
-    url\(
-      [\"|\']{0,1}
-      ([^\)|^\"|^\']+)
-      [\"|\']{0,1}
-    \)                  #
-  ///g
-  joinUrl  = url.resolve
-  protocol = url.parse(href).protocol
-  body = body.replace urlRegex, (m, url) ->
-    url = protocol + url if /^\/\/.*/.test(url)
-    url = joinUrl(href, url)
-    "url('#{url}')"
-  body
-
 pickBestFileForHref = (href, candidates) ->
   FileMatcher.pickBestFileForHref(href, candidates)
 
 module.exports =
   guid: guid
   fastFind: fastFind
-  hashCode: hashCode
   pipeEvent: pipeEvent
   extname: extname
   isFileOfType: isFileOfType
   sanitizePath: sanitizePath
   measureTime: measureTime
-  absolutizeUrls: absolutizeUrls
   pickBestFileForHref: pickBestFileForHref

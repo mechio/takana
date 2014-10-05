@@ -8,13 +8,14 @@ renderer        = require './renderer'
 log             = require './support/logger'
 editor          = require './editor'
 browser         = require './browser'
+watcher         = require './watcher'
+middleware      = require './support/middleware'
 connect         = require 'connect'
 http            = require 'http'
 shell           = require 'shelljs'
 path            = require 'path'
 express         = require 'express'
-livestyles      = require './livestyles'
-
+_               = require 'underscore'
 
 # configuration options
 Config = 
@@ -31,9 +32,16 @@ class Server
     @options.rootDir      ?= Config.rootDir
     @options.httpPort     ?= Config.httpPort
     @options.scratchPath  ?= Config.scratchPath
+    @options.includePaths ?= []
 
-    app         = express()
-    @webServer  = http.createServer(app)
+    @projectName = 'default'
+
+    if (!@options.path)
+      throw('specify a project path')
+
+
+    @app         = express()
+    @webServer  = http.createServer(@app)
 
     # the [Editor Manager](editor/manager.html) manages the editor TCP socket.
     @editorManager = new editor.Manager(
@@ -47,104 +55,101 @@ class Server
       logger    : log.getLogger('BrowserManager')
     )
 
-    # the [Project Manager](livestyles/project_manager.html) connects the editor and browsers together. 
-    # Live compilation happens here
-    @projectManager = new livestyles.ProjectManager(
-      browserManager : @browserManager
-      editorManager  : @editorManager
-      scratchPath    : @options.scratchPath
-    )
+    @folder      = new watcher.Folder(
+      path        : @options.path
+      scratchPath : @options.scratchPath
+      extensions  : ['scss', 'css']
+      logger      : @logger
+    ) 
 
+    @setupWebServer()
+    @setupListeners()
+  
+  setupWebServer: ->
     # serve the client side JS for browsers that listen to live updates
-    app.use express.static(path.join(__dirname, '..', '/node_modules/takana-client/dist'))
-    app.use express.json()
-    app.use express.urlencoded()
+    @app.use express.static(path.join(__dirname, '..', '/node_modules/takana-client/dist'))
+    @app.use express.json()
+    @app.use express.urlencoded()
 
-    app.use (req, res, next) =>
+    @app.use (req, res, next) =>
       res.setHeader 'X-Powered-By', 'Takana'
       next()
 
-    app.use (req, res, next) =>
+    @app.use (req, res, next) =>
       @logger.trace "[#{req.socket.remoteAddress}] #{req.method} #{req.headers.host} #{req.url}"
       next()
 
-    # returns the latest compiled css for a project & stylesheet
-    app.get '/projects/:name/:stylesheet', (req, res) =>
-      projectName = req.params.name
-      stylesheet  = req.params.stylesheet
-      href        = req.query.href
+    @app.use middleware.absolutizeCSSUrls
+    @app.use '/live', express.static(@options.scratchPath)
 
-      project     = @projectManager.get(projectName)
+  setupListeners: ->
+    @folder.on 'updated', @handleFolderUpdate.bind(@)
+
+    @editorManager.on 'buffer:update', (data) =>
+      return unless data.path.indexOf(@options.path) == 0
       
+      @logger.debug 'processing buffer:update', data.path
+      @folder.bufferUpdate(data)
 
-      if project && body = project.getBodyForStylesheet(stylesheet)
-        
-        body = helpers.absolutizeUrls(body, href) if href
+    @editorManager.on 'buffer:reset', (data) =>
+      return unless data.path.indexOf(@options.path) == 0
+      
+      @logger.debug 'processing buffer:reset', data.path
+      @folder.bufferClear(data.path)
 
-        res.setHeader 'Content-Type', 'text/css'
-        res.setHeader 'Content-Length', Buffer.byteLength(body)
-        res.end(body)
+    @browserManager.on 'stylesheet:resolve', (data, callback) =>
+      match = helpers.pickBestFileForHref(data.href, _.keys(@folder.files))
+
+      if typeof(match) == 'string'
+        @logger.info 'matched', data.href, '---->', match
+        callback(null, match) 
       else
-        res.end("couldn't find a body for stylesheet: #{stylesheet}")
+        callback("no match for #{data.href}") 
+        @logger.warn "couldn't find a match for", data.href, match || ''
 
-    # removes project by name
-    app.delete '/projects/:name', (req, res) =>
-      name = req.params.name
-      if @projectManager.get(name)
-        @projectManager.remove name
-        res.statusCode = 201
-        res.end()
+    @browserManager.on 'stylesheet:listen', (data) =>
+      @logger.debug 'processing stylesheet:listen', data.id
+      @handleFolderUpdate()
+
+  handleFolderUpdate: (stats={}) ->
+    @resultCache       ?= {}
+    watchedStylesheets = @browserManager.watchedStylesheetsForProject(@projectName)
+    
+    watchedStylesheets.forEach (p) =>
+      return if !p
+
+      file = @folder.getFile(p)
+      if file
+        renderer.for(file.scratchPath).render {
+          file         : file.scratchPath, 
+          includePaths : @includePaths
+          writeToDisk  : true
+        }, (error, result) =>
+          if !error
+            @logger.info 'rendered', file.path
+            @browserManager.stylesheetRendered(@projectName, file.path, "live/#{path.relative(@options.scratchPath, file.scratchPath)}.css")
+          else
+            @logger.warn 'error rendering', file.scratchPath, ':', error
       else
-        res.statusCode = 404
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(error: "no project named '#{name}'"))
-
-    # creates a new project
-    app.post '/projects', (req, res) =>
-      name = req.body.name
-      if !@projectManager.get(name)
-        @projectManager.add(
-          name: name
-          path: req.body.path
-          includePaths: req.body.includePaths
-        )
-        res.statusCode = 201
-        res.end()
-      else 
-        res.statusCode = 409
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(error: "a project named '#{name}' already exists"))
-
-    # lists all projects
-    app.get '/projects', (req, res) =>
-      data = @projectManager.allProjects().map (project) -> {
-        name: project.name, 
-        path: project.path,
-        includePaths: project.includePaths
-      }
-
-      res.setHeader('Content-Type', 'application/json')
-      res.end(JSON.stringify(data))
-
+        @logger.warn "couldn't find a file for watched stylesheet", path
 
 
   start: (callback) ->
-    @editorManager.start()
-    @browserManager.start()
-    @projectManager.start()
-
     shell.mkdir('-p', @options.rootDir)
     shell.mkdir('-p', @options.scratchPath)
+
+    @editorManager.start()
+    @browserManager.start()
+    @folder.start()
 
     @webServer.listen @options.httpPort, =>
       @logger.info "webserver listening on #{@options.httpPort}"
       callback?()
 
   stop: (callback) ->
-    @projectManager.stop()
+    @folder.stop()
     @editorManager.stop =>
       @webServer.close ->
         callback?()
-
 
 module.exports = Server

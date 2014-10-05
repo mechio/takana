@@ -19,7 +19,7 @@ mockFolder = ->
     scratchPath: scratch
   )
 
-describe 'Project', ->
+describe 'Folder', ->
   before (done) ->
     @folder       = mockFolder()
     @startWatching = sinon.stub(@folder, 'startWatching')
@@ -62,7 +62,7 @@ describe 'Project', ->
 
       beforeEach (done) ->
         @buffer = "Some buffer from the text editor"
-        @folder.bufferUpdate(@file.path, @buffer, done)
+        @folder.bufferUpdate({path: @file.path, buffer: @buffer}, done)
 
       it "should update the corresponding template's buffer", ->
         @file.hasBuffer().should.be.true
@@ -77,7 +77,7 @@ describe 'Project', ->
     context 'cleared', ->
       beforeEach (done) ->
         @buffer = "Some buffer from the text editor"
-        @folder.bufferUpdate @file.path, @buffer, =>
+        @folder.bufferUpdate {path: @file.path, buffer: @buffer}, =>
           @folder.bufferClear(@file.path, done)
 
       it "should clear the corresponding template's buffer", ->

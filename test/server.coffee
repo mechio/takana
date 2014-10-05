@@ -1,4 +1,4 @@
-describe 'Project', ->
+describe 'Sercer', ->
 
   context 'received folder updated event', ->
     it 'should call handleFolderUpdate'

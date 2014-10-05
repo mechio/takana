@@ -12,17 +12,11 @@ module.exports =
   # The [browser](browser/index.html) module manages the communication with the web browser
   browser:    require './browser'
     
-  # The [Client](client.html) class provides a way for external processes to communicate with the backend.
-  Client:     require './client'
-
   # The [editor](editor/index.html) module manages the communication with the text editor
   editor:     require './editor'
 
   # The support module provides various helper functions
   helpers:    require './support/support'
-
-  # The [livestyles](livestyles/index.html) module brokers the relationship between editor and browser
-  livestyles: require './livestyles'
 
   # The [renderer](renderer/index.html) module provides wrappers around supported compilers
   renderer:   require './renderer'

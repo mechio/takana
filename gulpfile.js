@@ -13,7 +13,4 @@ gulp.task('watch', function() {
   gulp.watch(['./lib/**/*.coffee'], ['docs']);  
 });
 
-
-
-
 gulp.task('default', ['docs']);
