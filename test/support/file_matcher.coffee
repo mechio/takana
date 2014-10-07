@@ -16,7 +16,18 @@ describe 'FileMatcher', ->
 
   describe 'pickBestFileForHref', ->
 
-    it 'should do somewhere', ->
+    it 'should should match infix cachebuster urls', ->
+      # see http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/
+      href       = 'http://localhost:8000/css/app.12.354.css'
+      candidates = [ 
+        '/Users/barnaby/Dropbox/Projects/lib/foundation-libsass-template/scss/app.scss'         
+      ]
+      match = FileMatcher.pickBestFileForHref href, candidates
+      match.should.equal(candidates[0])
+
+
+
+    it 'should should work for the out of the box foundation 5 template', ->
       href       = 'http://localhost:8000/css/app.css'
       candidates = [ 
         '/Users/barnaby/Dropbox/Projects/lib/foundation-libsass-template/css/app.css'
