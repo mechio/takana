@@ -5,7 +5,7 @@ fs    = require 'fs'
 
 parseError = (errorString) ->
   error = errorString
-  if matches = errorString.match(/([^\:]+)\:(\d+)\:\serror\:\s(.+)/)
+  if matches = errorString.match(/([^\:]+)\:(\d+):(.*)/)
     error = 
       file    : matches[1]
       line    : parseInt(matches[2])

@@ -1,6 +1,6 @@
 {
   "name": "takana",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "repository": "git@github.com:mechio/takana.git",
   "description": "Takana live editor server",
   "main": "index.js",
@@ -17,7 +17,7 @@
     "underscore": "~1.5.2",
     "nssocket": "~0.5.1",
     "log4js": "~0.6.9",
-    "node-sass": "^0.9.5-rc1",
+    "node-sass": "~1.0.1",
     "connect": "~2.12.0",
     "shelljs": "~0.2.6",
     "q": "~1.0.0",
