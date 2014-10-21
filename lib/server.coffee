@@ -21,7 +21,6 @@ _               = require 'underscore'
 Config = 
   editorPort:  48627
   httpPort:    48626
-  rootDir:     helpers.sanitizePath('~/.takana/')
   scratchPath: helpers.sanitizePath('~/.takana/scratch')
 
 class Server
@@ -29,7 +28,6 @@ class Server
     @logger = @options.logger || log.getLogger('Server')
 
     @options.editorPort   ?= Config.editorPort
-    @options.rootDir      ?= Config.rootDir
     @options.httpPort     ?= Config.httpPort
     @options.scratchPath  ?= Config.scratchPath
     @options.includePaths ?= []
@@ -83,7 +81,7 @@ class Server
     @app.use '/live', express.static(@options.scratchPath)
 
   setupListeners: ->
-    @folder.on 'updated', @handleFolderUpdate.bind(@)
+    @folder.on 'updated', => @handleFolderUpdate()
 
     @editorManager.on 'buffer:update', (data) =>
       return unless data.path.indexOf(@options.path) == 0
@@ -99,7 +97,6 @@ class Server
 
     @browserManager.on 'stylesheet:resolve', (data, callback) =>
       match = helpers.pickBestFileForHref(data.href, _.keys(@folder.files))
-
       if typeof(match) == 'string'
         @logger.info 'matched', data.href, '---->', match
         callback(null, match) 
@@ -135,16 +132,15 @@ class Server
 
 
   start: (callback) ->
-    shell.mkdir('-p', @options.rootDir)
     shell.mkdir('-p', @options.scratchPath)
 
     @editorManager.start()
     @browserManager.start()
-    @folder.start()
-
+    @folder.start =>
+      callback?()
+      
     @webServer.listen @options.httpPort, =>
       @logger.info "webserver listening on #{@options.httpPort}"
-      callback?()
 
   stop: (callback) ->
     @folder.stop()
