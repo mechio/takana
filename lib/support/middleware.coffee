@@ -33,16 +33,18 @@ exports.absolutizeCSSUrls = absolutizeCSSUrls = (req, res, next) ->
     else
       write.call(res, chunk, encoding)
 
-  res.end = (chunk, encoding) ->            
+  res.end = (chunk, encoding) ->  
     if bodyIsHtml
       @write(chunk, encoding) if chunk
 
       href = req.query.href
 
       if href
-        end.call(res, absolutizeUrls(data.toString(), href))
+        write.call(res, absolutizeUrls(data.toString(), href))
       else
-        end.call(res, data.toString())
+        write.call(res, data.toString())
+
+      end.call(res)
 
     else
       end.call(res, chunk, encoding)
@@ -50,7 +52,7 @@ exports.absolutizeCSSUrls = absolutizeCSSUrls = (req, res, next) ->
   res.on 'header', ->
     contentType = res.getHeader('Content-Type') 
     if contentType && mime.extension( contentType ) == 'css'
-      # We know that it's html
+      # We know that it's css
       res.removeHeader('Content-Length')      
       bodyIsHtml = true
 
