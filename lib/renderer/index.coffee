@@ -6,6 +6,7 @@ _       = require 'underscore'
 renderers = 
   css  : css
   scss : scss
+  sass : scss
 
 exports.for = (file) ->
   extension = helpers.extname(file)
