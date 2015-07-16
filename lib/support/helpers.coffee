@@ -19,7 +19,7 @@ fastFind = (path, extensions, callback) ->
   p      = sanitizePath(path)
   p      = p.substring(0, p.length - 1);
 
-  args   = "-L #{p} " + extensions.map( (e) -> "-name *.#{e}" ).join(' -o ') + "-type l"
+  args   = "-L #{p} " + extensions.map( (e) -> "-name *.#{e}" ).join(' -o ') + " -type l"
   find   = spawn('find', args.split(' '))
 
   stdout     = ''
