@@ -13,16 +13,17 @@ sassRender = (options, callback) ->
     sourceComments : 'map'
     sourceMap      : sourceMap
 
-    success: (css, sm) =>
-      callback?(null, {
-        body:      css
-        sourceMap: sm
-      })
-
-    error: (error) =>
-      callback?(error.trim() || error, null)
-
-  sass.render(renderOptions)
+  sass.render(renderOptions, (error, result) =>
+      if(error)
+          callback?(error, null)
+      else
+          css = result.css
+          sourceMap = result.map
+          callback?(null, {
+            body:      css
+            sourceMap: sourceMap
+          })
+  )
 
 
 describe 'scss', ->
@@ -54,23 +55,20 @@ describe 'scss', ->
           assertFileHasBody(@options.file + '.css', result.body)
           assertFileHasBody(@options.file + '.css.map', result.sourceMap)
           result.cssFile.should.equal(@options.file + '.css')
-
           done()
-          
 
     it 'should return css with a valid source map', ->
       file     = fixturePath('scss/foundation/style.scss')
       scss.render file: file, (error, result) ->
-        result.body.should.containDeep('sourceMappingURL=style.scss.css.map');
-        JSON.parse(result.sourceMap).sources[0].should.equal('style.scss')
+        result.body.toString().should.containEql('sourceMappingURL=style.scss.css.map');
+        JSON.parse(result.sourceMap.toString()).sources[0].should.equal('style.scss')
 
     it 'should have the same output as the sass compiler', (done) ->
       file     = fixturePath('scss/foundation/style.scss')
       sassRender file: file, (error, sassResult) ->
         scss.render file: file, (error, takanaResult) ->
-          takanaResult.body.should.equal(sassResult.body)
-          takanaResult.sourceMap.should.equal(sassResult.sourceMap)
-
+          takanaResult.body.toString().should.be.eql(sassResult.body.toString())
+          takanaResult.sourceMap.toString().should.be.eql(sassResult.sourceMap.toString())
           done()
       
     it 'should work with includePaths', (done) ->
@@ -80,6 +78,6 @@ describe 'scss', ->
       
       sassRender options, (error, sassResult) ->
         scss.render options, (error, takanaResult) ->
-          takanaResult.body.should.equal(sassResult.body)
-          takanaResult.sourceMap.should.equal(sassResult.sourceMap)
+          takanaResult.body.toString().should.be.eql(sassResult.body.toString())
+          takanaResult.sourceMap.toString().should.be.eql(sassResult.sourceMap.toString())
           done()
