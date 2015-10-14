@@ -1,0 +1,43 @@
+/* =Blocks
+-----------------------------------------------------------------------------*/
+blocks {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-wrap: wrap;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	margin-left: -@grid-gap;
+
+	& > div {
+		margin-left: @grid-gap;
+		margin-bottom: @base-line;
+	}
+
+	&[cols="2"] > div { width: 50% - @grid-gap; 	}
+	&[cols="3"] > div { width: 33.3% - @grid-gap; 	}
+	&[cols="4"] > div { width: 25% - @grid-gap; 	}
+	&[cols="5"] > div { width: 20% - @grid-gap; 	}
+	&[cols="6"] > div { width: 16.6% - @grid-gap; 	}
+}
+
+@media (max-width: @breakpoint-small) {
+
+	blocks {
+
+		display: block;
+		margin-left: 0;
+
+		&[cols="2"] > div,
+		&[cols="3"] > div,
+		&[cols="4"] > div,
+		&[cols="5"] > div,
+		&[cols="6"] > div {
+			width: 100%;
+			margin-left: 0;
+		}
+	}
+
+}

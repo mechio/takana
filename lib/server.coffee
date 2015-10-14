@@ -56,7 +56,7 @@ class Server
     @folder      = new watcher.Folder(
       path        : @options.path
       scratchPath : @options.scratchPath
-      extensions  : ['sass', 'scss', 'css']
+      extensions  : ['sass', 'scss','less', 'css']
       logger      : @logger
     ) 
 

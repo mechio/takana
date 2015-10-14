@@ -14,3 +14,5 @@ describe 'renderer', ->
       renderer.supportedExtensions().should.containEql('scss')
     it 'should support sass', ->
       renderer.supportedExtensions().should.containEql('sass')      
+    it 'should support less', ->
+      renderer.supportedExtensions().should.containEql('less')      

@@ -1,0 +1,105 @@
+/* =Labels
+-----------------------------------------------------------------------------*/
+
+@tag-padding-y: .2rem;
+@tag-padding-x: .7rem;
+
+.label,
+.badge {
+	font-size: @font-size-label;
+	font-weight: normal;
+	display: inline;
+	line-height: 1;
+	color: #000;
+	text-align: center;
+	text-transform: uppercase;
+	text-decoration: none;
+	border-radius: @global-radius;
+	padding: @tag-padding-y @tag-padding-x;
+	position: relative;
+	& a {
+		color: #000;
+		text-decoration: none;
+		&:hover {
+			.transition;
+			color: rgba(0, 0, 0, .6);
+		}
+	}
+	&:empty {
+		display: none;
+	}
+	&[bold] {
+		font-weight: bold;
+	}
+	&[outline] {
+		background: none;
+		color: rgba(0, 0, 0, .7);
+		border: 1px solid rgba(0, 0, 0, .5);
+		padding: @tag-padding-y - .1rem @tag-padding-x - .1rem;
+		&[bold] {
+			border-width: 2px;
+			padding: @tag-padding-y - .2rem @tag-padding-x - .2rem;
+		}
+	}
+	&.label-default,
+	&.badge-default {
+		.make-label(#e4e4e4, #000);
+	}
+	&.label-primary,
+	&.badge-primary {
+		.make-label(@color-primary, #fff);
+	}
+	&.label-error,
+	&.badge-error {
+		.make-label(@color-error, #fff);
+	}
+	&.label-success,
+	&.badge-success {
+		.make-label(@color-success, #fff);
+	}
+	&.label-warning,
+	&.badge-warning {
+		.make-label(@color-warning, #000);
+	}
+	&.label-black,
+	&.badge-black {
+		.make-label(#000, #fff);
+	}
+	&.label-white,
+	&.badge-white {
+		.make-label(#fff, #000);
+	}
+}
+.badge {
+	border-radius: 30px;
+	min-width: 17px;
+}
+
+.title,
+.large,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	& .label,
+	& .badge {
+		vertical-align: middle;
+	}
+}
+h3,
+h4,
+h5 {
+	& .label,
+	& .badge {
+		top: -1px;
+	}
+}
+h6 {
+	& .label,
+	& .badge {
+		top: -2px;
+	}
+}
+

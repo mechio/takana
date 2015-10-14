@@ -16,6 +16,7 @@
   "dependencies": {
     "underscore": "~1.5.2",
     "nssocket": "~0.5.1",
+    "less": "~2.5.3",
     "log4js": "~0.6.9",
     "node-sass": "~3.3.3",
     "connect": "~2.12.0",

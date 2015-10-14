@@ -1,0 +1,154 @@
+/* =Helpers
+-----------------------------------------------------------------------------*/
+.group {
+	.clearfix;
+}
+.hide {
+	display: none;
+}
+.visible {
+	visibility: visible;
+}
+.hidden {
+	visibility: hidden;
+}
+.centered {
+	margin: auto;
+}
+.highlight {
+	background-color: @color-highlighted-background;
+}
+.big {
+	font-size: @font-size-big;
+}
+.small {
+	font-size: @font-size-small;
+}
+.smaller {
+	font-size: @font-size-smaller;
+}
+p,
+ul,
+ol,
+dl,
+blockquote,
+hr,
+pre,
+table,
+form,
+fieldset,
+figure,
+address {
+	&.small {
+		line-height: @base-line-small;
+	}
+	&.smaller {
+		line-height: @base-line-smaller;
+	}
+	&.big {
+		line-height: @base-line-big;
+	}
+}
+.nowrap,
+.nowrap td {
+	white-space: nowrap;
+}
+.req {
+	font-weight: bold;
+	color: @color-error;
+	font-size: 1.1em;
+	text-transform: none;
+}
+.error {
+	color: @color-error;
+}
+.success {
+	color: @color-success;
+}
+.text-centered {
+	text-align: center;
+}
+.text-right {
+	text-align: right;
+}
+.text-left {
+	text-align: left !important;
+}
+.start {
+	margin-top: 0 !important;
+}
+.last {
+	margin-right: 0 !important;
+}
+.end {
+	margin-bottom: 0 !important;
+}
+.normal {
+	font-weight: normal !important;
+}
+.light {
+	font-weight: 300 !important;
+}
+.thin {
+	font-weight: 100 !important;
+}
+.bold {
+	font-weight: bold !important;
+}
+.italic {
+	font-style: italic !important;
+}
+.upper {
+	text-transform: uppercase;
+}
+.list-flat {
+	margin-left: 0;
+	list-style: none;
+}
+.muted {
+	color: rgba(0, 0, 0, .5);
+}
+.soft-muted {
+	color: rgba(0, 0, 0, .7);
+}
+.color-black {
+	color: rgba(0, 0, 0, 1);
+}
+a.color-black:hover {
+	color: rgba(0, 0, 0, .6);
+}
+.color-white {
+	color: rgba(255, 255, 255, 1);
+}
+a.color-white:hover {
+	color: rgba(255, 255, 255, .6);
+}
+
+// Responsive Utilities
+@media (max-width: @breakpoint-small) {
+	.hide-for-small {
+		display: none;
+	}
+}
+@media (min-width: @breakpoint-small) {
+	.show-for-small {
+		display: none;
+	}
+	.left {
+		float: none;
+		float: left;
+	}
+	.right {
+		float: none;
+		float: right;
+	}
+}
+
+@media print {
+	.hide-for-print {
+		display: none !important;
+	}
+	.show-for-print {
+		display: block !important;
+	}
+}
