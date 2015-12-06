@@ -100,11 +100,10 @@ describe 'browser.Manager', ->
           throw e
         .done()
       
-  context 'when the browser sends stylesheet:resolve', ->
-
+  testStylesheetResolve = (hrefName) ->
     beforeEach (done) ->
-      @payload = 
-        href: 'http://reddit.com/stylesheet.css'
+      @payload = {}
+      @payload[hrefName] = 'http://reddit.com/stylesheet.css'
 
       newBrowserConnection 'some_project', (e, @connection) => done()
 
@@ -113,7 +112,7 @@ describe 'browser.Manager', ->
 
     it 'should emit a styleheet:resolve message', (done) ->
       @browserManager.once 'stylesheet:resolve', (data, callback) =>
-        data.should.have.property('href', @payload.href)
+        data.should.have.property(hrefName, @payload[hrefName])
         data.should.have.property('project_name', 'some_project')
         callback.should.be.a.Function
         done()
@@ -130,7 +129,7 @@ describe 'browser.Manager', ->
         @connection.once 'message:parsed', (message) =>
           message.event.should.equal('stylesheet:resolved')
           # message.data.project_name.should.equal('project_name')
-          message.data.href.should.equal(@payload.href)
+          message.data[hrefName].should.equal(@payload[hrefName])
           message.data.id.should.equal(resolvedId)
           done()
 
@@ -148,6 +147,11 @@ describe 'browser.Manager', ->
 
           @connection.sendMessage('stylesheet:resolve', @payload)
 
+  context 'when the browser sends stylesheet:resolve', ->
+    for hrefName in ['takanaHref', 'href']
+      do (hrefName) ->
+        context "with href property name #{hrefName}", ->
+          testStylesheetResolve(hrefName)
 
   context 'when the browser sends styleheet:listen', ->
 

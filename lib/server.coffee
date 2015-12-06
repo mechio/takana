@@ -98,13 +98,15 @@ class Server
       @folder.bufferClear(data.path)
 
     @browserManager.on 'stylesheet:resolve', (data, callback) =>
-      match = helpers.pickBestFileForHref(data.href, _.keys(@folder.files))
+      href = data.takanaHref || data.href
+      match = helpers.pickBestFileForHref(href, _.keys(@folder.files))
+
       if typeof(match) == 'string'
-        @logger.info 'matched', data.href, '---->', match
+        @logger.info 'matched', href, '---->', match
         callback(null, match) 
       else
-        callback("no match for #{data.href}") 
-        @logger.warn "couldn't find a match for", data.href, match || ''
+        callback("no match for #{href}") 
+        @logger.warn "couldn't find a match for", href, match || ''
 
     @browserManager.on 'stylesheet:listen', (data) =>
       @logger.debug 'processing stylesheet:listen', data.id
