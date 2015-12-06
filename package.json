@@ -16,8 +16,9 @@
   "dependencies": {
     "underscore": "~1.5.2",
     "nssocket": "~0.5.1",
+    "less": "~2.5.3",
     "log4js": "~0.6.9",
-    "node-sass": "~1.0.1",
+    "node-sass": "~3.3.3",
     "connect": "~2.12.0",
     "shelljs": "~0.2.6",
     "q": "~1.0.0",
@@ -30,11 +31,11 @@
     "mime": "^1.2.11"
   },
   "devDependencies": {
-    "mocha": "~1.17.0",
-    "should": "~3.0.1",
+    "mocha": "~2.3.3",
+    "should": "~7.1.0",
     "checksum": "~0.1.1",
     "glob": "~3.2.8",
-    "sinon": "~1.7.3",
+    "sinon": "~1.17.1",
     "gulp-watch": "^0.6.5",
     "gulp-docco": "0.0.4"
   }

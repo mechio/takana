@@ -1,0 +1,131 @@
+/* =Tables
+-----------------------------------------------------------------------------*/
+table {
+	max-width: 100%;
+	width: 100%;
+	empty-cells: show;
+
+	caption {
+		text-transform: uppercase;
+		padding: 0;
+		color: #000;
+		font-size: 11px;
+		font-weight: bold;
+	}
+
+	th,
+	td {
+		font-size: @font-size-table;
+		border-bottom: 1px solid rgba(0, 0, 0, .04);
+		padding: 16px;
+		padding-bottom: 15px;
+		&:first-child {
+			padding-left: 0;
+		}
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+
+	tfoot th,
+	tfoot td {
+		color: rgba(0, 0, 0, .5);
+	}
+}
+
+table.table-bordered {
+
+	margin-top: -1px;
+
+	& td,
+	& th {
+		border: 1px solid rgba(0, 0, 0, .03);
+	}
+	& caption {
+		padding-left: 16px;
+	}
+}
+table.table-bordered,
+table.table-stripped {
+	& td,
+	& th {
+		&:first-child {
+			padding-left: 16px;
+		}
+		&:last-child {
+			padding-right: 16px;
+		}
+	}
+}
+table.table-simple {
+	& td,
+	& th,
+	& caption {
+		border: none;
+		padding-left: 0;
+	}
+	& td,
+	& th {
+		padding-bottom: 16px;
+	}
+}
+table.table-flat {
+	& td,
+	& th,
+	& caption {
+		border: none;
+		padding: 0;
+	}
+}
+table.table-stroked {
+	& td,
+	& th {
+		border-bottom: 1px solid rgba(0, 0, 0, .03);
+	}
+}
+table.table-stripped tbody tr:nth-child(odd) td {
+	background: @color-table-stripped;
+}
+
+@media (max-width: @breakpoint-small) {
+
+	table.table-responsive {
+
+		border: 0;
+
+		& thead {
+			display: none;
+		}
+		& tr {
+			display: block;
+			border-bottom: 2px solid rgba(0, 0, 0, .1);
+		}
+
+		& td,
+		& td:last-child,
+		& td:first-child {
+			display: block;
+			text-align: right;
+			padding: 10px;
+		}
+
+		&.table-flat td {
+			padding: 0;
+		}
+
+		&.table-bordered td:last-child,
+		& td:last-child {
+			border-bottom: 0;
+		}
+
+		& td:before {
+			content: attr(data-label);
+			float: left;
+			text-transform: uppercase;
+			font-size: @font-size-small;
+			font-weight: bold;
+			line-height: 2;
+		}
+	}
+
+}

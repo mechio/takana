@@ -1,0 +1,292 @@
+/* =Typography
+-----------------------------------------------------------------------------*/
+html {
+	font-size: 62.5%;
+}
+body {
+	font-family: @font-family-base;
+	font-size: @font-size / 10 + 0em;
+	line-height: @base-line;
+	background: @background-body;
+	color: @color-body;
+}
+
+/* =Links
+-----------------------------------------------------------------------------*/
+a {
+	color: @color-link;
+	&:hover {
+		.transition;
+		color: @color-link-hover;
+	}
+}
+
+
+/* =Headings
+-----------------------------------------------------------------------------*/
+.title,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: bold;
+	color: @color-headings;
+	text-rendering: optimizeLegibility;
+}
+.title,
+h1 {
+	margin-bottom: @margin-half;
+}
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin-bottom: 8px;
+}
+.title,
+h1,
+h2,
+h3,
+h4 {
+	margin-left: -1px;
+}
+.title {
+	font-size: @font-size-title;
+	line-height: 56px;
+}
+h1 {
+	font-size: @font-size-h1;
+	line-height: 32px;
+}
+h2 {
+	font-size: @font-size-h2;
+	line-height: 32px;
+}
+h3 {
+	font-size: @font-size-h3;
+	line-height: @base-line;
+}
+h4 {
+	font-size: @font-size-h4;
+	line-height: @base-line;
+}
+h5 {
+	font-size: @font-size-h5;
+	line-height: @base-line;
+}
+h6 {
+	font-size: @font-size-h6;
+	line-height: @base-line;
+	text-transform: uppercase;
+}
+p,
+ul,
+ol,
+dl,
+blockquote,
+hr,
+pre,
+table,
+form,
+figure,
+address {
+	+ h1,
+	+ h2,
+	+ h3,
+	+ h4,
+	+ h5,
+	+ h6 {
+		margin-top: @base-line;
+	}
+}
+
+/* =Line height and margin
+-----------------------------------------------------------------------------*/
+ul,
+ol,
+ul ul,
+ol ol,
+ul ol,
+ol ul {
+	margin: 0 0 0 @base-line;
+}
+ol ol li {
+	list-style-type: lower-alpha;
+}
+ol ol ol li {
+	list-style-type: lower-roman;
+}
+p,
+ul,
+ol,
+dl,
+blockquote,
+hr,
+pre,
+table,
+fieldset,
+figure,
+address,
+output {
+	margin-bottom: @margin-half;
+}
+
+/* =Lead
+-----------------------------------------------------------------------------*/
+.lead {
+	font-size: @font-size-big;
+	line-height: @base-line-big;
+}
+
+
+/* =Quote
+-----------------------------------------------------------------------------*/
+blockquote {
+	font-style: italic;
+	font-size: @font-size-big;
+	line-height: @base-line-big;
+	padding-left: @base-line;
+	border-left: 1px solid rgba(0, 0, 0, .2);
+	& cite {
+		font-size: @font-size-small;
+		font-weight: normal;
+		line-height: @base-line-small;
+	}
+}
+
+
+/* =Address
+-----------------------------------------------------------------------------*/
+address {
+	font-style: normal;
+}
+
+/* =Definition list
+-----------------------------------------------------------------------------*/
+dl dt {
+	font-weight: bold;
+}
+dd {
+	margin-left: @base-line;
+}
+
+/* =Text-level
+-----------------------------------------------------------------------------*/
+cite {
+	color: rgba(0, 0, 0, .5);
+	font-style: italic;
+}
+small {
+	font-size: @font-size-small;
+	line-height: @base-line-small;
+}
+s,
+del {
+	text-decoration: line-through;
+}
+abbr[title],
+dfn[title] {
+ 	border-bottom: 1px dotted @color-dfn-border;
+	cursor: help;
+}
+strong,
+b {
+	font-weight: bold;
+}
+em,
+i {
+	font-style: italic;
+}
+sub,
+sup {
+	font-size: @font-size-smaller;
+	line-height: 0;
+	position: relative;
+	margin-left: .2rem;
+}
+sup {
+	top: -.4rem;
+}
+sub {
+	bottom: -.2rem;
+}
+figcaption {
+	margin: .3rem 0;
+	font-size: @font-size-small;
+	font-style: italic;
+}
+ins,
+u {
+	text-decoration: underline;
+}
+mark {
+	background-color: @color-mark-background;
+	color: @color-mark;
+	text-decoration: none;
+}
+time {
+	font-size: @font-size-smaller;
+}
+
+/* =Code
+-----------------------------------------------------------------------------*/
+pre,
+code,
+kbd,
+samp,
+var,
+output {
+	font-size: 90%;
+	font-style: normal;
+	font-family: @font-family-code;
+}
+pre {
+	font-size: 90%;
+	line-height: @base-line;
+	color: rgba(0, 0, 0, .9);
+	overflow: auto;
+	background: @color-pre-background;
+	padding: @base-line;
+	word-wrap: normal;
+}
+td pre {
+	white-space: pre-wrap;
+	white-space: -moz-pre-wrap;
+	white-space: -pre-wrap;
+	white-space: -o-pre-wrap;
+	word-wrap: break-word;
+}
+mark,
+code,
+samp,
+kbd {
+	padding: .2rem .4rem;
+	display: inline-block;
+	line-height: 1;
+	border-radius: @global-radius;
+}
+code {
+	background: @color-code-background;
+}
+pre code {
+	font-size: 100%;
+	border: none;
+	padding: 0;
+	background: none;
+	line-height: @base-line;
+}
+var {
+	color: rgba(0, 0, 0, .5);
+}
+samp {
+	background: @color-samp-background;
+	color: @color-samp;
+}
+kbd {
+	background: @color-kbd-background;
+	color: @color-kbd;
+	white-space: nowrap;
+}

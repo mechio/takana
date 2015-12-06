@@ -1,0 +1,63 @@
+/* =Alerts
+-----------------------------------------------------------------------------*/
+.alert {
+	position: relative;
+	padding: @base-line / 2 @base-line;
+	padding-right: 32px;
+	line-height: @base-line;
+	font-size: 94%;
+	color: rgba(0, 0, 0, 1);
+	display: block;
+	font-weight: normal;
+	border-radius: @global-radius;
+	margin-bottom: @base-line;
+	&.alert-primary  {
+		color: @color-primary;
+		& a,
+		& h5 {
+			color: @color-primary;
+		}
+		background-color: rgba(red(@color-primary), green(@color-primary), blue(@color-primary), .15);
+	}
+	&.alert-error {
+		color: @color-error;
+		& a,
+		& h5 {
+			color: @color-error;
+		}
+		background-color: rgba(red(@color-error), green(@color-error), blue(@color-error), .15);
+	}
+	&.alert-warning {
+		color: darken(@color-warning, 15);
+		& a,
+		& h5 {
+			color: darken(@color-warning, 15);
+		}
+		background-color: rgba(red(@color-warning), green(@color-warning), blue(@color-warning), .23);
+	}
+	&.alert-success {
+		color: @color-success;
+		& a,
+		& h5 {
+			color: @color-success;
+		}
+		background-color: rgba(red(@color-success), green(@color-success), blue(@color-success), .13);
+	}
+	& a {
+		font-weight: bold;
+		&:hover {
+			color: #000;
+		}
+	}
+	& span.close {
+		position: absolute;
+		top: 0;
+		right: 0;
+		padding: .5rem 1rem;
+		opacity: .6;
+		cursor: pointer;
+		&:hover {
+			opacity: 1;
+		}
+	}
+}

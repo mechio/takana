@@ -1,0 +1,332 @@
+/* =Forms
+-----------------------------------------------------------------------------*/
+form {
+	margin-bottom: @base-line;
+}
+select[multiple="multiple"],
+textarea {
+	width: 100%;
+}
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea,
+select {
+	font-family: @font-family-base;
+	font-size: @font-size-btn-normal;
+	padding: @padding-input;
+	line-height: 1;
+	height: @input-height;
+	outline: none;
+	background: @color-input-background;
+	border: @input-border-size solid @color-input-border;
+	border-radius: @global-radius;
+	margin-bottom: 0;
+	color: @color-input;
+	&[disabled] {
+		resize: none;
+		opacity: 0.55;
+		cursor: default;
+	}
+}
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"] {
+	-webkit-appearance: none;
+}
+select[multiple],
+textarea {
+	height: auto;
+	line-height: 1.5;
+}
+textarea {
+	font-size: @font-size + 0px;
+}
+textarea,
+select,
+input {
+	&:focus {
+		outline: none;
+		background: @color-input-background-focus;
+		border: @input-border-size solid @color-input-border-focus;
+	}
+}
+
+// Fieldset
+fieldset {
+	padding: 31px 32px;
+	margin-bottom: @base-line;
+	border: @fieldset-border-size solid @color-fieldset-border;
+	border-radius: @global-radius;
+	& *:last-child {
+		margin-bottom: 0 !important;
+	}
+}
+legend {
+	font-weight: 500;
+	font-size: @font-size-small;
+	text-transform: uppercase;
+	padding: 0 1em;
+	margin-left: -1em;
+	top: 2px;
+	position: relative;
+	line-height: 0;
+}
+
+// Collection
+.forms {
+	& section {
+		display: block;
+	}
+	& section,
+	& p {
+		margin-bottom: @base-line;
+	}
+	& textarea,
+	& select,
+	& input[type="email"],
+	& input[type="number"],
+	& input[type="search"],
+	& input[type="text"],
+	& input[type="tel"],
+	& input[type="url"],
+	& input[type="password"] {
+		width: 100%;
+		display: block;
+	}
+	& label {
+		font-size: @font-size-form-label;
+		display: block;
+		&.checkbox {
+			text-transform: none;
+			font-weight: normal;
+			cursor: pointer;
+			color: inherit;
+			font-size: inherit;
+		}
+	}
+	& .label-top {
+		padding-top: @base-line;
+	}
+	& .checkbox-list {
+		display: block;
+		& label {
+			font-size: inherit;
+			color: inherit;
+			display: inline-block;
+			margin-bottom: 0;
+			margin-right: 16px;
+			text-transform: none;
+			font-weight: normal;
+		}
+	}
+	& .checkbox-list-vertical {
+		& .checkbox {
+			margin-bottom: 8px;
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+	& input,
+	& textarea,
+	& select {
+		&.width-1 { .col(1); }
+		&.width-2 { .col(2); }
+		&.width-3 { .col(3); }
+		&.width-4 { .col(4); }
+		&.width-5 { .col(5); }
+		&.width-6 { .col(6); }
+		&.width-7 { .col(7); }
+		&.width-8 { .col(8); }
+		&.width-9 { .col(9); }
+		&.width-10 { .col(10); }
+		&.width-11 { .col(11); }
+		&.width-12 { width: 100%; }
+	}
+	&.form-inline,
+	& .form-inline {
+
+		& textarea,
+		& select,
+		& input[type="email"],
+		& input[type="number"],
+		& input[type="search"],
+		& input[type="text"],
+		& input[type="tel"],
+		& input[type="url"],
+		& input[type="password"],
+		& .tools-select {
+			width: auto;
+			display: inline-block;
+		}
+	}
+}
+
+@media (max-width: @breakpoint-small) {
+
+	.forms {
+		& .label-top {
+			padding-top: 0;
+		}
+		& input,
+		& textarea,
+		& select {
+			&.width-1,
+			&.width-2,
+			&.width-3,
+			&.width-4,
+			&.width-5,
+			&.width-6,
+			&.width-7,
+			&.width-8,
+			&.width-9,
+			&.width-10,
+			&.width-11,
+			&.width-12 { width: 100%; }
+		}
+	}
+}
+
+
+// Descriptions
+.desc {
+	text-transform: none;
+	margin-top: 4px;
+	color: rgba(0, 0, 0, .5);
+	font-size: 12px;
+	line-height: @base-line-small;
+	font-weight: normal;
+}
+ul.desc {
+	margin-bottom: 8px;
+}
+span.desc {
+	margin-left: 4px;
+	line-height: @base-line-small;
+}
+
+// States
+.error,
+.success {
+	text-transform: none;
+	font-weight: normal;
+	font-size: 12px;
+	display: inline-block;
+}
+span.error,
+span.success {
+	margin-left: .4rem;
+}
+input.input-error,
+textarea.input-error,
+select.input-error,
+.input-error {
+	margin-top: -1px;
+	background: none;
+	background-color: rgba(red(@color-error), green(@color-error), blue(@color-error), .1);
+	border: @input-border-size solid @color-error;
+}
+input.input-success,
+textarea.input-success,
+select.input-success,
+.input-success  {
+	margin-top: -1px;
+	background: none;
+	background-color: rgba(red(@color-success), green(@color-success), blue(@color-success), .1);
+	border: @input-border-size solid @color-success;
+
+}
+
+// Sizes
+input.input-big {
+	font-size: @font-size-btn-big;
+	padding: @padding-input-big;
+	height: @input-height-big;
+}
+select.select-big {
+	font-size: @font-size-btn-big;
+	height: @input-height-big;
+	padding: 6px 10px;
+}
+input.input-small {
+	font-size: @font-size-btn-small;
+	padding: @padding-input-small;
+	height: @input-height-small;
+}
+select.select-small {
+	font-size: @font-size-btn-small;
+	height: @input-height-small;
+	padding: 6px 10px;
+}
+
+// Append
+.input-append,
+.input-prepend {
+
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+
+	margin-bottom: @base-line;
+
+	& input {
+		flex: 1;
+		margin-bottom: 0 !important;
+	}
+	& span {
+		-webkit-flex-shrink: 0;
+		display: block;
+		font-weight: normal;
+		background-color: @background-input-append;
+		margin: 0;
+		padding: 0 1rem;
+		color: @color-input-append;
+		font-size: @font-size-small;
+		line-height: @input-height;
+		white-space: nowrap;
+	}
+}
+.input-append {
+	& span {
+		position: relative;
+		z-index: 1;
+		border-left: none;
+		border-radius: 0 @global-radius @global-radius 0;
+	}
+	& input {
+		border-radius: @global-radius 0 0 @global-radius;
+	}
+}
+.input-prepend {
+	& span {
+		border-right: none;
+		border-radius: @global-radius 0 0 @global-radius;
+	}
+	& input {
+		border-radius: 0 @global-radius @global-radius 0;
+	}
+}
+.btn-append {
+
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+
+	& button,
+	& .btn {
+		flex: 1;
+	}
+}

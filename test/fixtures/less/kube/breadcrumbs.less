@@ -1,0 +1,47 @@
+/* =Breadcrumbs
+-----------------------------------------------------------------------------*/
+.breadcrumb {
+
+	margin: 0;
+	list-style: none;
+	margin-bottom: @base-line;
+	font-size: @font-size-small;
+	color: rgba(0, 0, 0, .5);
+	.clearfix;
+	& li {
+		float: left;
+	}
+	& a {
+		position: relative;
+		margin-right: 8px;
+		padding-right: 13px;
+		color: #000;
+		text-decoration: none;
+		&:hover {
+			.transition();
+			color: rgba(0, 0, 0, .6);
+			text-decoration: underline;
+		}
+	}
+	& a:before {
+		position: absolute;
+		top: -5px;
+		right: 0;
+	    content: " > ";
+	    color: rgba(0, 0, 0, .4);
+	    font-size: 12px;
+	}
+	&.breadcrumb-path a:before {
+	    content: " / ";
+	    top: -4px;
+	}
+
+	& span,
+	& a.active:hover {
+		text-decoration: none;
+		cursor: text;
+		color: rgba(0, 0, 0, .4);
+	}
+
+}
+

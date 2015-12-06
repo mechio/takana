@@ -1,0 +1,64 @@
+/* =Messages
+-----------------------------------------------------------------------------*/
+.message {
+
+	border-radius: @global-radius;
+	display: none;
+	position: fixed;
+	z-index: 2000;
+	top: @margin-half;
+	right: @margin-half;
+	max-width: 360px;
+	line-height: 1.45;
+	font-size: 94%;
+	padding: @base-line (@base-line * 1.5);
+	color: rgba(0, 0, 0, .9);
+	&.message-line {
+		top: 0;
+		right: 0;
+		left: 0;
+		width: 100%;
+		padding-right: 200px;
+		max-width: none;
+		border-radius: 0;
+		& footer {
+			position: absolute;
+			top: 0;
+			right: 2rem;
+		}
+	}
+	& ul,
+	& ol {
+		margin-top: 8px;
+		margin-bottom: 0;
+	}
+	& footer {
+		margin-top: 8px;
+	}
+	& a {
+		font-weight: bold;
+	}
+	&.message-primary,
+	&.message-error,
+	&.message-success {
+		color: rgba(255, 255, 255, .9);
+		& a {
+			color: rgba(255, 255, 255, .9);
+			&:hover {
+				color: rgba(255, 255, 255, .7);
+			}
+		}
+	}
+	&.message-primary {
+		background: @color-primary;
+	}
+	&.message-error {
+		background: @color-error;
+	}
+	&.message-warning {
+		background: @color-warning;
+	}
+	&.message-success {
+		background: @color-success;
+	}
+}
