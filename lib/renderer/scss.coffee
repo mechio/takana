@@ -21,6 +21,7 @@ exports.render = (options, callback) ->
   sass.render({
     file           : file
     includePaths   : options.includePaths
+    functions      : require(options.functions) if options.functions
     outFile        : outFile
     sourceComments : 'map'
     sourceMap      : sourceMapFile

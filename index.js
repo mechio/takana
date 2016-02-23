@@ -66,7 +66,8 @@ exports.run = function(options){
   var server = new Server({
     name:         'default',
     path:         options.path,
-    includePaths: options.includePaths
+    includePaths: options.includePaths,
+    functions:    options.functions
   });
 
   console.log();
