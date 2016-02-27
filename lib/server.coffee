@@ -18,7 +18,7 @@ express         = require 'express'
 _               = require 'underscore'
 
 # configuration options
-Config = 
+Config =
   editorPort:  48627
   httpPort:    48626
   scratchPath: helpers.sanitizePath('~/.takana/scratch')
@@ -58,11 +58,11 @@ class Server
       scratchPath : @options.scratchPath
       extensions  : ['sass', 'scss','less', 'css']
       logger      : @logger
-    ) 
+    )
 
     @setupWebServer()
     @setupListeners()
-  
+
   setupWebServer: ->
     # serve the client side JS for browsers that listen to live updates
     @app.use express.static(path.join(__dirname, '..', '/node_modules/takana-client/dist'))
@@ -85,13 +85,13 @@ class Server
 
     @editorManager.on 'buffer:update', (data) =>
       return unless data.path.indexOf(@options.path) == 0
-      
+
       @logger.debug 'processing buffer:update', data.path
       @folder.bufferUpdate(data)
 
     @editorManager.on 'buffer:reset', (data) =>
       return unless data.path.indexOf(@options.path) == 0
-      
+
       @logger.debug 'processing buffer:reset', data.path
       @folder.bufferClear(data.path)
 
@@ -101,9 +101,9 @@ class Server
 
       if typeof(match) == 'string'
         @logger.info 'matched', href, '---->', match
-        callback(null, match) 
+        callback(null, match)
       else
-        callback("no match for #{href}") 
+        callback("no match for #{href}")
         @logger.warn "couldn't find a match for", href, match || ''
 
     @browserManager.on 'stylesheet:listen', (data) =>
@@ -113,14 +113,14 @@ class Server
   handleFolderUpdate: (stats={}) ->
     @resultCache       ?= {}
     watchedStylesheets = @browserManager.watchedStylesheetsForProject(@projectName)
-    
+
     watchedStylesheets.forEach (p) =>
       return if !p
 
       file = @folder.getFile(p)
       if file
         renderer.for(file.scratchPath).render {
-          file         : file.scratchPath, 
+          file         : file.scratchPath,
           includePaths : @options.includePaths
           writeToDisk  : true
         }, (error, result) =>
@@ -140,7 +140,7 @@ class Server
     @browserManager.start()
     @folder.start =>
       callback?()
-      
+
     @webServer.listen @options.httpPort, =>
       @logger.info "webserver listening on #{@options.httpPort}"
 
