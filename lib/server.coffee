@@ -16,7 +16,6 @@ shell           = require 'shelljs'
 path            = require 'path'
 express         = require 'express'
 _               = require 'underscore'
-getInstalledPath = require 'get-installed-path'
 
 # configuration options
 Config = 
@@ -66,7 +65,6 @@ class Server
   
   setupWebServer: ->
     # serve the client side JS for browsers that listen to live updates
-    # takanaClientDistPath = getInstalledPath('takana-client', true) + '/dist';
     @app.use express.static(path.join(__dirname, '..', '/node_modules/takana-client/dist'))
     @app.use express.json()
     @app.use express.urlencoded()
