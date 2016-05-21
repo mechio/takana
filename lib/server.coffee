@@ -122,6 +122,7 @@ class Server
         renderer.for(file.scratchPath).render {
           file         : file.scratchPath, 
           includePaths : @options.includePaths
+          functions    : @options.functions
           writeToDisk  : true
         }, (error, result) =>
           if !error
