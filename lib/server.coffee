@@ -66,8 +66,7 @@ class Server
   
   setupWebServer: ->
     # serve the client side JS for browsers that listen to live updates
-    takanaClientDistPath = getInstalledPath('takana-client', true) + '/dist';
-    @app.use express.static(takanaClientDistPath)
+    @app.use express.static(path.join(__dirname, '..', '/node_modules/takana-client/dist'))
     @app.use express.json()
     @app.use express.urlencoded()
 
