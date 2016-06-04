@@ -16,6 +16,7 @@ shell           = require 'shelljs'
 path            = require 'path'
 express         = require 'express'
 _               = require 'underscore'
+fs              = require 'fs'
 
 # configuration options
 Config = 
@@ -65,7 +66,13 @@ class Server
   
   setupWebServer: ->
     # serve the client side JS for browsers that listen to live updates
-    @app.use express.static(path.join(__dirname, '..', '/node_modules/takana-client/dist'))
+    try
+      takanaClientDistPath = path.join(__dirname, '../../..', '/node_modules/takana-client/dist')
+      fs.accessSync(takanaClientDistPath)
+    catch
+      takanaClientDistPath = path.join(__dirname, '..', '/node_modules/takana-client/dist')
+
+    @app.use express.static(takanaClientDistPath)
     @app.use express.json()
     @app.use express.urlencoded()
 
