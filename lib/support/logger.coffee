@@ -1,7 +1,6 @@
 log4js = require('log4js')
 
-exports.getLogger = (name) ->  
-  log4js.getLogger(name)  
+exports.getLogger = log4js.getLogger
 
 exports.silentLogger = ->
   {

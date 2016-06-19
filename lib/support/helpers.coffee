@@ -21,16 +21,17 @@ fastFind = (path, extensions, callback) ->
 
   args   = "#{p} " + extensions.map( (e) -> "-name *.#{e}" ).join(' -o ')
   find   = spawn('find', args.split(' '))
-
-  stdout     = ''
+  stdout = ""
 
   find.stdout.on 'data', (data) -> stdout += data
   find.on 'error', (e) -> 
-    callback?(e)
+    if callback
+      callback(e)
 
   find.on 'close', (code) ->
     files = stdout.trim().split("\n")
-    callback?(null, files)
+    if callback
+      callback(null, files)
 
 
 # pipes event from eventemitter a through eventemitter b

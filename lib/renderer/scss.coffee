@@ -26,7 +26,8 @@ exports.render = (options, callback) ->
     sourceMap      : sourceMapFile
   }, (error, result) =>
       if(error)
-          callback?(error, null)
+          if callback
+            callback(error, null)
       else
           css = result.css
           sourceMap = result.map
@@ -34,16 +35,16 @@ exports.render = (options, callback) ->
             Q.nfcall(fs.writeFile, outFile, css, flags: 'w')
               .then -> Q.nfcall(fs.writeFile, sourceMapFile, sourceMap, flags: 'w')
               .then -> 
-                callback?(null, 
+                (callback && callback(null, 
                   body      : css
                   sourceMap : sourceMap
                   cssFile   : outFile
-                )
-              .fail (e) -> callback?(message: error)      
+                ))
+              .fail (e) -> (callback && callback(message: error))      
               .done()
           else 
-            callback?(null, {
+            (callback && callback(null, {
               body:      css
               sourceMap: sourceMap
-            })
+            }))
   )

@@ -3,3 +3,5 @@ tmp/**
 docs/
 bower_components
 database.yml
+build/
+.gitignore

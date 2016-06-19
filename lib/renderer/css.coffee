@@ -3,10 +3,13 @@ fs           = require 'fs'
 exports.render = (options, callback) ->
   fs.readFile options.file, (error, data) ->
     if error
-      callback?(error, null)
+      if callback
+      	callback(error, null)
     else 
       result = 
         body: data.toString()
 
-      result.cssFile = options.file if options.writeToDisk
-      callback?(null, result)
+      if options.writeToDisk
+      	result.cssFile = options.file 
+      if callback
+      	callback(null, result)

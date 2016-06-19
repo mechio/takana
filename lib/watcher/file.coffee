@@ -2,7 +2,8 @@ fs               = require 'fs'
 shell            = require 'shelljs'
 
 class File
-  constructor: (@options) ->
+  constructor: (options) ->
+    @optiosn      = options
     @path         = @options.path
     @scratchPath  = @options.scratchPath
     @buffer       = null
@@ -12,9 +13,11 @@ class File
       fs.writeFile @scratchPath, @buffer, {flags: 'w'}, callback
     else
       shell.cp '-f', @path, @scratchPath
-      callback?(null)
+      if callback
+        callback(null)
 
-  updateBuffer: (@buffer) ->
+  updateBuffer: (buffer) ->
+    @buffer = buffer
 
   clearBuffer: ->
     @buffer = null

@@ -15,14 +15,16 @@ sassRender = (options, callback) ->
 
   sass.render(renderOptions, (error, result) =>
       if(error)
-          callback?(error, null)
+          if callback
+            callback(error, null)
       else
           css = result.css
           sourceMap = result.map
-          callback?(null, {
-            body:      css
-            sourceMap: sourceMap
-          })
+          if callback
+            callback(null, {
+              body:      css
+              sourceMap: sourceMap
+            })
   )
 
 

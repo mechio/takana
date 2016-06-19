@@ -10,7 +10,8 @@ _                 = require 'underscore'
 logger            = require '../support/logger'
 
 class Folder extends EventEmitter
-  constructor: (@options={}) ->
+  constructor: (options) ->
+    @options        = options || {}
     @files          = {}
     @path           = @options.path
     @scratchPath    = @options.scratchPath
@@ -36,7 +37,8 @@ class Folder extends EventEmitter
   getFile: (path) ->
     @files[path]
 
-  emitUpdateMessage: (data={}) ->
+  emitUpdateMessage: (data) ->
+    data = data || {}
     @emit 'updated', data
 
   runRsync: (callback) ->
@@ -47,7 +49,8 @@ class Folder extends EventEmitter
     @logger.debug 'starting rsync'
     exec cmd, (error, stdout, stderr) =>
       @logger.debug 'rsync finished'
-      callback?(error)
+      if callback
+        callback(error)
 
   start: (callback) ->
     shell.mkdir('-p', @scratchPath)
@@ -57,7 +60,8 @@ class Folder extends EventEmitter
         files.forEach @addFile.bind(@)
         @startWatching()
         @logger.debug 'started'
-        callback?()
+        if callback
+          callback()
 
   stop: ->
     @watcher.close() if @watcher
@@ -70,10 +74,11 @@ class Folder extends EventEmitter
           file:      data.path
           timestamp: data.timestamp
         )
-        callback?()
+        (callback && callback())
 
     else
-      callback?()
+      if callback
+        callback()
     
 
   bufferClear: (path, callback) ->
@@ -83,7 +88,8 @@ class Folder extends EventEmitter
 
       @emitUpdateMessage()
     else
-      callback?()
+      if callback
+        callback()
 
   startWatching: ->
     @watcher = chokidar.watch(@path,
@@ -101,7 +107,8 @@ class Folder extends EventEmitter
       .on( 'unlinkDir', (path) => @_handleFSEvent('deleted', path, type: 'directory') )
       .on( 'error',     (error) => console.error 'fs watch error:', error )
   
-  _handleFSEvent: (event, path, info={}) ->
+  _handleFSEvent: (event, path, info) ->
+    info = info || {}
     if path == @path && event == 'deleted'
       @stop()
       @emit 'deleted', @

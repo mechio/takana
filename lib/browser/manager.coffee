@@ -10,7 +10,8 @@ _                   = require 'underscore'
 Browser             = require './browser'
 
 class Manager extends EventEmitter
-  constructor: (@options={}) ->
+  constructor: (options) ->
+    @options         = options || {} 
     @logger          = @options.logger || logger.silentLogger()
     @webServer       = @options.webServer
     @browsers        = {}
@@ -49,10 +50,10 @@ class Manager extends EventEmitter
 
       # normalise the incomming message format
       connection.on 'message', (message) ->
-        message = if message.binaryData
-          JSON.parse(message.binaryData.toString())
+        if message.binaryData
+          message = JSON.parse(message.binaryData.toString())
         else if message.utf8Data
-          JSON.parse(message.utf8Data)
+          message = JSON.parse(message.utf8Data)
 
         @emit 'message:parsed', message
 

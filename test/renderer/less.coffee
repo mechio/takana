@@ -2,7 +2,6 @@ less  = require '../../lib/renderer/less'
 path  = require 'path'
 shell = require 'shelljs'
 
-
 describe 'less', ->
   describe 'render', ->
     it 'should return an error when the render is unsuccessful', (done) ->

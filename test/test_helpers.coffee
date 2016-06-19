@@ -29,7 +29,8 @@ global.assertFilesSame = (file1, file2, done) ->
           [hash1, hash2]
     .spread (hash1, hash2) ->
       hash1.should.equal(hash2)
-      done?()
+      if done 
+        done()
     .fail (e) ->
       throw e
     .done()
@@ -37,13 +38,15 @@ global.assertFilesSame = (file1, file2, done) ->
 global.assertFileHasBody = (file, body, done) ->
   checksum.file file, (e, hash1) ->
     hash1.should.equal(checksum(body))
-    done?()
+    if done
+      done()
 
 global.assertIsFolder = (existance, folder, done) ->
   Q.nfcall(fs.lstat, folder)
     .then (stats) ->
       stats.isDirectory().should.equal(existance)
-      done?()
+      if done
+        done()
     .fail (e) ->
       throw e
     .done()
@@ -51,7 +54,8 @@ global.assertIsFolder = (existance, folder, done) ->
 global.assertFileExistance = (existance, file, done) ->
   fs.exists file, (exists) ->
     (!!exists).should.equal(existance)
-    done?()
+    if done
+      done()
 
 global.assertFoldersEqual = (pattern, folder1, folder2, done) ->
   Q.nfcall(glob, path.join(folder1, pattern))
@@ -61,7 +65,8 @@ global.assertFoldersEqual = (pattern, folder1, folder2, done) ->
           files1 = files1.map (f) -> f.replace(folder1, '')
           files2 = files2.map (f) -> f.replace(folder2, '')
           assert.deepEqual(files1, files2)
-          done?()
+          if done
+            done()
     .fail (e) ->
       throw e
     .done()
@@ -69,7 +74,8 @@ global.assertFoldersEqual = (pattern, folder1, folder2, done) ->
 global.assertFolderEmpty = (folder, done) ->
   glob path.join(folder, '**/**'), (e, files) ->
     assert.deepEqual(files, [folder])
-    done?()
+    if done
+      done()
 
 
 #

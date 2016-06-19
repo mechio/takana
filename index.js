@@ -1,6 +1,6 @@
 'use strict';
 
-require("coffee-script");
+// require("coffee-script");
 
 var path     = require('path'),
     shell    = require('shelljs'),
@@ -8,8 +8,8 @@ var path     = require('path'),
     fs       = require('fs'),
     logger   = Log4js.getDefaultLogger();
 
-var Server  = exports.Server  = require('./lib/server');
-var helpers = exports.helpers = require('./lib/support/helpers');
+var Server  = require('./build/server').default;
+var helpers = require('./build/support/helpers');
 
 function installSublimePlugin(){
 

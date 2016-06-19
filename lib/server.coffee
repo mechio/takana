@@ -25,7 +25,8 @@ Config =
   scratchPath: helpers.sanitizePath('~/.takana/scratch')
 
 class Server
-  constructor: (@options={}) ->
+  constructor: (options) ->
+    @options = options || {}
     @logger = @options.logger || log.getLogger('Server')
 
     @options.editorPort   ?= Config.editorPort
@@ -146,7 +147,8 @@ class Server
     @editorManager.start()
     @browserManager.start()
     @folder.start =>
-      callback?()
+      if callback
+        callback()
       
     @webServer.listen @options.httpPort, =>
       @logger.info "webserver listening on #{@options.httpPort}"
@@ -155,6 +157,7 @@ class Server
     @folder.stop()
     @editorManager.stop =>
       @webServer.close ->
-        callback?()
+        if callback 
+          callback()
 
 module.exports = Server

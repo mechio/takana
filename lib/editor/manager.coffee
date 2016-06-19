@@ -9,7 +9,9 @@ logger            = require '../support/logger'
 
 class Manager extends EventEmitter
     
-  constructor: (@options={}) ->
+  constructor: (options) ->
+    @options = options || {}
+
     @port   = @options.port || 48627
     @logger = @options.logger || logger.silentLogger()
 
@@ -26,19 +28,22 @@ class Manager extends EventEmitter
   start: (callback) ->
     @server.listen @port, =>
       @logger.info "editor server listening on #{@port}"
-      callback?()
+      if callback
+        callback()
 
   stop: (callback) ->
     @server.close(callback)
     
   # A `buffer:reset` message is emitted by the editor when changes to a file are discarded.
-  handleReset: (data={}) ->    
+  handleReset: (data) ->
+    data       = data || {}    
     path       = data.path
     @logger.debug "buffer reset", path
     @emit 'buffer:reset', path : path
 
   # A `buffer:update` message is emitted by the editor when a file buffer is changed.
-  handleUpdate: (data={}) ->
+  handleUpdate: (data) ->
+    data       = data || {}
     if !data.path
       @logger.warn 'Regecting update (invalid format)'
       return

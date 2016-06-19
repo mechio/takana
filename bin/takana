@@ -1,13 +1,13 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --harmony
 
 'use strict';
 
 process.title = 'takana';
 
-require("coffee-script");
+// require("coffee-script");
 
 var program     = require('commander'),
-    helpers     = require('../lib/support/helpers'),
+    helpers     = require('../build/support/helpers'),
     fs          = require('fs'),
     packageJson = require('../package.json'),
     takana      = require('../index');

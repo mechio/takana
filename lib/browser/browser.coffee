@@ -14,7 +14,8 @@ helpers             = require '../support/helpers'
 
 
 class Browser extends EventEmitter
-  constructor: (@options={}) ->
+  constructor: (options) ->
+    @options            = options || {}
     @id                 = helpers.guid()
     @logger             = @options.logger || logger.silentLogger()
     @watchedStylesheets = []
