@@ -1,0 +1,22 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/Cellar/node/6.2.1/bin/node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'tes' ]
+2 info using npm@3.9.3
+3 info using node@v6.2.1
+4 verbose stack Error: missing script: tes
+4 verbose stack     at run (/usr/local/lib/node_modules/npm/lib/run-script.js:150:19)
+4 verbose stack     at /usr/local/lib/node_modules/npm/lib/run-script.js:60:5
+4 verbose stack     at /usr/local/lib/node_modules/npm/node_modules/read-package-json/read-json.js:356:5
+4 verbose stack     at handleExists (/usr/local/lib/node_modules/npm/node_modules/read-package-json/read-json.js:329:20)
+4 verbose stack     at FSReqWrap.cb [as oncomplete] (fs.js:251:19)
+5 verbose cwd /Users/namitchadha/Workspace/takana
+6 error Darwin 15.4.0
+7 error argv "/usr/local/Cellar/node/6.2.1/bin/node" "/usr/local/bin/npm" "run" "tes"
+8 error node v6.2.1
+9 error npm  v3.9.3
+10 error missing script: tes
+11 error If you need help, you may report this error at:
+11 error     <https://github.com/npm/npm/issues>
+12 verbose exit [ 1, true ]
