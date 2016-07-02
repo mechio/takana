@@ -1,6 +1,6 @@
 ![Takana Logo](https://raw.github.com/mechio/takana/master/takana.png)
 
-[![Build Status](https://travis-ci.org/mechio/takana.svg?branch=master&style=flat)](https://travis-ci.org/mechio/takana)
+[![CircleCI](https://circleci.com/gh/mechio/takana.svg?style=svg)](https://circleci.com/gh/mechio/takana)
 [![npm version](https://badge.fury.io/js/takana.svg)](http://badge.fury.io/js/takana)
 
 [http://usetakana.com](http://usetakana.com)
