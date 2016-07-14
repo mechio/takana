@@ -24,7 +24,7 @@ describe('Server', function() {
   });
 
   after(function() {
-    this.server.stop();
+    // this.server.stop();
     this.startSpies.forEach(spy => { return spy.restore() });
   });
 
