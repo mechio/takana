@@ -1,6 +1,6 @@
 'use strict';
 
-require("coffee-script");
+require("babel-register");
 
 var path     = require('path'),
     shell    = require('shelljs'),
@@ -8,17 +8,17 @@ var path     = require('path'),
     fs       = require('fs'),
     logger   = Log4js.getDefaultLogger();
 
-var Server  = exports.Server  = require('./lib/server');
-var helpers = exports.helpers = require('./lib/support/helpers');
+var Server  = require('./lib/server').default;
+var helpers = require('./lib/support/helpers');
 
 function installSublimePlugin(){
 
   var takanaPackagePath = null,
       searchPaths = [
-    helpers.sanitizePath('~/Library/Application Support/Sublime Text 3/Packages/'),
-    helpers.sanitizePath('~/Library/Application Support/Sublime Text 2/Packages/'),
-    helpers.sanitizePath('~/.config/sublime-text-3/Packages/') // linux
-  ];
+        helpers.sanitizePath('~/Library/Application Support/Sublime Text 3/Packages/'),
+        helpers.sanitizePath('~/Library/Application Support/Sublime Text 2/Packages/'),
+        helpers.sanitizePath('~/.config/sublime-text-3/Packages/') // linux
+      ];
 
   searchPaths.forEach(function(p){
     if (takanaPackagePath) return;

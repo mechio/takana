@@ -5,7 +5,7 @@
 while getopts ":w" opt; do
   case $opt in
     w)
-      node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --compilers coffee:coffee-script --watch
+      node_modules/mocha/bin/mocha  --compilers js:babel-register test/*.js test/**/*.js --require should --require test/test_helpers.js --watch
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -19,4 +19,4 @@ while getopts ":w" opt; do
 done
 
 
-node_modules/mocha/bin/mocha test/*.coffee test/**/*.coffee --require should --require test/test_helpers.coffee --compilers coffee:coffee-script
+node_modules/mocha/bin/mocha --recursive test --require should --require test/test_helpers.js --compilers js:babel-register

@@ -1,10 +1,10 @@
-#!/usr/bin/env node
+#!/usr/bin/env node --harmony
 
 'use strict';
 
 process.title = 'takana';
 
-require("coffee-script");
+require("babel-register");
 
 var program     = require('commander'),
     helpers     = require('../lib/support/helpers'),

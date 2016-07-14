@@ -1,6 +1,6 @@
 ![Takana Logo](https://raw.github.com/mechio/takana/master/takana.png)
 
-[![Build Status](https://travis-ci.org/mechio/takana.svg?branch=master&style=flat)](https://travis-ci.org/mechio/takana)
+[![CircleCI](https://circleci.com/gh/mechio/takana.svg?style=svg)](https://circleci.com/gh/mechio/takana)
 [![npm version](https://badge.fury.io/js/takana.svg)](http://badge.fury.io/js/takana)
 
 [http://usetakana.com](http://usetakana.com)
@@ -61,6 +61,10 @@ We maintain a grunt plugin for easy integration with Takana. Head over to [mechi
 You can install your development folder with
 
     $ npm install
+
+You can compile the JS code with
+
+		$ npm run build
 
 Please adjust unit tests, if you change code. Run tests with:
 
