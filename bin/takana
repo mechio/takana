@@ -4,10 +4,10 @@
 
 process.title = 'takana';
 
-// require("coffee-script");
+require("babel-register");
 
 var program     = require('commander'),
-    helpers     = require('../build/support/helpers'),
+    helpers     = require('../lib/support/helpers'),
     fs          = require('fs'),
     packageJson = require('../package.json'),
     takana      = require('../index');
