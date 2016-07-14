@@ -6,31 +6,29 @@ import _ from 'underscore';
 let scratchPath = path.join(createEmptyTmpDir(), 'scratchy');
 
 describe('Server', function() {
-  beforeEach(function() {
+  before(function() {
     this.server = new Server({
       name:         'default',
       path:         fixturePath('foundation5'),
       scratchPath,
       includePaths: []
     });
+
+    this.startSpies = [
+      sinon.stub(this.server.webServer, 'listen'),
+      sinon.stub(this.server.editorManager, 'start'),
+      sinon.stub(this.server.browserManager, 'start'),
+      sinon.stub(this.server.folder, 'start')
+    ];
+    this.server.start();
+  });
+
+  after(function() {
+    this.server.stop();
+    this.startSpies.forEach(spy => { return spy.restore() });
   });
 
   describe('start', function() {
-    beforeEach(function(done) {
-      this.startSpies = [
-        sinon.spy(this.server.webServer, 'listen'),
-        sinon.spy(this.server.editorManager, 'start'),
-        sinon.spy(this.server.browserManager, 'start'),
-        sinon.spy(this.server.folder, 'start')
-      ];
-      this.server.start(done);
-    });
-
-    afterEach(function(done) {
-      this.server.stop(done);
-      this.startSpies.forEach(spy => { return spy.restore() });
-    });
-
     it('should create the scratchPath folder', function() {
       assertIsFolder(true, this.server.options.scratchPath);
     });
@@ -41,21 +39,8 @@ describe('Server', function() {
   });
   
   context('when the server is running', function() {
-
-    beforeEach(function(done) {
-      this.server.start(done);
-    });
-
-    afterEach(function(done) {
-      return this.server.stop(done);
-    });
-
     context('received folder updated event', function() {
-
-      
-      it('should call handleFolderUpdate', function() {
-        console.log('here');
-    
+      it('should call handleFolderUpdate', function() {    
         let stub = sinon.stub(this.server, 'handleFolderUpdate');
         this.server.folder.emit('updated');
         stub.called.should.be.true;
