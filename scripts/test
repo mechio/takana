@@ -19,4 +19,4 @@ while getopts ":w" opt; do
 done
 
 
-node_modules/mocha/bin/mocha test/*.js test/**/*.js --require should --require test/test_helpers.js --compilers js:babel-register
+node_modules/mocha/bin/mocha --recursive test --require should --require test/test_helpers.js --compilers js:babel-register

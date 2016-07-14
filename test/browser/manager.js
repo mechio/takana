@@ -12,7 +12,7 @@ const PORT = 50001;
 let promiseListen = function(eventemitter, event, options={}) {
   let deferred = Q.defer();
   let called   = false;
-  let timeout  = options.timeout || 1000;
+  let timeout  = options.timeout || 3000;
 
   eventemitter.once(event, function() {
     called = true;
