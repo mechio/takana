@@ -29,11 +29,13 @@ describe('Folder', function() {
     return this.folder.start(() => done());
   });
 
+  after(function(){
+    this.startWatching.restore();
+  });
+
   beforeEach(function() {
     return this.emitStub = sinon.stub(this.folder, 'emitUpdateMessage');
   });
-    // @throttledEmitUpadteStub = sinon.stub(@project, 'throttledEmitUpdateMessage')
-
     
   afterEach(function() {
     return this.emitStub.restore();

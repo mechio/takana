@@ -15,10 +15,10 @@ function installSublimePlugin(){
 
   var takanaPackagePath = null,
       searchPaths = [
-    helpers.sanitizePath('~/Library/Application Support/Sublime Text 3/Packages/'),
-    helpers.sanitizePath('~/Library/Application Support/Sublime Text 2/Packages/'),
-    helpers.sanitizePath('~/.config/sublime-text-3/Packages/') // linux
-  ];
+        helpers.sanitizePath('~/Library/Application Support/Sublime Text 3/Packages/'),
+        helpers.sanitizePath('~/Library/Application Support/Sublime Text 2/Packages/'),
+        helpers.sanitizePath('~/.config/sublime-text-3/Packages/') // linux
+      ];
 
   searchPaths.forEach(function(p){
     if (takanaPackagePath) return;

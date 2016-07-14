@@ -15,15 +15,14 @@
   "author": "mech.io",
   "license": "MIT",
   "dependencies": {
-    "chokidar": "1.5.2",
-    "coffee-script": "~1.6.3",
+    "chokidar": "1.6.0",
     "commander": "~2.1.0",
     "connect": "~2.12.0",
     "express": "~3.4.8",
     "less": "~2.5.3",
     "log4js": "~0.6.9",
     "mime": "^1.2.11",
-    "node-sass": "~3.4.2",
+    "node-sass": "~3.8.0",
     "nssocket": "~0.5.1",
     "q": "~1.0.0",
     "shelljs": "~0.2.6",
@@ -41,6 +40,6 @@
     "gulp-watch": "^0.6.5",
     "mocha": "~2.3.3",
     "should": "~7.1.0",
-    "sinon": "~1.17.1"
+    "sinon": "~1.17.4"
   }
 }
