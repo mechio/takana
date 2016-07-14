@@ -62,10 +62,6 @@ You can install your development folder with
 
     $ npm install
 
-You can compile the JS code with
-
-		$ npm run build
-
 Please adjust unit tests, if you change code. Run tests with:
 
     $ npm test
