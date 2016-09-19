@@ -67,6 +67,7 @@ exports.run = function(options){
     name:         'default',
     path:         options.path,
     includePaths: options.includePaths,
+    excludes:     options.excludes,
     functions:    options.functions
   });
 

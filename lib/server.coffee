@@ -32,6 +32,7 @@ class Server
     @options.httpPort     ?= Config.httpPort
     @options.scratchPath  ?= Config.scratchPath
     @options.includePaths ?= []
+    @options.excludes     ?= []
 
     @projectName = 'default'
 
@@ -100,7 +101,16 @@ class Server
       href = data.takanaHref || data.href
       match = helpers.pickBestFileForHref(href, _.keys(@folder.files))
 
-      if typeof(match) == 'string'
+      if @options.excludes.length
+        for excludeString in @options.excludes
+          if href.includes(excludeString)
+            matchedExclude = true
+            break
+
+      if matchedExclude
+        @logger.warn 'excluded', href, '---->', match
+        callback("excluded match for #{href}") 
+      else if typeof(match) == 'string'
         @logger.info 'matched', href, '---->', match
         callback(null, match) 
       else

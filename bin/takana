@@ -18,6 +18,7 @@ program
   .usage('[options] <path>')
   .option('-v, --verbose', 'verbose logging')
   .option('-i, --includes <paths>', 'set include paths (comma separated)', function(val) { return val.split(','); })
+  .option('-e, --excludes <strings>', 'Strings (comma separated) to test against stylesheet matches to exclude from rendering', function(val) { return val.split(','); })
   .option('-f, --functions <path>', 'Path to .js file containing custom functions (Experimental LibSass feature)')
   .parse(process.argv);
 
@@ -26,6 +27,7 @@ program
 //
 var projectPath = program.args[0];
 var includes    = program.includes || [];
+var excludes    = program.excludes || [];
 var functions   = program.functions || null;
 
 if (!projectPath){
@@ -51,6 +53,7 @@ projectPath = fs.realpathSync(helpers.sanitizePath(projectPath));
 takana.run({
   path:         projectPath,
   includePaths: includes,
+  excludes:     excludes,
   functions:    functions,
   verbose:      program.verbose
 });
