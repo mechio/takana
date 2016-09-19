@@ -16,6 +16,7 @@ var program     = require('commander'),
 program
   .version(packageJson.version)
   .usage('[options] <path>')
+  .option('-n, --noWarnings', 'Silence all warnings')
   .option('-v, --verbose', 'verbose logging')
   .option('-i, --includes <paths>', 'set include paths (comma separated)', function(val) { return val.split(','); })
   .option('-e, --excludes <strings>', 'Strings (comma separated) to test against stylesheet matches to exclude from rendering', function(val) { return val.split(','); })
@@ -55,5 +56,6 @@ takana.run({
   includePaths: includes,
   excludes:     excludes,
   functions:    functions,
-  verbose:      program.verbose
+  verbose:      program.verbose,
+  noWarnings:   program.noWarnings
 });

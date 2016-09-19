@@ -108,14 +108,14 @@ class Server
             break
 
       if matchedExclude
-        @logger.warn 'excluded', href, '---->', match
+        @logger.warn 'excluded', href, '---->', match unless @options.noWarnings
         callback("excluded match for #{href}") 
       else if typeof(match) == 'string'
         @logger.info 'matched', href, '---->', match
         callback(null, match) 
       else
         callback("no match for #{href}") 
-        @logger.warn "couldn't find a match for", href, match || ''
+        @logger.warn "couldn't find a match for", href, match || '' unless @options.noWarnings
 
     @browserManager.on 'stylesheet:listen', (data) =>
       @logger.debug 'processing stylesheet:listen', data.id
@@ -140,9 +140,9 @@ class Server
             @logger.info 'rendered', file.path
             @browserManager.stylesheetRendered(@projectName, file.path, "live/#{path.relative(@options.scratchPath, result.cssFile)}")
           else
-            @logger.warn 'error rendering', file.scratchPath, ':', error
+            @logger.warn 'error rendering', file.scratchPath, ':', error unless @options.noWarnings
       else
-        @logger.warn "couldn't find a file for watched stylesheet", path
+        @logger.warn "couldn't find a file for watched stylesheet", path unless @options.noWarnings
 
 
   start: (callback) ->
