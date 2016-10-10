@@ -1,6 +1,6 @@
 {
   "name": "takana-plus",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "repository": "git@github.com:mechio/takana.git",
   "description": "Takana live editor server (with support for custom sass functions, silencing warnings, and match excludes)",
   "main": "index.js",
