@@ -100,6 +100,7 @@ class Server
     @browserManager.on 'stylesheet:resolve', (data, callback) =>
       href = data.takanaHref || data.href
       match = helpers.pickBestFileForHref(href, _.keys(@folder.files))
+      matchPretty = if match then match.replace process.cwd()+'/', '' else match
 
       if @options.excludes.length
         for excludeString in @options.excludes
@@ -108,14 +109,14 @@ class Server
             break
 
       if matchedExclude
-        @logger.warn 'excluded', href, '---->', match unless @options.noWarnings
+        @logger.warn 'excluded', href, '---->', matchPretty unless @options.noWarnings
         callback("excluded match for #{href}") 
       else if typeof(match) == 'string'
-        @logger.info 'matched', href, '---->', match
+        @logger.info 'matched', href, '---->', matchPretty
         callback(null, match) 
       else
         callback("no match for #{href}") 
-        @logger.warn "couldn't find a match for", href, match || '' unless @options.noWarnings
+        @logger.warn "no match for", href, match || '' unless @options.noWarnings
 
     @browserManager.on 'stylesheet:listen', (data) =>
       @logger.debug 'processing stylesheet:listen', data.id
@@ -137,7 +138,7 @@ class Server
           writeToDisk  : true
         }, (error, result) =>
           if !error
-            @logger.info 'rendered', file.path
+            @logger.info 'rendered', file.path.replace(process.cwd()+'/', '')
             @browserManager.stylesheetRendered(@projectName, file.path, "live/#{path.relative(@options.scratchPath, result.cssFile)}")
           else
             @logger.warn 'error rendering', file.scratchPath, ':', error unless @options.noWarnings
