@@ -34,7 +34,8 @@ class Manager extends EventEmitter
   # A `buffer:reset` message is emitted by the editor when changes to a file are discarded.
   handleReset: (data={}) ->    
     path       = data.path
-    @logger.debug "buffer reset", path
+    shortPath  = path.replace process.cwd()+'/', ''
+    @logger.debug "buffer reset", shortPath
     @emit 'buffer:reset', path : path
 
   # A `buffer:update` message is emitted by the editor when a file buffer is changed.
@@ -46,8 +47,9 @@ class Manager extends EventEmitter
     path       = data.path
     buffer     = data.buffer
     timestamp  = data.created_at
+    shortPath  = path.replace process.cwd()+'/', ''
 
-    @logger.info "buffer updated for #{path}"
+    @logger.info "buffer updated for #{shortPath}"
     @emit 'buffer:update', {
       path      : path
       buffer    : buffer

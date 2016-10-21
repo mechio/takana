@@ -14,7 +14,7 @@
   "author": "mech.io",
   "license": "MIT",
   "dependencies": {
-    "chokidar": "^1.6.0",
+    "chokidar": "^1.6.1",
     "coffee-script": "~1.6.3",
     "commander": "~2.1.0",
     "connect": "~2.12.0",
