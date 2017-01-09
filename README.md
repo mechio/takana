@@ -3,7 +3,7 @@
 [![CircleCI](https://circleci.com/gh/mechio/takana.svg?style=svg)](https://circleci.com/gh/mechio/takana)
 [![npm version](https://badge.fury.io/js/takana.svg)](http://badge.fury.io/js/takana)
 
-[http://usetakana.com](http://usetakana.com)
+[http://takana.io](http://takana.io)
 
 Takana is a Sass/CSS live-editor. It lets you see your SCSS and CSS style changes live, in the browser, as you type them.
 
