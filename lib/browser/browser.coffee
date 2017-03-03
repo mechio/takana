@@ -20,6 +20,7 @@ class Browser extends EventEmitter
     @watchedStylesheets = []
     @connection         = @options.connection
     @projectName        = @options.projectName
+    @resolvedHrefs      = {}
     
     if !@connection || !@projectName
       throw 'Browser not instantiated with correct options'
@@ -31,14 +32,20 @@ class Browser extends EventEmitter
   handleMessage: (message) ->
     event = message.event
     data  = message.data
-
+    return unless Object.keys(data).length
+    
     @logger.trace "received event: '#{message.event}', data:", message.data
 
     switch event
       # browsers send `stylesheet:reslove` with the value of a stylesheet `href` attribute.
       # we then call back with an id that uniquely identifies the file on disk.
       when 'stylesheet:resolve'
-        data.project_name ?= @projectName 
+        data.project_name ?= @projectName
+        if @resolvedHrefs[data.href]
+          return @logger.debug "duplicate resolve request from browser:", data.href
+        else
+          @resolvedHrefs[data.href] = true
+        
         @emit 'stylesheet:resolve', data, (error, id) =>
           data.error = error
           data.id    = id
